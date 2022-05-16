@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "# Jackie # Rob",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +17,16 @@
   "bugs": {
     "url": "https://github.com/jacqizee/Plantpedia/issues"
   },
-  "homepage": "https://github.com/jacqizee/Plantpedia#readme"
+  "homepage": "https://github.com/jacqizee/Plantpedia#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.3",
+    "mongoose-unique-validator": "2.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
 }
