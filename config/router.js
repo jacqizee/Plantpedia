@@ -1,6 +1,8 @@
 import express from 'express'
 
 import { getAllPlants, getSinglePlant, addPlant, updatePlant, deletePlant } from '../controllers/plants.js'
+import { registerUser, loginUser } from '../controllers/auth.js'
+import { secureRoute } from './secureRoute.js'
 
 const router = express.Router()
 
@@ -10,13 +12,22 @@ const router = express.Router()
 
 router.route('/plants')
   .get(getAllPlants)
-  .post(addPlant)
+  .post(secureRoute, addPlant)
 
 //specific
 router.route('/plants/:id')
   .get(getSinglePlant)
-  .put(updatePlant)
-  .delete(deletePlant)
+  .put(secureRoute, updatePlant)
+  .delete(secureRoute, deletePlant)
+
+
+
+//users
+router.route('/register')
+  .post(registerUser)
+
+router.route('/login')
+  .post(loginUser)  
 
 
 

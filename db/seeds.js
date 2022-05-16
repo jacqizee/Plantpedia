@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 import Plant from '../models/plants.js'
+import User from '../models/users.js'
 import plantData from './data/plants.js'
+import userData from './data/users.js'
 
 import 'dotenv/config'
 
@@ -12,8 +14,14 @@ const seedDatabase = async () => {
     await mongoose.connection.db.dropDatabase()
     console.log('👍 Database dropped')
 
+    const usersAdded = await User.create(userData)
 
-    const plantsAdded = await Plant.create(plantData)
+    const plantsWithOwners = plantData.map(plant => {
+      
+      return { ...plant, owner: usersAdded[0]._id }
+    })
+
+    const plantsAdded = await Plant.create(plantsWithOwners)
     console.log(`🌱 Database seeded with ${plantsAdded.length} plants`)
 
     await mongoose.connection.close()

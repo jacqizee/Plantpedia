@@ -22,6 +22,7 @@ const plantSchema = new mongoose.Schema({
     },
     nativeArea: { type: Array },
   },
+  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
 }, {
   timestamps: true
 })
