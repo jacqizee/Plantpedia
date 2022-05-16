@@ -3,7 +3,7 @@ import express from 'express'
 import { getAllPlants, getSinglePlant, addPlant, updatePlant, deletePlant } from '../controllers/plants.js'
 import { registerUser, loginUser } from '../controllers/auth.js'
 import { secureRoute } from './secureRoute.js'
-import { addComment } from '../controllers/comments.js'
+import { addComment, deleteComment } from '../controllers/comments.js'
 
 const router = express.Router()
 
@@ -26,6 +26,9 @@ router.route('/plants/:id')
 //comments
 router.route('/plants/:id/comments')
   .post(secureRoute, addComment)
+
+router.route('/plants/:id/comments/:commentId')
+  .delete(secureRoute, deleteComment)
 
 
 

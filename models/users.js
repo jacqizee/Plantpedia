@@ -6,10 +6,20 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true, maxlength: 30 },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  image: {type: String, default: 'https://png.pngtree.com/element_our/20190531/ourlarge/pngtree-cartoon-square-green-vine-image_1316677.jpg'}
+  image: { type: String, default: 'https://png.pngtree.com/element_our/20190531/ourlarge/pngtree-cartoon-square-green-vine-image_1316677.jpg'}
 }, { id: false })
 
+userSchema.virtual('createdPlants', {
+  ref: 'Plant',
+  localField: '_id',
+  foreignField: 'owner'
+})
 
+userSchema.virtual('createdComments', {
+  ref: 'Plant',
+  localField: '_id',
+  foreignField: 'owner'
+})
 
 userSchema.set('toJSON', {
   virtuals: true,

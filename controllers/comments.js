@@ -27,3 +27,36 @@ export const addComment = async (req, res) => {
     return res.status(422).json(err)
   }
 }
+
+// METHOD: DELETE
+// Endpoint: /delete/:id/comments/:commentId
+// Description: Deleting a single comment
+export const deleteComment = async (req, res) => {
+  const { id, commentId } = req.params
+  try {
+    
+    const plant = await Plant.findById(id)
+    if (!plant) throw new Error('Plant not found')
+
+    // get comment to delete
+    const commentToDelete = plant.comments.id(commentId)
+    if (!commentToDelete) throw new Error('Comment not found')
+    
+    
+  
+    if (!commentToDelete.owner.equals(req.verifiedUser._id)) throw new Error('Unauthorised')
+
+    // Firstly we'll remove the subdocument from the comments array
+    await commentToDelete.remove()
+
+    // Secondly we'll save our document
+    await plant.save()
+
+    // Return 204 status to user
+    return res.sendStatus(204)
+  } catch (err) {
+    console.log(err)
+    return res.status(401).json({ message: 'Unauthorised' })
+  }
+}
+
