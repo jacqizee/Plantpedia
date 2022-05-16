@@ -18,7 +18,7 @@ const startSever = async () => {
   app.use(router)
 
   await mongoose.connect(process.env.MONGO_DB)
-  console.log("Connected to MongoDB!")
+  console.log('Connected to MongoDB!')
   app.listen(process.env.PORT, () => console.log(`🚀 - Server listening on Port ${process.env.PORT}`))
 }
 

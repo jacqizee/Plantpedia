@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getAllPlants } from '../controllers/plants.js'
+import { getAllPlants, getSinglePlant } from '../controllers/plants.js'
 
 const router = express.Router()
 
@@ -10,6 +10,10 @@ const router = express.Router()
 
 router.route('/plants')
   .get(getAllPlants)
+
+//specific
+router.route('/plants/:id')
+  .get(getSinglePlant)
 
 
 
