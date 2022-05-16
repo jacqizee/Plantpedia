@@ -3,4 +3,4 @@
 # Jackie
 # Rob
 
-#Philip J Sopher
+#Philip Sopher
