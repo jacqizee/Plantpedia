@@ -17,8 +17,7 @@ const seedDatabase = async () => {
     const usersAdded = await User.create(userData)
 
     const plantsWithOwners = plantData.map(plant => {
-      
-      return { ...plant, owner: usersAdded[0]._id }
+      return { ...plant, owner: usersAdded[0]._id, lastEdit: usersAdded[0]._id }
     })
 
     const plantsAdded = await Plant.create(plantsWithOwners)

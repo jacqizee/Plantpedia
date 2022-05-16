@@ -54,13 +54,14 @@ export const addPlant = async (req, res) => {
 // update single plant
 export const updatePlant = async (req, res) => {
   const { id } = req.params
-  const { body: editPlant } = req
+  const { body: editPlant, verifiedUser } = req
   try {
     const updatedPlant = await Plant.findById(id)
     
     // Check user making request is owner of tapa document
     // if (!updatedPlant.owner.equals(verifiedUser._id)) throw new Error('Unauthorised')
 
+    editPlant.lastEdit = verifiedUser._id
     // Update the document
     Object.assign(updatedPlant, editPlant)
 

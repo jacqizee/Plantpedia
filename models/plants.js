@@ -2,6 +2,18 @@ import mongoose from 'mongoose'
 import mongooseUniqueValidator from 'mongoose-unique-validator'
 
 
+
+// SUBDOCUMENT
+// Comment Schema
+const commentSchema = new mongoose.Schema({
+  subject: { type: String, required: true, maxlength: 50 },
+  text: { type: String, required: true, maxlength: 350 },
+  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
+}, {
+  timestamps: true // setting timestamps to be true adds "createdAt" and "updatedAt" timestamps to our document
+})
+
+
 const plantSchema = new mongoose.Schema({
   name: { type: String, required: true, maxLength: 150 },
   scientificName: { type: String, required: true, unique: true },
@@ -22,7 +34,9 @@ const plantSchema = new mongoose.Schema({
     },
     nativeArea: { type: Array },
   },
-  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
+  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
+  lastEdit: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
+  comments: [commentSchema],
 }, {
   timestamps: true
 })
