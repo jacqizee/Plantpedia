@@ -78,3 +78,29 @@ export const updatePlant = async (req, res) => {
     return res.status(404).json(err)
   }
 }
+
+
+// METHOD: DELETE
+// Endpoint: /plants/:id
+// Description: Delete specified plants
+export const deletePlant = async (req, res) => {
+  const { id } = req.params
+  try {
+    // We can't send a body back due to the status code, so no need to save the response to a variable
+    const plantToDelete = await Plant.findById(id)
+    
+    
+
+    // if (!plantToDelete.owner.equals(req.verifiedUser._id)){
+    //   console.log('🆘 Failed at owner check')
+    //   throw new Error('Unauthorised')
+    // }
+    // 
+    // await User.findByIdAndDelete(id)
+    await plantToDelete.remove()
+    // 204 status doesn't accept a body in the response, so sendStatus ends the request as well as allowing us to still define the status
+    return res.sendStatus(204)
+  } catch (err) {
+    return res.status(404).json(err)
+  }
+}

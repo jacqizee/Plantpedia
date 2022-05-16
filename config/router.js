@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getAllPlants, getSinglePlant, addPlant, updatePlant } from '../controllers/plants.js'
+import { getAllPlants, getSinglePlant, addPlant, updatePlant, deletePlant } from '../controllers/plants.js'
 
 const router = express.Router()
 
@@ -16,6 +16,7 @@ router.route('/plants')
 router.route('/plants/:id')
   .get(getSinglePlant)
   .put(updatePlant)
+  .delete(deletePlant)
 
 
 
