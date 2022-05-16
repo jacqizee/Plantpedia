@@ -1,3 +1,3 @@
 # Plantpedia
 
-# Jackie
+# Jackie Z
