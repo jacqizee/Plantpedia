@@ -16,7 +16,7 @@ userSchema.virtual('createdPlants', {
 })
 
 userSchema.virtual('createdComments', {
-  ref: 'Plant',
+  ref: 'Comments',
   localField: '_id',
   foreignField: 'owner'
 })

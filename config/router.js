@@ -4,6 +4,7 @@ import { getAllPlants, getSinglePlant, addPlant, updatePlant, deletePlant } from
 import { registerUser, loginUser } from '../controllers/auth.js'
 import { secureRoute } from './secureRoute.js'
 import { addComment, deleteComment } from '../controllers/comments.js'
+import { getProfile } from '../controllers/users.js'
 
 const router = express.Router()
 
@@ -39,6 +40,8 @@ router.route('/register')
 router.route('/login')
   .post(loginUser)  
 
+router.route('/profile/:userId')
+  .get(secureRoute, getProfile)
 
 
 export default router
