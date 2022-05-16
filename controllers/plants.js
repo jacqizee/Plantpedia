@@ -32,6 +32,23 @@ export const getSinglePlant = async (req, res) => {
   }
 }
 
+// METHOD: POST
+// Endpoint: /plants
+// Description: POST request that adds a new plant to the db
+export const addPlant = async (req, res) => {
+  const { body: newPlant } = req
+  try {
+    console.log('req.body ->', newPlant)
+    const addedPlant = await Plant.create({ ...newPlant })
+
+    return res.status(200).json(addedPlant)
+  } catch (err) {
+    console.log("Can't add this plant!")
+    console.log(err)
+    return res.status(400).json(err)
+  }
+}
+
 //METHOD PUT
 // plants/:id
 // update single plant

@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getAllPlants, getSinglePlant, updatePlant } from '../controllers/plants.js'
+import { getAllPlants, getSinglePlant, addPlant, updatePlant } from '../controllers/plants.js'
 
 const router = express.Router()
 
@@ -10,6 +10,7 @@ const router = express.Router()
 
 router.route('/plants')
   .get(getAllPlants)
+  .post(addPlant)
 
 //specific
 router.route('/plants/:id')
