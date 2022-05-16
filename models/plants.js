@@ -22,6 +22,8 @@ const plantSchema = new mongoose.Schema({
     },
     nativeArea: { type: Array },
   },
+}, {
+  timestamps: true
 })
 
 plantSchema.plugin(mongooseUniqueValidator)

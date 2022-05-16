@@ -1,5 +1,6 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import router from './config/router.js'
 
 import 'dotenv/config'
 
@@ -14,9 +15,7 @@ const startSever = async () => {
   app.use(express.json())
   app.use(logger)
 
-  app.get('/', (req, res, next) => {
-    return res.end('hi')
-  })
+  app.use(router)
 
   await mongoose.connect(process.env.MONGO_DB)
   console.log("Connected to MongoDB!")
