@@ -7,14 +7,14 @@ const plantSchema = new mongoose.Schema({
   scientificName: { type: String, required: true, unique: true },
   images: { type: String, required: true },
   upkeep: {
-    watering: { type: String, enum: ['Daily', 'Weekly', 'Monthly'], required: true },
+    watering: { type: String, enum: ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly'], required: true },
     sunExposure: { type: String, enum: ['Full sun', 'Partial sun', 'Shade'], required: true },
     soilType: { type: String, enum: ['Loamy', 'Chalky', 'Peaty', 'Silty', 'Sandy', 'Clay'], required: true },
   },
   characteristics: {
     flowerColor: { type: Array },
     mood: { type: String, enum: ['Mysterious', 'Cheerful', 'Emo', 'Bright', 'Classy'] },
-    lifespan: { type: String, enum: ['Evergreen', 'Perennial', 'Biennial'] },
+    lifespan: { type: String, enum: ['Perennial', 'Biennial', 'Annual'] },
     isIndoor: { type: Boolean },
     matureSize: {
       height: { type: Number },
