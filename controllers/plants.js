@@ -78,7 +78,6 @@ export const updatePlant = async (req, res) => {
   }
 }
 
-
 // METHOD: DELETE
 // Endpoint: /plants/:id
 // Description: Delete specified plants
@@ -87,8 +86,6 @@ export const deletePlant = async (req, res) => {
   try {
     // We can't send a body back due to the status code, so no need to save the response to a variable
     const plantToDelete = await Plant.findById(id)
-    
-    
 
     // if (!plantToDelete.owner.equals(req.verifiedUser._id)){
     //   console.log('🆘 Failed at owner check')
@@ -101,5 +98,24 @@ export const deletePlant = async (req, res) => {
     return res.sendStatus(204)
   } catch (err) {
     return res.status(404).json(err)
+  }
+}
+
+// METHOD: PUT
+// Endpoint: /plants/:id/favorite
+// Description: adds/removes user from favorites array
+
+export const clickFavorite = async (req, res) => {
+  const { id } = req.params
+  const { _id: userId } = req.verifiedUser
+  try {
+    const plantToUpdate = await Plant.findById(id)
+    const { favorites } = plantToUpdate
+    favorites.includes(userId) ? favorites.splice(favorites.indexOf(userId), 1) : favorites.push(userId)
+    await plantToUpdate.save()
+    return res.sendStatus(202)
+  } catch (error) {
+    console.log(error)
+    return res.status(404).json(error)
   }
 }

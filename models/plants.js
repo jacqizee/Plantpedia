@@ -25,6 +25,7 @@ const plantSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
   lastEdit: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
   comments: [commentSchema],
+  favorites: []
 }, {
   timestamps: true
 })
