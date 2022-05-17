@@ -1,4 +1,5 @@
 import Plant from '../models/plants.js'
+import { Comment } from '../models/comments.js'
 
 // METHOD: POST
 // Endpoint: /plants/:id/comments
@@ -11,11 +12,11 @@ export const addComment = async (req, res) => {
 
     // Create a comment with an owner
     const commentWithOwner = { ...req.body, owner: req.verifiedUser._id }
+    await Comment.create(commentWithOwner)
     console.log('commentWithOwner', commentWithOwner)
 
     // Add commentWithOwner into plantToUpdate.comments
     plantToUpdate.comments.push(commentWithOwner)
-    
 
     // Save updated tapa
     await plantToUpdate.save()
@@ -34,16 +35,12 @@ export const addComment = async (req, res) => {
 export const deleteComment = async (req, res) => {
   const { id, commentId } = req.params
   try {
-    
     const plant = await Plant.findById(id)
     if (!plant) throw new Error('Plant not found')
 
     // get comment to delete
     const commentToDelete = plant.comments.id(commentId)
     if (!commentToDelete) throw new Error('Comment not found')
-    
-    
-  
     if (!commentToDelete.owner.equals(req.verifiedUser._id)) throw new Error('Unauthorised')
 
     // Firstly we'll remove the subdocument from the comments array
