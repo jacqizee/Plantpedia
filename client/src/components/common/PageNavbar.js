@@ -16,6 +16,7 @@ import AddIcon from '@mui/icons-material/Add'
 
 // Import logo image
 import logo from '../../images/logo.png'
+import philip from '../../images/philip.png'
 
 
 const pages = ['Add']
@@ -70,7 +71,7 @@ const PageNavbar  = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Philip Sopher" src={philip} />
               </IconButton>
             </Tooltip>
             <Menu
