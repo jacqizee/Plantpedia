@@ -1,6 +1,5 @@
 import Plant from '../models/plants.js'
-
-
+import User from '../models/users.js'
 
 //METHOD: GET
 //Endpoint: /plants
@@ -39,7 +38,7 @@ export const addPlant = async (req, res) => {
   const { body: newPlant } = req
   try {
     console.log('req.body ->', newPlant)
-    const addedPlant = await Plant.create({ ...newPlant })
+    const addedPlant = await Plant.create({ ...newPlant, owner: req.verifiedUser._id, lastEdit: req.verifiedUser._id })
 
     return res.status(200).json(addedPlant)
   } catch (err) {
@@ -80,7 +79,6 @@ export const updatePlant = async (req, res) => {
   }
 }
 
-
 // METHOD: DELETE
 // Endpoint: /plants/:id
 // Description: Delete specified plants
@@ -89,8 +87,6 @@ export const deletePlant = async (req, res) => {
   try {
     // We can't send a body back due to the status code, so no need to save the response to a variable
     const plantToDelete = await Plant.findById(id)
-    
-    
 
     // if (!plantToDelete.owner.equals(req.verifiedUser._id)){
     //   console.log('🆘 Failed at owner check')
@@ -103,5 +99,31 @@ export const deletePlant = async (req, res) => {
     return res.sendStatus(204)
   } catch (err) {
     return res.status(404).json(err)
+  }
+}
+
+// METHOD: PUT
+// Endpoint: /plants/:id/favorite
+// Description: adds/removes user from favorites array
+export const clickFavorite = async (req, res) => {
+  const { id } = req.params
+  const { _id: userId } = req.verifiedUser
+  try {
+    // update favorites on plant
+    const plantToUpdate = await Plant.findById(id)
+    const { favorites: plantFavorites } = plantToUpdate
+    plantFavorites.includes(userId) ? plantFavorites.splice(plantFavorites.indexOf(userId), 1) : plantFavorites.push(userId)
+
+    // update favorites on user
+    const userToUpdate = await User.findById(userId)
+    const { favorites: userFavorites } = userToUpdate
+    userFavorites.includes(id) ? userFavorites.splice(userFavorites.indexOf(id), 1) : userFavorites.push(id)
+
+    await plantToUpdate.save()
+    await userToUpdate.save()
+    return res.sendStatus(202)
+  } catch (error) {
+    console.log(error)
+    return res.status(404).json(error)
   }
 }

@@ -1,17 +1,15 @@
 import express from 'express'
 
-import { getAllPlants, getSinglePlant, addPlant, updatePlant, deletePlant } from '../controllers/plants.js'
+import { getAllPlants, getSinglePlant, addPlant, updatePlant, deletePlant, clickFavorite } from '../controllers/plants.js'
 import { registerUser, loginUser } from '../controllers/auth.js'
 import { secureRoute } from './secureRoute.js'
 import { addComment, deleteComment } from '../controllers/comments.js'
 import { getProfile } from '../controllers/users.js'
 
 const router = express.Router()
-
-
 //Routes
-//Generic
 
+//Generic
 router.route('/plants')
   .get(getAllPlants)
   .post(secureRoute, addPlant)
@@ -22,8 +20,6 @@ router.route('/plants/:id')
   .put(secureRoute, updatePlant)
   .delete(secureRoute, deletePlant)
 
-
-
 //comments
 router.route('/plants/:id/comments')
   .post(secureRoute, addComment)
@@ -31,6 +27,10 @@ router.route('/plants/:id/comments')
 router.route('/plants/:id/comments/:commentId')
   .delete(secureRoute, deleteComment)
 
+// Favorites
+
+router.route('/plants/:id/favorite')
+  .put(secureRoute, clickFavorite)
 
 
 //users
