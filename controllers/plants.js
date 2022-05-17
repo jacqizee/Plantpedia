@@ -1,7 +1,5 @@
 import Plant from '../models/plants.js'
 
-
-
 //METHOD: GET
 //Endpoint: /plants
 //get all plants
@@ -39,7 +37,7 @@ export const addPlant = async (req, res) => {
   const { body: newPlant } = req
   try {
     console.log('req.body ->', newPlant)
-    const addedPlant = await Plant.create({ ...newPlant })
+    const addedPlant = await Plant.create({ ...newPlant, owner: req.verifiedUser._id, lastEdit: req.verifiedUser._id })
 
     return res.status(200).json(addedPlant)
   } catch (err) {

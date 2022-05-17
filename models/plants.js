@@ -1,18 +1,6 @@
 import mongoose from 'mongoose'
 import mongooseUniqueValidator from 'mongoose-unique-validator'
-
-
-
-// SUBDOCUMENT
-// Comment Schema
-const commentSchema = new mongoose.Schema({
-  subject: { type: String, required: true, maxlength: 50},
-  text: { type: String, required: true, maxlength: 350 },
-  owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true }
-}, {
-  timestamps: true // setting timestamps to be true adds "createdAt" and "updatedAt" timestamps to our document
-})
-
+import { commentSchema } from './comments.js'
 
 const plantSchema = new mongoose.Schema({
   name: { type: String, required: true, maxLength: 150 },
@@ -42,5 +30,4 @@ const plantSchema = new mongoose.Schema({
 })
 
 plantSchema.plugin(mongooseUniqueValidator)
-
 export default mongoose.model('Plant', plantSchema)
