@@ -1,4 +1,5 @@
 import Plant from '../models/plants.js'
+import User from '../models/users.js'
 
 //METHOD: GET
 //Endpoint: /plants
@@ -104,15 +105,22 @@ export const deletePlant = async (req, res) => {
 // METHOD: PUT
 // Endpoint: /plants/:id/favorite
 // Description: adds/removes user from favorites array
-
 export const clickFavorite = async (req, res) => {
   const { id } = req.params
   const { _id: userId } = req.verifiedUser
   try {
+    // update favorites on plant
     const plantToUpdate = await Plant.findById(id)
-    const { favorites } = plantToUpdate
-    favorites.includes(userId) ? favorites.splice(favorites.indexOf(userId), 1) : favorites.push(userId)
+    const { favorites: plantFavorites } = plantToUpdate
+    plantFavorites.includes(userId) ? plantFavorites.splice(plantFavorites.indexOf(userId), 1) : plantFavorites.push(userId)
+
+    // update favorites on user
+    const userToUpdate = await User.findById(userId)
+    const { favorites: userFavorites } = userToUpdate
+    userFavorites.includes(id) ? userFavorites.splice(userFavorites.indexOf(id), 1) : userFavorites.push(id)
+
     await plantToUpdate.save()
+    await userToUpdate.save()
     return res.sendStatus(202)
   } catch (error) {
     console.log(error)
