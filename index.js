@@ -14,7 +14,6 @@ const startSever = async () => {
 
   app.use(express.json())
   app.use(logger)
-
   app.use('/api', router)
 
   await mongoose.connect(process.env.MONGO_DB)

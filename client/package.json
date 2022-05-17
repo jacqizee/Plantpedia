@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.8.0",
     "axios": "^0.25.0",
     "eslint-plugin-react": "^7.29.4",
     "react": "^18.1.0",
@@ -33,5 +36,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:4000"
+  "proxy": "http://localhost:3000"
 }
