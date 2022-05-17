@@ -6,7 +6,7 @@ export const getProfile = async (req, res) => {
   const { userId } = req.params
   try {
     // Retrieve profile information
-    if (req.verifiedUser._id === userId) {
+    if (req.verifiedUser._id.equals(userId)) {
       const profile = await User.findById(req.verifiedUser._id).populate('createdPlants').populate('createdComments')
       if (!profile) throw new Error('User not found')
       return res.status(200).json(profile)
