@@ -27,7 +27,7 @@ const Home = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const { data } = await axios.get('/api/plants/')
+        const { data } = await axios.get('/api/plants')
         setPlants(data)
       } catch (error) {
         console.log(error)
@@ -43,11 +43,13 @@ const Home = () => {
 
       <Container maxWidth='md' >
         <TextField sx={{ mt: 4 }} fullWidth placeholder='Search...' />
-      </Container>
+      </Container >
       {loading ?
-        <Spinner />
+        <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }}>
+          <Spinner />
+        </Container>
         : errors ?
-          <Container>
+          <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
             <Typography>
               Error! Could not fetch data!
             </Typography>
@@ -58,7 +60,7 @@ const Home = () => {
               {plants.map(plant => {
                 return (
                   <>
-                    <ImageListItem key={plant._id}  >
+                    <ImageListItem key={plant._id} >
                       <Box as={Link} to={`/plants/${plant._id}`} >
                         <img
                           src={`${plant.images}`}
