@@ -15,6 +15,8 @@ import InputLabel from '@mui/material/InputLabel'
 import Autocomplete from '@mui/material/Autocomplete'
 import Slider from '@mui/material/Slider'
 import Checkbox from '@mui/material/Checkbox'
+import Button from '@mui/material/Button'
+
 
 const PlantAdd = () => {
 
@@ -23,7 +25,7 @@ const PlantAdd = () => {
     scientificName: '',
     images: '',
     upkeep: {
-      watering: 'Daily',
+      watering: '',
       sunExposure: '',
       soilType: '',
     },
@@ -40,8 +42,30 @@ const PlantAdd = () => {
     },
   })
 
+  const upkeep = ['watering', 'sunExposure', 'soilType']
+  const chars = ['mood', 'lifespan', 'isIndoor']
+
+  const handleNestedChange = (objectName, keyName, value) => {
+    setFormData({ ...formData, [objectName]: {
+      ...formData[objectName],
+      [keyName]: value,
+    } })
+  }
+
   const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    if (upkeep.includes(name)) {
+      handleNestedChange('upkeep', name, value)
+    } else if (chars.includes(name)) {
+      handleNestedChange('characteristics', name, value)
+    } else {
+      setFormData({ ...formData, [name]: value })
+    }        
+  }
+
+  const handleMultiChange = (selected, keyName, nestedKeyName) => {
+    console.log(selected)
+    // const selectedValues = selected.map(item => item.)
   }
 
   const handleSubmit = e => {
@@ -78,13 +102,13 @@ const PlantAdd = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center' }}
-        m={1}
       >
         <Typography variant='h3'>Add a Plant</Typography>
         <Grid
           container
-          spacing={1}
-          sx={{ width: .5 }}>
+          sx={{ width: .5 }}
+          rowSpacing={1}
+          columnSpacing={1}>
           {/* Name */}
           <Grid item xs={12} md={6}>
             <TextField
@@ -123,7 +147,7 @@ const PlantAdd = () => {
           {/* Water Requirements */}
           <Grid item xs={12} md={4}>
             <FormControl fullWidth>
-              <InputLabel id="water-label">Water Requirements</InputLabel>
+              <InputLabel id="water-label">Water</InputLabel>
               <Select
                 labelId="water-label"
                 id="water"
@@ -183,6 +207,7 @@ const PlantAdd = () => {
             <Autocomplete
               disablePortal
               id='colors'
+              name='flowerColor'
               options={colors}
               fullWidth
               multiple
@@ -238,6 +263,7 @@ const PlantAdd = () => {
               // value={value}
               onChange={handleChange}
               valueLabelDisplay="auto"
+              name="height"
               size="small"
               min={1}
               max={100}
@@ -253,6 +279,7 @@ const PlantAdd = () => {
               // value={value}
               onChange={handleChange}
               valueLabelDisplay="auto"
+              name='width'
               size="small"
               min={1}
               max={100}
@@ -267,8 +294,8 @@ const PlantAdd = () => {
               options={regions}
               fullWidth
               multiple
-              value={formData.characteristics.nativeArea}
-              onChange={handleChange}
+              // value={formData.characteristics.nativeArea}
+              onChange={(selected) => handleMultiChange(selected, 'characteristics', 'nativeArea')}
               renderInput={(params) => <TextField {...params} label="Native Area" />}
             />
           </Grid>
@@ -278,7 +305,9 @@ const PlantAdd = () => {
           </Grid>
           {/* Submit Button */}
           <Grid item xs={12}>
-            
+            <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Button variant="contained" size='large' sx={{ width: .70 }}>Submit</Button>
+            </Container>
           </Grid>
         </Grid>
       </Box>
