@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { useNavigate, useParams } from 'react-router-dom'
+
+import Spinner from './utilities/Spinner.js'
 
 //mui
 import Container from '@mui/material/Container'
-import Card from '@mui/material/Card'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import FavoriteIcon from '@mui/icons-material/Favorite'
+import ImageList from '@mui/material/ImageList'
+import ImageListItem from '@mui/material/ImageListItem'
+import ImageListItemBar from '@mui/material/ImageListItemBar'
+import { Typography } from '@mui/material'
 
 const Home = () => {
 
+  //loading and error state
+  const [loading, setLoading] = useState(true)
+  const [errors, setErrors] = useState(false)
+
+
+  //plant arrays  
   const [plants, setPlants] = useState([])
 
 
@@ -25,54 +31,52 @@ const Home = () => {
         setPlants(data)
       } catch (error) {
         console.log(error)
+        setErrors(true)
       }
+      setLoading(false)
     }
     getData()
   }, [])
 
-
-  const handleFavorite = async (plantId) => {
-    try {
-      await axios.put(`/api/plants/${plantId}/favorites`)
-    } catch (err) {
-      console.log(err)
-    }
-
-  }
-
   return (
     <>
+
       <Container maxWidth='md' >
         <TextField sx={{ mt: 4 }} fullWidth placeholder='Search...' />
       </Container>
-      <Container maxWidth='md' sx={{ my: 4 }}>
-        <Grid container spacing={2}>
-          {plants.map(plant => {
-            return (
-              <>
-                <Grid key={plant._id} item md={3} sm={6} xs={12}>
-                  <Card variant="outlined" >
-                    <Box as={Link} to={`/plants/${plant._id}`}>
-                      <img src={plant.images} alt={plant.name} />
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mx: 1 }}>
-                      <Box sx={{ my: 1 }}>
-                        {plant.name}
+      {loading ?
+        <Spinner />
+        : errors ?
+          <Container>
+            <Typography>
+              Error! Could not fetch data!
+            </Typography>
+          </Container>
+          :
+          <Container maxWidth='md' sx={{ my: 4 }}>
+            <ImageList cols={3} gap={10}>
+              {plants.map(plant => {
+                return (
+                  <>
+                    <ImageListItem key={plant._id}  >
+                      <Box as={Link} to={`/plants/${plant._id}`} >
+                        <img
+                          src={`${plant.images}`}
+                          alt={plant.name}
+                          loading="lazy"
+                        />
                       </Box>
-                      <IconButton onClick={() => handleFavorite(plant._id)}>
-                        {/* plant.favorites.inlcudes(userId) ? <FavoriteIcon/> : <FavouriteBorderIcon /> */}
-                        <FavoriteBorderIcon />
-                      </IconButton>
-                    </Box>
-
-                  </Card>
-                </Grid>
-              </>
-            )
-          })}
-        </Grid>
-      </Container>
-
+                      <ImageListItemBar
+                        title={plant.name}
+                        sx={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+                      />
+                    </ImageListItem>
+                  </>
+                )
+              })}
+            </ImageList>
+          </Container>
+      }
     </>
   )
 }
