@@ -8,10 +8,14 @@ import Spinner from './utilities/Spinner.js'
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import ImageList from '@mui/material/ImageList'
 import ImageListItem from '@mui/material/ImageListItem'
 import ImageListItemBar from '@mui/material/ImageListItemBar'
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
+import Masonry from '@mui/lab/Masonry'
+import IconButton from '@mui/material/IconButton'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
+
 
 const Home = () => {
 
@@ -41,7 +45,7 @@ const Home = () => {
   return (
     <>
 
-      <Container maxWidth='md' >
+      <Container maxWidth='lg' >
         <TextField sx={{ mt: 4 }} fullWidth placeholder='Search...' />
       </Container >
       {loading ?
@@ -55,8 +59,8 @@ const Home = () => {
             </Typography>
           </Container>
           :
-          <Container maxWidth='md' sx={{ my: 4 }}>
-            <ImageList cols={3} gap={10}>
+          <Container maxWidth='lg' sx={{ my: 4 }}>
+            <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1}>
               {plants.map(plant => {
                 return (
                   <>
@@ -65,18 +69,41 @@ const Home = () => {
                         <img
                           src={`${plant.images}`}
                           alt={plant.name}
-                          loading="lazy"
+                          loading='lazy'
                         />
                       </Box>
                       <ImageListItemBar
                         title={plant.name}
                         sx={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+                        actionIcon={
+                          <>
+                            <IconButton
+                              sx={{ color: 'white' }}
+                              aria-label={`favorites for ${plant.name}`}
+                            >
+                              <FavoriteIcon />
+                            </IconButton>
+                            <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
+                              {plant.favorites.length}
+                            </Typography>
+                            <IconButton
+                              sx={{ color: 'white' }}
+                              aria-label={` comments for ${plant.name}`}
+                            >
+                              <ChatBubbleIcon />
+                            </IconButton>
+                            <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
+                              {plant.comments.length}
+                            </Typography>
+                          </>
+                        }
                       />
                     </ImageListItem>
                   </>
                 )
               })}
-            </ImageList>
+            </Masonry>
+
           </Container>
       }
     </>
