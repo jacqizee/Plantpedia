@@ -73,7 +73,7 @@ const PlantAdd = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/plants', formData, {
+      const response = await axios.post('/api/plants', formData, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
