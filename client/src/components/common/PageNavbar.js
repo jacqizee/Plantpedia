@@ -37,13 +37,20 @@ const PageNavbar  = () => {
   const handleAdd = (event) => {
     console.log('plus clicked')
     setAnchorElNav(event.currentTarget)
+
+    navigate('/plants/add')
   }
 
   const navigateToSelected = (event) => {
     const pageName = event.currentTarget.innerText.toLowerCase()
     console.log('page to navigate', pageName)
 
-    navigate(`/${pageName}`)
+    if (pageName === 'login' || pageName === 'register') {
+      navigate(`/${pageName}`)
+    } else if (pageName === 'profile') {
+      handleCloseUserMenu()
+      navigate(`/${pageName}/username`)
+    }
   }
 
   const handleOpenUserMenu = (event) => {
@@ -108,7 +115,7 @@ const PageNavbar  = () => {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <MenuItem key={setting} onClick={navigateToSelected}>
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))}
