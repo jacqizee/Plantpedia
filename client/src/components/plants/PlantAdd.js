@@ -14,11 +14,11 @@ import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
-import Autocomplete from '@mui/material/Autocomplete'
 import Slider from '@mui/material/Slider'
 import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
-
+import OutlinedInput from '@mui/material/OutlinedInput'
+import Chip from '@mui/material/Chip'
 
 const PlantAdd = () => {
   const [ formData, setFormData ] = useState({
@@ -36,8 +36,8 @@ const PlantAdd = () => {
       lifespan: '',
       isIndoor: false,
       matureSize: {
-        height: 0,
-        width: 0,
+        height: 25,
+        width: 25,
       },
       nativeArea: [],
     },
@@ -54,9 +54,11 @@ const PlantAdd = () => {
     } })
   }
 
-  const handleMultiChange = (selected, objectName, keyName) => {
-    console.log(selected.target, objectName, keyName)
-    console.log(selected)
+  const handleNestedNestedChange = (objectName, nestedObjectName, keyName, value) => {
+    setFormData({ ...formData, [objectName]: {
+      ...formData[objectName],
+      [nestedObjectName]: { ...formData[objectName][nestedObjectName], [keyName]: value },
+    } })
   }
 
   const handleChange = (e) => {
@@ -73,7 +75,7 @@ const PlantAdd = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/plants', formData, {
+      const response = await axios.post('/api/plants', formData, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
@@ -102,7 +104,8 @@ const PlantAdd = () => {
     'Europe',
     'Middle East',
     'Africa',
-    'Asia'
+    'Asia',
+    'Australia'
   ]
 
   return (
@@ -158,7 +161,7 @@ const PlantAdd = () => {
           </Grid>
           {/* Water Requirements */}
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
+            <FormControl required fullWidth>
               <InputLabel id="water-label">Water</InputLabel>
               <Select
                 labelId="water-label"
@@ -177,7 +180,7 @@ const PlantAdd = () => {
           </Grid>
           {/* Sun Exposure */}
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
+            <FormControl required fullWidth>
               <InputLabel id="sunExposure-label">Sun Exposure</InputLabel>
               <Select
                 labelId="sunExposure-label"
@@ -195,7 +198,7 @@ const PlantAdd = () => {
           </Grid>
           {/* Soil Type */}
           <Grid item xs={12} md={4}>
-            <FormControl fullWidth>
+            <FormControl required fullWidth>
               <InputLabel id="soilType-label">Soil Type</InputLabel>
               <Select
                 labelId="soilType-label"
@@ -214,22 +217,27 @@ const PlantAdd = () => {
               </Select>
             </FormControl>
           </Grid>
-          {/* Flower Colors */}
+          {/* Lifespan */}
           <Grid item xs={12} md={6}>
-            <Autocomplete
-              disablePortal
-              id='colors'
-              name='flowerColor'
-              options={colors}
-              fullWidth
-              multiple
-              onChange={(selected) => handleMultiChange(selected, 'characteristics', 'flowerColor')}
-              renderInput={(params) => <TextField {...params} label="Flower Color" />}
-            />
+            <FormControl fullWidth>
+              <InputLabel id="lifespan-label">Lifespan</InputLabel>
+              <Select
+                labelId="lifespan-label"
+                id="lifespan"
+                name='lifespan'
+                value={formData.characteristics.lifespan}
+                label='lifespan'
+                onChange={handleChange}
+              >
+                <MenuItem value={'Perennial'}>Perennial</MenuItem>
+                <MenuItem value={'Biennial'}>Biennial</MenuItem>
+                <MenuItem value={'Annual'}>Annual</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           {/* Mood */}
           <Grid item xs={12} md={6}>
-            <FormControl fullWidth>
+            <FormControl required fullWidth>
               <InputLabel id="mood-label">Mood</InputLabel>
               <Select
                 labelId="mood-label"
@@ -247,21 +255,33 @@ const PlantAdd = () => {
               </Select>
             </FormControl>
           </Grid>
-          {/* Lifespan */}
+          {/* Flower Colors */}
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="lifespan-label">Lifespan</InputLabel>
+              <InputLabel id="flowerColor">Flower Color</InputLabel>
               <Select
-                labelId="lifespan-label"
-                id="lifespan"
-                name='lifespan'
-                value={formData.characteristics.lifespan}
-                label='lifespan'
-                onChange={handleChange}
+                labelId="flowerColor"
+                id="flowerColor"
+                multiple
+                value={formData.characteristics.flowerColor}
+                onChange={(e) => handleNestedChange('characteristics', 'flowerColor', e.target.value)}
+                input={<OutlinedInput id="color" label="Color" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
               >
-                <MenuItem value={'Perennial'}>Perennial</MenuItem>
-                <MenuItem value={'Biennial'}>Biennial</MenuItem>
-                <MenuItem value={'Annual'}>Annual</MenuItem>
+                {colors.map((color) => (
+                  <MenuItem
+                    key={color}
+                    value={color}
+                  >
+                    {color}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -271,13 +291,15 @@ const PlantAdd = () => {
               Height:
             </Typography>
             <Slider
-              // value={value}
-              onChange={handleChange}
+              value={formData.characteristics.matureSize.height}
+              onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'height', e.target.value)}
               valueLabelDisplay="auto"
               name="height"
               size="small"
               min={1}
-              max={100}
+              max={50}
+              marks
+              step={5}
               sx={{ width: .9, align: 'center' }}
             />
           </Grid>
@@ -287,31 +309,53 @@ const PlantAdd = () => {
               Width: 
             </Typography>
             <Slider
-              // value={value}
-              onChange={handleChange}
+              value={formData.characteristics.matureSize.width}
+              onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'width', e.target.value)}
               valueLabelDisplay="auto"
               name='width'
               size="small"
               min={1}
-              max={100}
+              max={50}
+              marks
+              step={5}
               sx={{ width: .9, align: 'center' }}
             />
           </Grid>
           {/* Native Area */}
-          <Grid item xs={12} md={9}>
-            <Autocomplete
-              disablePortal
-              id='nativeArea'
-              options={regions}
-              fullWidth
-              multiple
-              onChange={(selected) => handleMultiChange(selected, 'characteristics', 'nativeArea')}
-              renderInput={(params) => <TextField {...params} label="Native Area" />}
-            />
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="nativeArea">Native Area</InputLabel>
+              <Select
+                labelId="nativeArea"
+                id="nativeArea"
+                multiple
+                value={formData.characteristics.nativeArea}
+                onChange={(e) => handleNestedChange('characteristics', 'nativeArea', e.target.value)}
+                input={<OutlinedInput id="regions" label="Regions" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+                {regions.map((region) => (
+                  <MenuItem
+                    key={region}
+                    value={region}
+                  >
+                    {region}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           {/* Is Indoor? */}
-          <Grid item xs={12} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Indoor Plant" />
+          <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
+            <FormControlLabel control={
+              <Checkbox value={formData.characteristics.isIndoor} onChange={(e) => handleNestedChange('characteristics', 'isIndoor', e.target.checked)} />
+            } label="Indoor Plant" />
           </Grid>
           {/* Submit Button */}
           <Grid item xs={12}>
