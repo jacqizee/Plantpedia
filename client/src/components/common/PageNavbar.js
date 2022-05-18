@@ -37,6 +37,8 @@ const PageNavbar  = () => {
   const handleAdd = (event) => {
     console.log('plus clicked')
     setAnchorElNav(event.currentTarget)
+
+    navigate('/plants/add')
   }
 
   const navigateToSelected = (event) => {
