@@ -58,7 +58,7 @@ const PlantShow = () => {
         },
       })
       favorite ? setFavorite(false) : setFavorite(true)
-      
+
     } catch (error) {
       console.log(error)
     }
@@ -75,9 +75,9 @@ const PlantShow = () => {
               {plant.name}
             </Typography>
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={6} sx={{ position: 'relative' }}>
             <img src={plant.images} alt={plant.name} sx={{ position: 'relative' }} />
-            <IconButton sx={{ color: 'white', position: 'relative', bottom: '90%', left: 0 }} onClick={() => toggleFavorite(plant)} >
+            <IconButton sx={{ color: 'white', position: 'absolute', bottom: '1%', right: 0 }} onClick={() => toggleFavorite(plant)} >
               {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
             </IconButton>
           </Grid>
