@@ -152,7 +152,7 @@ const UserProfile = () => {
                 </Typography>
               </Container>
               :
-              <Container maxWidth='lg' sx={{ my: 4 }}>
+              <Container maxWidth='lg' sx={{ my: 0 }}>
                 <Masonry columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
                   {plants.map(plant => {
                     return (
