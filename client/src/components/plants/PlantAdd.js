@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { getTokenFromLocalStorage } from '../../helpers/auth.js'
 import { Link } from 'react-router-dom'
 
 // MUI Imports
@@ -19,7 +21,6 @@ import Button from '@mui/material/Button'
 
 
 const PlantAdd = () => {
-
   const [ formData, setFormData ] = useState({
     name: '',
     scientificName: '',
@@ -42,6 +43,7 @@ const PlantAdd = () => {
     },
   })
 
+  // Nested Objects and Their Keys
   const upkeep = ['watering', 'sunExposure', 'soilType']
   const chars = ['mood', 'lifespan', 'isIndoor']
 
@@ -52,7 +54,12 @@ const PlantAdd = () => {
     } })
   }
 
-  const handleChange = e => {
+  const handleMultiChange = (selected, objectName, keyName) => {
+    console.log(selected.target, objectName, keyName)
+    console.log(selected)
+  }
+
+  const handleChange = (e) => {
     const { name, value } = e.target
     if (upkeep.includes(name)) {
       handleNestedChange('upkeep', name, value)
@@ -60,17 +67,21 @@ const PlantAdd = () => {
       handleNestedChange('characteristics', name, value)
     } else {
       setFormData({ ...formData, [name]: value })
-    }        
+    }
   }
 
-  const handleMultiChange = (selected, keyName, nestedKeyName) => {
-    console.log(selected)
-    // const selectedValues = selected.map(item => item.)
-  }
-
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // post to api
+    try {
+      const response = await axios.post('/plants', formData, {
+        headers: {
+          Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        },
+      })
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const colors = [
@@ -102,6 +113,7 @@ const PlantAdd = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center' }}
+        onSubmit={handleSubmit}
       >
         <Typography variant='h3'>Add a Plant</Typography>
         <Grid
@@ -211,8 +223,7 @@ const PlantAdd = () => {
               options={colors}
               fullWidth
               multiple
-              value={formData.characteristics.flowerColor}
-              onChange={handleChange}
+              onChange={(selected) => handleMultiChange(selected, 'characteristics', 'flowerColor')}
               renderInput={(params) => <TextField {...params} label="Flower Color" />}
             />
           </Grid>
@@ -294,7 +305,6 @@ const PlantAdd = () => {
               options={regions}
               fullWidth
               multiple
-              // value={formData.characteristics.nativeArea}
               onChange={(selected) => handleMultiChange(selected, 'characteristics', 'nativeArea')}
               renderInput={(params) => <TextField {...params} label="Native Area" />}
             />
@@ -306,7 +316,7 @@ const PlantAdd = () => {
           {/* Submit Button */}
           <Grid item xs={12}>
             <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Button variant="contained" size='large' sx={{ width: .70 }}>Submit</Button>
+              <Button variant="contained" type="submit" size='large' sx={{ width: .70 }}>Submit</Button>
             </Container>
           </Grid>
         </Grid>
