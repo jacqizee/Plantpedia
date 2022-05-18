@@ -28,9 +28,9 @@ const PlantShow = () => {
 
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
+  const [plantComments, setPlantComments] = useState(false)
 
   const [formData, setFormData] = useState({
-    subject: '',
     text: '',
     owner: '',
   })
@@ -40,7 +40,8 @@ const PlantShow = () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant(data)
-        console.log(data)
+        setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
+
       } catch (error) {
         console.log(error)
         // setErrors(true)
@@ -50,7 +51,6 @@ const PlantShow = () => {
   }, [id])
 
   const plantIsFavorite = (singlePlant) => {
-    // get payload and check it has a value
     const payload = getPayload()
     if (!payload) return
     if (!singlePlant) return
@@ -86,7 +86,7 @@ const PlantShow = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!formData.subject.length || !formData.text.length) return
+    if (!formData.text.length) return
     setFormData({ ...formData, owner: getPayload().sub })
     try {
       await axios.post(`/api/plants/${plant._id}/comments`, formData, {
@@ -94,8 +94,9 @@ const PlantShow = () => {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
       })
+      const { data } = await axios.get(`/api/plants/${id}`)
+      setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
       setFormData({
-        subject: '',
         text: '',
         owner: '',
       })
@@ -103,6 +104,9 @@ const PlantShow = () => {
       console.log(err)
     }
   }
+
+  const isTextDisabled = formData.text.length === 0
+
 
 
 
@@ -112,10 +116,10 @@ const PlantShow = () => {
     <Container maxWidth='lg' >
       {plant ?
         <>
-          <Grid container spacing={2} sx={{ mt: 4 }}>
+          <Grid container spacing={2} sx={{ my: 1 }}>
 
             {/* Title */}
-            <Grid item xs={12} sx={{ textAlign: 'center', mb: 2 }}>
+            <Grid item xs={12} sx={{ textAlign: 'center', mb: 1 }}>
               <Typography variant='h4'>
                 {plant.name}
               </Typography>
@@ -149,18 +153,19 @@ const PlantShow = () => {
           </Grid>
 
           {/* comment info */}
-          <Box display='flex' my={2} alignItems='center'>
+          <Box display='flex' mb={3} alignItems='flex-end'>
             <Typography> {plant.comments.length} comments</Typography>
 
             {/* comment sort select */}
             <Box sx={{ minWidth: 120, mx: 3 }} >
-              <FormControl fullWidth size='small'>
+              <FormControl variant='standard' fullWidth size='small'>
                 <InputLabel id="sort-comments">Sort by</InputLabel>
                 <Select
                   labelId="sort-comments"
                   id="sort-comments"
                   value=''
                   label="sort"
+                  sx={{ p: 'none' }}
                 >
                   <MenuItem value='Newest' >Newest</MenuItem>
                   <MenuItem value='Oldest'>Oldest</MenuItem>
@@ -175,24 +180,19 @@ const PlantShow = () => {
             <Avatar sx={{ width: 24, height: 24 }} alt="" src="" />
             <Box width='100%' as='form' onSubmit={handleSubmit}>
               <TextField
-                name='subject'
-                value={formData.subject}
-                size='small'
-                placeholder='Subject'
-                onChange={handleInput}
-                sx={{ mb: 2 }} />
-              <TextField
                 name='text'
                 value={formData.text}
                 size='small'
                 variant='standard'
                 fullWidth
                 placeholder='Add comment'
+                autoComplete='off'
                 onChange={handleInput} />
               <Button
                 type="submit"
                 variant="contained"
                 sx={{ mt: 3, float: 'right' }}
+                disabled={isTextDisabled}
               >
                 Add comment
               </Button>
@@ -200,17 +200,35 @@ const PlantShow = () => {
           </Stack>
 
           {/* comment section */}
-          <Stack direction='row' spacing={2} mt={3}>
-            <Avatar sx={{ width: 24, height: 24 }} />
-            <Box >
-              <Typography>
-                Username
-              </Typography>
-              <Typography>
-                This is awesome
-              </Typography>
+          {plantComments.length ?
+            plantComments.map(comment => {
+              const { owner, _id, text, createdAt } = comment
+              const date = new Date(createdAt)
+              return (
+                <Stack key={_id} direction='row' spacing={2} my={3}>
+                  <Avatar sx={{ width: 24, height: 24 }} />
+                  <Box >
+                    <Typography sx={{ fontSize: 14 }}>
+                      {owner} 
+                      <Typography as='span' sx={{
+                        ml: 1,
+                        fontSize: 10,
+                        color: '#9c9c9c',
+                      }}>{date.getUTCMonth() + 1}/{date.getUTCDate()}/{date.getUTCFullYear()}
+                      </Typography>
+                    </Typography>
+                    <Typography>
+                      {text}
+                    </Typography>
+                  </Box>
+                </Stack>
+              )
+            })
+            :
+            <Box>
+              No comments!
             </Box>
-          </Stack>
+          }
 
         </>
 
