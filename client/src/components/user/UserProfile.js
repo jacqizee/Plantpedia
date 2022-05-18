@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
+import Spinner from '../utilities/Spinner.js'
 
 //mui
 import Container from '@mui/material/Container'
@@ -62,7 +64,30 @@ function a11yProps(index) {
 
 const UserProfile = () => {
 
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = useState(0)
+
+  //loading and error state
+  const [loading, setLoading] = useState(true)
+  const [errors, setErrors] = useState(false)
+
+
+  //plant arrays  
+  const [plants, setPlants] = useState([])
+
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const { data } = await axios.get('/api/plants')
+        setPlants(data)
+      } catch (error) {
+        console.log(error)
+        setErrors(true)
+      }
+      setLoading(false)
+    }
+    getData()
+  }, [])
 
   const handleChange = (event, newValue) => {
     console.log('handle change runs')
@@ -76,15 +101,15 @@ const UserProfile = () => {
       <Container maxWidth='lg' sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
         <Box sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', mt: 4 }}>
           {/* Profile Picture */}
-          <Grid xs={4} >
+          <Grid item xs={4} >
             <Avatar alt="Philip Sopher" src={philip} sx={{ width: 96, height: 96 }} />
           </Grid>
 
           {/* About Me */}
-          <Grid xs={6} sx={{ ml: 8 }} >
+          <Grid item xs={6} sx={{ ml: 8 }} >
             <Stack spacing={0} >
               <Box sx={{ flexGrow: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex' }}>
-                <Typography align="center">username</Typography>
+                <Typography variant="h6">philipsopher</Typography>
                 <Button href="#">Edit</Button>
               </Box>
               <Box>
@@ -106,21 +131,58 @@ const UserProfile = () => {
             indicatorColor="secondary"
             aria-label="secondary tabs example"
           >
-            <Tab value="0" label="Item One" {...a11yProps(0)} />
-            <Tab value="1" label="Item Two" {...a11yProps(1)} />
-            <Tab value="2" label="Item Three" {...a11yProps(2)} />
+            <Tab label="My Plants" {...a11yProps(0)} />
+            <Tab label="Favorites" {...a11yProps(1)} />
+            <Tab label="Comments" {...a11yProps(2)} />
           </Tabs>
         </Box>
 
         {/* Image Lists */}
+
+        {/* My Plants  */}
         <TabPanel value={value} index={0}>
-          Item One
+          {loading ?
+            <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }}>
+              <Spinner />
+            </Container>
+            : errors ?
+              <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
+                <Typography>
+                  Error! Could not fetch data!
+                </Typography>
+              </Container>
+              :
+              <Container maxWidth='lg' sx={{ my: 4 }}>
+                <Masonry columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
+                  {plants.map(plant => {
+                    return (
+                      <>
+                        <ImageListItem key={plant._id} >
+                          <Box as={Link} to={`/plants/${plant._id}`} >
+                            <img
+                              src={`${plant.images}`}
+                              alt={plant.name}
+                              loading='lazy'
+                            />
+                          </Box>
+                        </ImageListItem>
+                      </>
+                    )
+                  })}
+                </Masonry>
+
+              </Container>
+          }
         </TabPanel>
+
+        {/* Favorite Plants */}
         <TabPanel value={value} index={1}>
-          Item Two
+          No Favorites yet
         </TabPanel>
+
+        {/* Comment History */}
         <TabPanel value={value} index={2}>
-          Item Three
+          No comments yet
         </TabPanel>
 
       </Container>
