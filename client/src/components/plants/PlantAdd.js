@@ -14,13 +14,11 @@ import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
-import Autocomplete from '@mui/material/Autocomplete'
 import Slider from '@mui/material/Slider'
 import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Chip from '@mui/material/Chip'
-
 
 const PlantAdd = () => {
   const [ formData, setFormData ] = useState({
@@ -53,13 +51,6 @@ const PlantAdd = () => {
     setFormData({ ...formData, [objectName]: {
       ...formData[objectName],
       [keyName]: value,
-    } })
-  }
-
-  const handleMultiChange = (e, objectName, keyName) => {
-    setFormData({ ...formData, [objectName]: {
-      ...formData[objectName],
-      [keyName]: e.target.value,
     } })
   }
 
@@ -106,7 +97,8 @@ const PlantAdd = () => {
     'Europe',
     'Middle East',
     'Africa',
-    'Asia'
+    'Asia',
+    'Australia'
   ]
 
   return (
@@ -227,7 +219,7 @@ const PlantAdd = () => {
                 id="flowerColor"
                 multiple
                 value={formData.characteristics.flowerColor}
-                onChange={(e) => handleMultiChange(e, 'characteristics', 'flowerColor')}
+                onChange={(e) => handleNestedChange('characteristics', 'flowerColor', e.target.value)}
                 input={<OutlinedInput id="color" label="Color" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -319,7 +311,7 @@ const PlantAdd = () => {
             />
           </Grid>
           {/* Native Area */}
-          <Grid item xs={12} md={9}>
+          <Grid item xs={12}>
             <FormControl fullWidth>
               <InputLabel id="nativeArea">Native Area</InputLabel>
               <Select
@@ -327,7 +319,7 @@ const PlantAdd = () => {
                 id="nativeArea"
                 multiple
                 value={formData.characteristics.nativeArea}
-                onChange={(e) => handleMultiChange(e, 'characteristics', 'nativeArea')}
+                onChange={(e) => handleNestedChange('characteristics', 'nativeArea', e.target.value)}
                 input={<OutlinedInput id="regions" label="Regions" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -349,8 +341,10 @@ const PlantAdd = () => {
             </FormControl>
           </Grid>
           {/* Is Indoor? */}
-          <Grid item xs={12} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Indoor Plant" />
+          <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
+            <FormControlLabel control={
+              <Checkbox value={formData.characteristics.isIndoor} onChange={(e) => handleNestedChange('characteristics', 'isIndoor', e.target.checked)} />
+            } label="Indoor Plant" />
           </Grid>
           {/* Submit Button */}
           <Grid item xs={12}>
