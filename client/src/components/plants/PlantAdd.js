@@ -36,8 +36,8 @@ const PlantAdd = () => {
       lifespan: '',
       isIndoor: false,
       matureSize: {
-        height: 0,
-        width: 0,
+        height: 25,
+        width: 25,
       },
       nativeArea: [],
     },
@@ -51,6 +51,13 @@ const PlantAdd = () => {
     setFormData({ ...formData, [objectName]: {
       ...formData[objectName],
       [keyName]: value,
+    } })
+  }
+
+  const handleNestedNestedChange = (objectName, nestedObjectName, keyName, value) => {
+    setFormData({ ...formData, [objectName]: {
+      ...formData[objectName],
+      [nestedObjectName]: { ...formData[objectName][nestedObjectName], [keyName]: value },
     } })
   }
 
@@ -210,8 +217,46 @@ const PlantAdd = () => {
               </Select>
             </FormControl>
           </Grid>
-          {/* Flower Colors */}
+          {/* Lifespan */}
           <Grid item xs={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel id="lifespan-label">Lifespan</InputLabel>
+              <Select
+                labelId="lifespan-label"
+                id="lifespan"
+                name='lifespan'
+                value={formData.characteristics.lifespan}
+                label='lifespan'
+                onChange={handleChange}
+              >
+                <MenuItem value={'Perennial'}>Perennial</MenuItem>
+                <MenuItem value={'Biennial'}>Biennial</MenuItem>
+                <MenuItem value={'Annual'}>Annual</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          {/* Mood */}
+          <Grid item xs={12} md={6}>
+            <FormControl required fullWidth>
+              <InputLabel id="mood-label">Mood</InputLabel>
+              <Select
+                labelId="mood-label"
+                id="mood"
+                name='mood'
+                value={formData.characteristics.mood}
+                label='soilType'
+                onChange={handleChange}
+              >
+                <MenuItem value={'Cheerful'}>Cheerful</MenuItem>
+                <MenuItem value={'Emo'}>Emo</MenuItem>
+                <MenuItem value={'Mysterious'}>Mysterious</MenuItem>
+                <MenuItem value={'Classy'}>Classy</MenuItem>
+                <MenuItem value={'Bright'}>Bright</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          {/* Flower Colors */}
+          <Grid item xs={12}>
             <FormControl fullWidth>
               <InputLabel id="flowerColor">Flower Color</InputLabel>
               <Select
@@ -240,57 +285,21 @@ const PlantAdd = () => {
               </Select>
             </FormControl>
           </Grid>
-          {/* Mood */}
-          <Grid item xs={12} md={6}>
-            <FormControl required fullWidth>
-              <InputLabel id="mood-label">Mood</InputLabel>
-              <Select
-                labelId="mood-label"
-                id="mood"
-                name='mood'
-                value={formData.characteristics.mood}
-                label='soilType'
-                onChange={handleChange}
-              >
-                <MenuItem value={'Cheerful'}>Cheerful</MenuItem>
-                <MenuItem value={'Emo'}>Emo</MenuItem>
-                <MenuItem value={'Mysterious'}>Mysterious</MenuItem>
-                <MenuItem value={'Classy'}>Classy</MenuItem>
-                <MenuItem value={'Bright'}>Bright</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          {/* Lifespan */}
-          <Grid item xs={12}>
-            <FormControl fullWidth>
-              <InputLabel id="lifespan-label">Lifespan</InputLabel>
-              <Select
-                labelId="lifespan-label"
-                id="lifespan"
-                name='lifespan'
-                value={formData.characteristics.lifespan}
-                label='lifespan'
-                onChange={handleChange}
-              >
-                <MenuItem value={'Perennial'}>Perennial</MenuItem>
-                <MenuItem value={'Biennial'}>Biennial</MenuItem>
-                <MenuItem value={'Annual'}>Annual</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
           {/* Height */}
           <Grid item xs={12} md={6}>
             <Typography id="height-slider" gutterBottom>
               Height:
             </Typography>
             <Slider
-              // value={value}
-              onChange={handleChange}
+              value={formData.characteristics.matureSize.height}
+              onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'height', e.target.value)}
               valueLabelDisplay="auto"
               name="height"
               size="small"
               min={1}
-              max={100}
+              max={50}
+              marks
+              step={5}
               sx={{ width: .9, align: 'center' }}
             />
           </Grid>
@@ -300,13 +309,15 @@ const PlantAdd = () => {
               Width: 
             </Typography>
             <Slider
-              // value={value}
-              onChange={handleChange}
+              value={formData.characteristics.matureSize.width}
+              onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'width', e.target.value)}
               valueLabelDisplay="auto"
               name='width'
               size="small"
               min={1}
-              max={100}
+              max={50}
+              marks
+              step={5}
               sx={{ width: .9, align: 'center' }}
             />
           </Grid>
