@@ -35,7 +35,7 @@ const App = () => {
           <Route path="/plants/:plantId/edit" element={<PlantEdit />} />
 
           {/* User routes */}
-          <Route path="/profile/:id" element={<UserProfile />} />
+          <Route path="/profile/:username" element={<UserProfile />} />
 
           
           {/* The following path matches any path specified, so it needs to come last */}

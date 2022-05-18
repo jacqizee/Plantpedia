@@ -74,31 +74,31 @@ const UserProfile = () => {
   return (
     <>
       <Container maxWidth='lg' sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
-        <Box sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex' }}>
+        <Box sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', mt: 4 }}>
           {/* Profile Picture */}
-          <Grid xs={4}>
+          <Grid xs={4} >
             <Avatar alt="Philip Sopher" src={philip} sx={{ width: 96, height: 96 }} />
           </Grid>
 
           {/* About Me */}
-          <Grid xs={8}>
-            <Stack spacing={2}>
-              <Box sx={{ flexGrow: 1, justifyContent: 'space-between', display: 'flex' }}>
-                <h4>username</h4>
+          <Grid xs={6} sx={{ ml: 8 }} >
+            <Stack spacing={0} >
+              <Box sx={{ flexGrow: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex' }}>
+                <Typography align="center">username</Typography>
                 <Button href="#">Edit</Button>
               </Box>
               <Box>
-                <p><span>12</span> posts</p>
+                <Typography sx={{ mt: 0, mb: 0 }}><strong>12</strong> posts </Typography>
               </Box>
-              <Box>
-                <p>33 yo plant lover ...and plant <em>lover</em></p>
+              <Box sx={{ flexGrow: 1, display: 'flex', flexWrap: 'wrap', maxWidth: '350px' }} >
+                <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}>33 yo cactus lover ...and cherry plum <em>lover</em>.</Typography>
               </Box>
             </Stack>
           </Grid>
         </Box>
 
         {/* Tabs */}
-        <Box>
+        <Box sx={{ mt: 2 }}>
           <Tabs
             value={value}
             onChange={handleChange}
