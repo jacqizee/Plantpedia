@@ -2,7 +2,7 @@ export default [
   {
     name: 'Cherry Plum',
     scientificName: 'Prunus cerasifera',
-    images: 'https://www.thespruce.com/thmb/2Y3lqOTlLt9Xp7ktbKQ_-vGFjpg=/700x0/filters:no_upscale([…]growing-tips-3269344-02-d5ce69e0f28d41a2b5d05bfb9a6e119b.jpg',
+    images: 'https://www.thespruce.com/thmb/IDgU_vXQok2Fxor-NN4ZeM-ISQQ=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/purple-leaf-plum-growing-tips-3269344-06-01e5062c07c3454288035906fb88e8bb.jpg',
     upkeep: {
       watering: 'Weekly',
       sunExposure: 'Full sun',
@@ -23,7 +23,7 @@ export default [
   {
     name: 'Cactus',
     scientificName: 'Cactaceae',
-    images: 'https://www.thespruce.com/thmb/MDG_B0WY6dKUCFLTy3GOgAoC-70=/941x0/filters:no_upscale([…]-grow-cactus-1902954-01-e1bb010180b54eb1970ddf2eed54f86f.jpg',
+    images: 'https://www.thespruce.com/thmb/nBaspJ0QqNPD9SGtquy5RJkGWho=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/how-to-grow-cactus-1902954-04-69e55884693744de924906ddd41c2a81.jpg',
     upkeep: {
       watering: 'Monthly',
       sunExposure: 'Full sun',
