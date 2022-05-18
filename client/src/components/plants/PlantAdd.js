@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 // MUI Imports
+import Container from '@mui/material/InputLabel'
 import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
-import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
-import Container from '@mui/material/InputLabel'
+import Autocomplete from '@mui/material/Autocomplete'
+import Slider from '@mui/material/Slider'
+import Checkbox from '@mui/material/Checkbox'
 
 const PlantAdd = () => {
 
@@ -45,18 +49,44 @@ const PlantAdd = () => {
     // post to api
   }
 
+  const colors = [
+    'Red',
+    'Orange',
+    'Yellow',
+    'Blue',
+    'Pink',
+    'Purple',
+    'Violet',
+    'Cream',
+    'White'
+  ]
+
+  const regions = [
+    'North America',
+    'South America',
+    'Europe',
+    'Middle East',
+    'Africa',
+    'Asia'
+  ]
+
   return (
     <Container>
-      <Box component='form' sx={{ minWidth: '100vw', margin: 2 }} display='flex' direction='column'
-        alignItems='center'
-        justify-content='center'>
+      <Box
+        component='form'
+        sx={{ minWidth: '100vw',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center' }}
+        m={1}
+      >
+        <Typography variant='h3'>Add a Plant</Typography>
         <Grid
           container
           spacing={1}
-          fullWidth>
-          <Typography variant='h3'>Add a Plant</Typography>
+          sx={{ width: .5 }}>
           {/* Name */}
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6}>
             <TextField
               id='name'
               label='Common Name'
@@ -64,10 +94,11 @@ const PlantAdd = () => {
               name='name'
               value={formData.name}
               required
-              onChange={handleChange} />
+              onChange={handleChange}
+              fullWidth />
           </Grid>
           {/* Scientific Name */}
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6}>
             <TextField
               id='scientificName' 
               label='Scientific Name'
@@ -75,21 +106,22 @@ const PlantAdd = () => {
               name='scientificName'
               value={formData.scientificName}
               required
-              onChange={handleChange} />
+              onChange={handleChange}
+              fullWidth />
           </Grid>
           {/* Images */}
           <Grid item xs={12}>
             <TextField id='images'
-              label='Image
-              URL'
+              label='Image URL'
               variant='outlined'
               name='images'
               value={formData.images}
               required
-              onChange={handleChange} />
+              onChange={handleChange}
+              fullWidth />
           </Grid>
           {/* Water Requirements */}
-          <Grid item xs={12}>
+          <Grid item xs={12} md={4}>
             <FormControl fullWidth>
               <InputLabel id="water-label">Water Requirements</InputLabel>
               <Select
@@ -99,7 +131,6 @@ const PlantAdd = () => {
                 value={formData.upkeep.watering}
                 label='water'
                 onChange={handleChange}
-                fullWidth
               >
                 <MenuItem value={'Daily'}>Daily</MenuItem>
                 <MenuItem value={'Weekly'}>Weekly</MenuItem>
@@ -109,7 +140,7 @@ const PlantAdd = () => {
             </FormControl>
           </Grid>
           {/* Sun Exposure */}
-          <Grid item xs={12}>
+          <Grid item xs={12} md={4}>
             <FormControl fullWidth>
               <InputLabel id="sunExposure-label">Sun Exposure</InputLabel>
               <Select
@@ -119,7 +150,6 @@ const PlantAdd = () => {
                 value={formData.upkeep.sunExposure}
                 label='sunExposure'
                 onChange={handleChange}
-                fullWidth
               >
                 <MenuItem value={'Full sun'}>Full Sun</MenuItem>
                 <MenuItem value={'Partial sun'}>Partial Sun</MenuItem>
@@ -128,7 +158,7 @@ const PlantAdd = () => {
             </FormControl>
           </Grid>
           {/* Soil Type */}
-          <Grid item xs={12}>
+          <Grid item xs={12} md={4}>
             <FormControl fullWidth>
               <InputLabel id="soilType-label">Soil Type</InputLabel>
               <Select
@@ -138,7 +168,6 @@ const PlantAdd = () => {
                 value={formData.upkeep.soilType}
                 label='soilType'
                 onChange={handleChange}
-                fullWidth
               >
                 <MenuItem value={'Loamy'}>Loamy</MenuItem>
                 <MenuItem value={'Chalky'}>Chalky</MenuItem>
@@ -150,13 +179,20 @@ const PlantAdd = () => {
             </FormControl>
           </Grid>
           {/* Flower Colors */}
-          <Grid item xs={12}>
-            <FormControl fullWidth>
-              {/* need to add some kind of chip element */}
-            </FormControl>
+          <Grid item xs={12} md={6}>
+            <Autocomplete
+              disablePortal
+              id='colors'
+              options={colors}
+              fullWidth
+              multiple
+              value={formData.characteristics.flowerColor}
+              onChange={handleChange}
+              renderInput={(params) => <TextField {...params} label="Flower Color" />}
+            />
           </Grid>
           {/* Mood */}
-          <Grid item xs={12}>
+          <Grid item xs={12} md={6}>
             <FormControl fullWidth>
               <InputLabel id="mood-label">Mood</InputLabel>
               <Select
@@ -166,7 +202,6 @@ const PlantAdd = () => {
                 value={formData.characteristics.mood}
                 label='soilType'
                 onChange={handleChange}
-                fullWidth
               >
                 <MenuItem value={'Cheerful'}>Cheerful</MenuItem>
                 <MenuItem value={'Emo'}>Emo</MenuItem>
@@ -187,15 +222,63 @@ const PlantAdd = () => {
                 value={formData.characteristics.lifespan}
                 label='lifespan'
                 onChange={handleChange}
-                fullWidth
               >
-                <MenuItem value={'Cheerful'}>Cheerful</MenuItem>
-                <MenuItem value={'Emo'}>Emo</MenuItem>
-                <MenuItem value={'Mysterious'}>Mysterious</MenuItem>
-                <MenuItem value={'Classy'}>Classy</MenuItem>
-                <MenuItem value={'Bright'}>Bright</MenuItem>
+                <MenuItem value={'Perennial'}>Perennial</MenuItem>
+                <MenuItem value={'Biennial'}>Biennial</MenuItem>
+                <MenuItem value={'Annual'}>Annual</MenuItem>
               </Select>
             </FormControl>
+          </Grid>
+          {/* Height */}
+          <Grid item xs={12} md={6}>
+            <Typography id="height-slider" gutterBottom>
+              Height:
+            </Typography>
+            <Slider
+              // value={value}
+              onChange={handleChange}
+              valueLabelDisplay="auto"
+              size="small"
+              min={1}
+              max={100}
+              sx={{ width: .9, align: 'center' }}
+            />
+          </Grid>
+          {/* Width */}
+          <Grid item xs={12} md={6}>
+            <Typography id="width-slider" gutterBottom>
+              Width: 
+            </Typography>
+            <Slider
+              // value={value}
+              onChange={handleChange}
+              valueLabelDisplay="auto"
+              size="small"
+              min={1}
+              max={100}
+              sx={{ width: .9, align: 'center' }}
+            />
+          </Grid>
+          {/* Native Area */}
+          <Grid item xs={12} md={9}>
+            <Autocomplete
+              disablePortal
+              id='nativeArea'
+              options={regions}
+              fullWidth
+              multiple
+              value={formData.characteristics.nativeArea}
+              onChange={handleChange}
+              renderInput={(params) => <TextField {...params} label="Native Area" />}
+            />
+          </Grid>
+          {/* Is Indoor? */}
+          <Grid item xs={12} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
+            <FormControlLabel control={<Checkbox defaultChecked />} label="Indoor Plant" />
+          </Grid>
+          {/* Submit Button */}
+          <Grid item xs={12}>
+            
           </Grid>
         </Grid>
       </Box>
