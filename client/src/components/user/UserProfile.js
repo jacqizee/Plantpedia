@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import Spinner from '../utilities/Spinner.js'
+
+import { getPayload, getTokenFromLocalStorage, userIsOwner } from '../../helpers/auth'
 
 //mui
 import Container from '@mui/material/Container'
@@ -25,6 +28,7 @@ import Tab from '@mui/material/Tab'
 import Grid from '@mui/material/Grid'
 
 import philip from '../../images/philip.png'
+import logo from '../../images/logo.png'
 
 
 
@@ -64,6 +68,11 @@ function a11yProps(index) {
 
 const UserProfile = () => {
 
+  // Navigate
+  const navigate = useNavigate()
+
+  const payload = getPayload()
+
   const [value, setValue] = useState(0)
 
   //loading and error state
@@ -72,10 +81,16 @@ const UserProfile = () => {
 
 
   //plant arrays  
-  const [plants, setPlants] = useState([])
-  const [user, setPlant] = useState({
-    
+  const [myPlants, setMyPlants] = useState([])
+  const [favoritePlants, setFavoritePlants] = useState([])
+  const [editedPlants, setEditedPlants] = useState([])
+  const [user, setUser] = useState({
+    username: payload.username,
+    numberOfPosts: 0,
+    bio: '',
+    image: logo,
   })
+
 
 
   // useEffect(() => {
@@ -97,8 +112,41 @@ const UserProfile = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const { data } = await axios.get('/api/users')
-        setPlants(data)
+        if (!payload) {
+          navigate('/login')
+        }
+        console.log('payload is: ', payload)
+        console.log('payload.sub is: ', payload.sub)
+
+        const { data } = await axios.get(`/api/profile/${payload.sub}`, {
+          headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          },
+        })
+
+        console.log('data is: ', data)
+        console.log(('createdPlants length is: ', data.createdPlants.length))
+        console.log(('favorite plants length is: ', data.favorites.length))
+        console.log(('my edits length is: ', data.myEdits.length))
+
+        setMyPlants(data.createdPlants)
+        setFavoritePlants(data.favorites)
+        setEditedPlants(data.myEdits)
+        
+        const newUser = {
+          numberOfPosts: data.createdPlants.length,
+          bio: data.bio,
+          image: data.image,
+        }
+        setUser(
+          { 
+            ...user, 
+            numberOfPosts: data.createdPlants.length,
+            bio: data.bio,
+            image: data.image,
+          }
+        )
+
       } catch (error) {
         console.log(error)
         setErrors(true)
@@ -121,21 +169,21 @@ const UserProfile = () => {
         <Box sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', mt: 4 }}>
           {/* Profile Picture */}
           <Grid item xs={4} >
-            <Avatar alt="Philip Sopher" src={philip} sx={{ width: 96, height: 96 }} />
+            <Avatar alt={payload.username} src={logo} sx={{ width: 96, height: 96 }} />
           </Grid>
 
           {/* About Me */}
           <Grid item xs={6} sx={{ ml: 8 }} >
             <Stack spacing={0} >
               <Box sx={{ flexGrow: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex' }}>
-                <Typography variant="h6">philipsopher</Typography>
+                <Typography variant="h6">{user.username}</Typography>
                 <Button href="#">Edit</Button>
               </Box>
               <Box>
-                <Typography sx={{ mt: 0, mb: 0 }}><strong>12</strong> posts </Typography>
+                <Typography sx={{ mt: 0, mb: 0 }}><strong>{user.numberOfPosts}</strong> posts </Typography>
               </Box>
               <Box sx={{ flexGrow: 1, display: 'flex', flexWrap: 'wrap', maxWidth: '350px' }} >
-                <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}>33 yo cactus lover ...and cherry plum <em>lover</em>.</Typography>
+                <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}>{user.bio}</Typography>
               </Box>
             </Stack>
           </Grid>
@@ -169,38 +217,112 @@ const UserProfile = () => {
                   Error! Could not fetch data!
                 </Typography>
               </Container>
-              :
-              <Container maxWidth='lg' sx={{ my: 0 }}>
-                <Masonry columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
-                  {plants.map(plant => {
-                    return (
-                      <>
-                        <ImageListItem key={plant._id} >
-                          <Box as={Link} to={`/plants/${plant._id}`} >
-                            <img
-                              src={`${plant.images}`}
-                              alt={plant.name}
-                              loading='lazy'
-                            />
-                          </Box>
-                        </ImageListItem>
-                      </>
-                    )
-                  })}
-                </Masonry>
+              : myPlants.length > 0 ?
+                <Container maxWidth='lg' sx={{ my: 0 }}>
+                  <Masonry columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
+                    {myPlants.map(plant => {
+                      return (
+                        <>
+                          <ImageListItem key={plant._id} >
+                            <Box as={Link} to={`/plants/${plant._id}`} >
+                              <img
+                                src={`${plant.images}`}
+                                alt={plant.name}
+                                loading='lazy'
+                              />
+                            </Box>
+                          </ImageListItem>
+                        </>
+                      )
+                    })}
+                  </Masonry>
 
-              </Container>
+                </Container>
+                :
+                <Typography variant='p'>
+                  Click the + button to add your first plant
+                </Typography>
           }
         </TabPanel>
 
         {/* Favorite Plants */}
         <TabPanel value={value} index={1}>
-          No Favorites yet
+          {loading ?
+            <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }}>
+              <Spinner />
+            </Container>
+            : errors ?
+              <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
+                <Typography>
+                  Error! Could not fetch data!
+                </Typography>
+              </Container>
+              : favoritePlants.length > 0 ?
+                <Container maxWidth='lg' sx={{ my: 0 }}>
+                  <Masonry columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
+                    {favoritePlants.map(plant => {
+                      return (
+                        <>
+                          <ImageListItem key={plant._id} >
+                            <Box as={Link} to={`/plants/${plant._id}`} >
+                              <img
+                                src={`${plant.images}`}
+                                alt={plant.name}
+                                loading='lazy'
+                              />
+                            </Box>
+                          </ImageListItem>
+                        </>
+                      )
+                    })}
+                  </Masonry>
+
+                </Container>
+                :
+                <Typography variant='p'>
+                  Tap the ⭐️ button to add your first favorite
+                </Typography>
+          }
         </TabPanel>
 
-        {/* Comment History */}
+        {/* Edit History */}
         <TabPanel value={value} index={2}>
-          No comments yet
+          {loading ?
+            <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }}>
+              <Spinner />
+            </Container>
+            : errors ?
+              <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
+                <Typography>
+                  Error! Could not fetch data!
+                </Typography>
+              </Container>
+              : editedPlants.length > 0 ?
+                <Container maxWidth='lg' sx={{ my: 0 }}>
+                  <Masonry columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
+                    {editedPlants.map(plant => {
+                      return (
+                        <>
+                          <ImageListItem key={plant._id} >
+                            <Box as={Link} to={`/plants/${plant._id}`} >
+                              <img
+                                src={`${plant.images}`}
+                                alt={plant.name}
+                                loading='lazy'
+                              />
+                            </Box>
+                          </ImageListItem>
+                        </>
+                      )
+                    })}
+                  </Masonry>
+
+                </Container>
+                :
+                <Typography variant='p'>
+                  Plants that you edit will appear here
+                </Typography>
+          }
         </TabPanel>
 
       </Container>

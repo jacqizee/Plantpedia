@@ -18,6 +18,6 @@ export default [
     email: 'phil@email.com',
     password: 'pass',
     passwordConfirmation: 'pass',
-    bio: '33 yo cactus lover ...and cherry plum <em>lover</em>'
+    bio: '33 yo cactus lover ...and cherry plum LOVER'
   }
 ]
