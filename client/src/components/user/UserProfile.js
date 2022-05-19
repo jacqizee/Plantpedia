@@ -139,7 +139,7 @@ const UserProfile = () => {
         if (data.favorites.length > 0) {
           const favoritesArray = []
           for (let i = 0; i < data.favorites.length; i++) {
-            const plant = await axios.get(`/api/plants/${data.favorites[0]}`)
+            const plant = await axios.get(`/api/plants/${data.favorites[i]}`)
             console.log('plant value is: ', plant.data)
             favoritesArray.push(plant.data)
             console.log('favoritesArray is: ', favoritesArray)
@@ -152,7 +152,7 @@ const UserProfile = () => {
         if (data.myEdits.length > 0) {
           const editsArray = []
           for (let i = 0; i < data.myEdits.length; i++) {
-            const plant = await axios.get(`/api/plants/${data.myEdits[0]}`)
+            const plant = await axios.get(`/api/plants/${data.myEdits[i]}`)
             console.log('plant value is: ', plant.data)
             editsArray.push(plant.data)
             console.log('editsArray is: ', editsArray)
