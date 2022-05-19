@@ -73,12 +73,31 @@ const UserProfile = () => {
 
   //plant arrays  
   const [plants, setPlants] = useState([])
+  const [user, setPlant] = useState({
+    
+  })
+
+
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       const { data } = await axios.get('/api/plants')
+  //       setPlants(data)
+  //     } catch (error) {
+  //       console.log(error)
+  //       setErrors(true)
+  //     }
+  //     setLoading(false)
+  //   }
+  //   getData()
+  // }, [])
+
 
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const { data } = await axios.get('/api/plants')
+        const { data } = await axios.get('/api/users')
         setPlants(data)
       } catch (error) {
         console.log(error)
