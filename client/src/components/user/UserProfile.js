@@ -124,15 +124,44 @@ const UserProfile = () => {
           },
         })
 
+
+
         console.log('data is: ', data)
         console.log(('createdPlants length is: ', data.createdPlants.length))
         console.log(('favorite plants length is: ', data.favorites.length))
+        console.log(('favorite plants first index is: ', data.favorites[0]))
         console.log(('my edits length is: ', data.myEdits.length))
 
+        // Set My Plants
         setMyPlants(data.createdPlants)
-        setFavoritePlants(data.favorites)
-        setEditedPlants(data.myEdits)
+
+        // Search for favorite plants and set it
+        if (data.favorites.length > 0) {
+          const favoritesArray = []
+          for (let i = 0; i < data.favorites.length; i++) {
+            const plant = await axios.get(`/api/plants/${data.favorites[i]}`)
+            console.log('plant value is: ', plant.data)
+            favoritesArray.push(plant.data)
+            console.log('favoritesArray is: ', favoritesArray)
+          }
+          console.log('favorites array: ', favoritesArray)
+          setFavoritePlants(favoritesArray)
+        }
+
+        // Search for edited plants and set it
+        if (data.myEdits.length > 0) {
+          const editsArray = []
+          for (let i = 0; i < data.myEdits.length; i++) {
+            const plant = await axios.get(`/api/plants/${data.myEdits[i]}`)
+            console.log('plant value is: ', plant.data)
+            editsArray.push(plant.data)
+            console.log('editsArray is: ', editsArray)
+          }
+          console.log('edits array: ', editsArray)
+          setEditedPlants(editsArray)
+        }
         
+        //Update user image
         const newUser = {
           numberOfPosts: data.createdPlants.length,
           bio: data.bio,
@@ -169,7 +198,7 @@ const UserProfile = () => {
         <Box sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', mt: 4 }}>
           {/* Profile Picture */}
           <Grid item xs={4} >
-            <Avatar alt={payload.username} src={logo} sx={{ width: 96, height: 96 }} />
+            <Avatar alt={payload.username} src={user.image} sx={{ width: 96, height: 96 }} />
           </Grid>
 
           {/* About Me */}
@@ -200,7 +229,7 @@ const UserProfile = () => {
           >
             <Tab label="My Plants" {...a11yProps(0)} />
             <Tab label="Favorites" {...a11yProps(1)} />
-            <Tab label="Comments" {...a11yProps(2)} />
+            <Tab label="My Edits" {...a11yProps(2)} />
           </Tabs>
         </Box>
 
@@ -280,7 +309,7 @@ const UserProfile = () => {
                 </Container>
                 :
                 <Typography variant='p'>
-                  Tap the ⭐️ button to add your first favorite
+                  Tap the 🤍 button to add your first favorite
                 </Typography>
           }
         </TabPanel>

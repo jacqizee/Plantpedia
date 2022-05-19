@@ -19,6 +19,8 @@ import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Chip from '@mui/material/Chip'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 
 const PlantAdd = () => {
 
@@ -45,6 +47,22 @@ const PlantAdd = () => {
       nativeArea: [],
     },
   })
+
+  // Setting units for height/width
+  const [ unit, setUnit ] = useState('in')
+  const [ max, setMax ] = useState(50)
+  const handleUnitChange = (e) => {
+    const { height, width } = formData.characteristics.matureSize
+    setUnit(e.target.value)
+    if (e.target.value === 'in') {
+      handleNestedChange('characteristics', 'matureSize', { height: Math.ceil(height / 2.54), width: Math.ceil(width / 2.54) })
+      setMax(50)
+    } else if (e.target.value === 'cm') {
+      handleNestedChange('characteristics', 'matureSize', { height: Math.ceil(height * 2.54), width: Math.ceil(width * 2.54) })
+      setMax(130)
+    }
+    
+  }
 
   // Nested Objects and Their Keys
   const upkeep = ['watering', 'sunExposure', 'soilType']
@@ -77,6 +95,10 @@ const PlantAdd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (unit === 'cm') {
+      const { height, width } = formData.characteristics.matureSize
+      handleNestedChange('characteristics', 'matureSize', { height: Math.ceil(height / 2.54), width: Math.ceil(width / 2.54) })
+    }
     try {
       const response = await axios.post('/api/plants', formData, {
         headers: {
@@ -111,6 +133,12 @@ const PlantAdd = () => {
     'Asia',
     'Australia'
   ]
+
+  const waterTypes = ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly']
+  const sunTypes = ['Full sun', 'Partial sun', 'Shade']
+  const soilTypes = ['Loamy', 'Chalky', 'Peaty', 'Silty', 'Sandy', 'Clay']
+  const lifespanTypes = ['Perennial', 'Biennial', 'Annual']
+  const moodTypes = ['Cheerful', 'Emo', 'Mysterious', 'Classy', 'Bright']
 
   return (
     <Container>
@@ -175,10 +203,7 @@ const PlantAdd = () => {
                 label='water'
                 onChange={handleChange}
               >
-                <MenuItem value={'Daily'}>Daily</MenuItem>
-                <MenuItem value={'Weekly'}>Weekly</MenuItem>
-                <MenuItem value={'Bi-Weekly'}>Bi-Weekly</MenuItem>
-                <MenuItem value={'Monthly'}>Monthly</MenuItem>
+                {waterTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -194,9 +219,7 @@ const PlantAdd = () => {
                 label='sunExposure'
                 onChange={handleChange}
               >
-                <MenuItem value={'Full sun'}>Full Sun</MenuItem>
-                <MenuItem value={'Partial sun'}>Partial Sun</MenuItem>
-                <MenuItem value={'Shade'}>Shade</MenuItem>
+                {sunTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -212,12 +235,7 @@ const PlantAdd = () => {
                 label='soilType'
                 onChange={handleChange}
               >
-                <MenuItem value={'Loamy'}>Loamy</MenuItem>
-                <MenuItem value={'Chalky'}>Chalky</MenuItem>
-                <MenuItem value={'Peaty'}>Peaty</MenuItem>
-                <MenuItem value={'Silty'}>Silty</MenuItem>
-                <MenuItem value={'Sandy'}>Sandy</MenuItem>
-                <MenuItem value={'Clay'}>Clay</MenuItem>
+                {soilTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -233,9 +251,7 @@ const PlantAdd = () => {
                 label='lifespan'
                 onChange={handleChange}
               >
-                <MenuItem value={'Perennial'}>Perennial</MenuItem>
-                <MenuItem value={'Biennial'}>Biennial</MenuItem>
-                <MenuItem value={'Annual'}>Annual</MenuItem>
+                {lifespanTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -251,11 +267,7 @@ const PlantAdd = () => {
                 label='soilType'
                 onChange={handleChange}
               >
-                <MenuItem value={'Cheerful'}>Cheerful</MenuItem>
-                <MenuItem value={'Emo'}>Emo</MenuItem>
-                <MenuItem value={'Mysterious'}>Mysterious</MenuItem>
-                <MenuItem value={'Classy'}>Classy</MenuItem>
-                <MenuItem value={'Bright'}>Bright</MenuItem>
+                {moodTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -290,27 +302,27 @@ const PlantAdd = () => {
             </FormControl>
           </Grid>
           {/* Height */}
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={5}>
             <Typography id="height-slider" gutterBottom>
-              Height:
+              Height: {formData.characteristics.matureSize.height} {unit}
             </Typography>
             <Slider
               value={formData.characteristics.matureSize.height}
               onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'height', e.target.value)}
               valueLabelDisplay="auto"
-              name="height"
+              name='height'
               size="small"
               min={1}
-              max={50}
+              max={max}
               marks
               step={5}
               sx={{ width: .9, align: 'center' }}
             />
           </Grid>
           {/* Width */}
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={5}>
             <Typography id="width-slider" gutterBottom>
-              Width: 
+              Width: {formData.characteristics.matureSize.width} {unit}
             </Typography>
             <Slider
               value={formData.characteristics.matureSize.width}
@@ -319,11 +331,24 @@ const PlantAdd = () => {
               name='width'
               size="small"
               min={1}
-              max={50}
+              max={max}
               marks
               step={5}
               sx={{ width: .9, align: 'center' }}
             />
+          </Grid>
+          {/* Unit Toggler */}
+          <Grid item xs={12} md={2}>
+            <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+              <ToggleButtonGroup value={unit} exclusive onChange={handleUnitChange} aria-label="measurement unit">
+                <ToggleButton value="in" aria-label="inches" size="small">
+                  in
+                </ToggleButton>
+                <ToggleButton value="cm" aria-label="centimeter" size="small">
+                  cm
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Container>
           </Grid>
           {/* Native Area */}
           <Grid item xs={12}>
@@ -356,8 +381,8 @@ const PlantAdd = () => {
             </FormControl>
           </Grid>
           {/* Is Indoor? */}
-          <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
-            <FormControlLabel control={
+          <Grid item xs={12}>
+            <FormControlLabel sx={{ display: 'flex', justifyContent: 'center' }} control={
               <Checkbox value={formData.characteristics.isIndoor} onChange={(e) => handleNestedChange('characteristics', 'isIndoor', e.target.checked)} />
             } label="Can Be Indoor Plant" />
           </Grid>

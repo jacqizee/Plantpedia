@@ -18,12 +18,16 @@ export const getAllPlants = async (req, res) => {
 // plants/:id
 // get single plant
 export const getSinglePlant = async (req, res) => {
+  console.log('get single plant fires 🔥')
   const { id } = req.params
   try {
     const plant = await Plant.findById(id).populate('comments')
     if (!plant) {
+      console.log('no plant 👎')
       return res.status(404).json({ message: "Plant not found" })
     }
+    console.log('yes plant 👍🏻')
+    console.log('what is plant: ', plant)
     return res.status(200).json(plant)
   } catch (err) {
     console.log(err)
@@ -60,20 +64,31 @@ export const updatePlant = async (req, res) => {
     // if (!updatedPlant.owner.equals(verifiedUser._id)) throw new Error('Unauthorised')
 
     // Update myEdits and lastEdit
-    updatedPlant.lastEdit = verifiedUser._id
+    editPlant.lastEdit = verifiedUser._id
     if (!verifiedUser.myEdits.includes(id) && !updatedPlant.owner.equals(verifiedUser._id)) {
+      console.log('The if statement runs 🏃🏻‍♂️')
       verifiedUser.myEdits.push(id)
     }
+    
+    console.log('updated plant is: ', updatedPlant)
+    console.log('verified user is: ', verifiedUser)
 
     // Update the document
     Object.assign(updatedPlant, editPlant)
 
     // Save the document
     await updatedPlant.save()
+    await verifiedUser.save()
 
     if (!updatedPlant){
       return res.status(404).json({
         message: 'Plant not found',
+      })
+    }
+
+    if (!verifiedUser){
+      return res.status(404).json({
+        message: 'User not found',
       })
     }
     return res.status(200).json(updatedPlant)
