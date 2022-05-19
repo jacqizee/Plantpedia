@@ -51,16 +51,18 @@ const PlantEdit = () => {
   const upkeep = ['watering', 'sunExposure', 'soilType']
   const chars = ['mood', 'lifespan', 'isIndoor']
 
+  // Get existing form data from API and populate in form
   useEffect(() => {
     const getFormData = async () => {
       try {
-        const { data } = await axios.get(`/api/${plantId}`)
+        const { data } = await axios.get(`/api/plants/${plantId}`)
+        setFormData(data)
       } catch (error) {
         console.log(error)
       }
     }
     getFormData()
-  }, [])
+  }, [plantId])
 
   const handleNestedChange = (objectName, keyName, value) => {
     setFormData({ ...formData, [objectName]: {
@@ -90,12 +92,13 @@ const PlantEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/api/plants', formData, {
+      const response = await axios.put(`/api/plants/${plantId}`, formData, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
       })
       console.log(response)
+      navigate(`/plants/${plantId}`)
     } catch (error) {
       console.log(error)
     }
@@ -247,7 +250,7 @@ const PlantEdit = () => {
           </Grid>
           {/* Lifespan */}
           <Grid item xs={12} md={6}>
-            <FormControl fullWidth>
+            <FormControl required fullWidth>
               <InputLabel id="lifespan-label">Lifespan</InputLabel>
               <Select
                 labelId="lifespan-label"

@@ -223,7 +223,7 @@ const PlantAdd = () => {
           </Grid>
           {/* Lifespan */}
           <Grid item xs={12} md={6}>
-            <FormControl fullWidth>
+            <FormControl required fullWidth>
               <InputLabel id="lifespan-label">Lifespan</InputLabel>
               <Select
                 labelId="lifespan-label"
