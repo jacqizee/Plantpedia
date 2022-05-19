@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getTokenFromLocalStorage } from '../../helpers/auth.js'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 // MUI Imports
 import Container from '@mui/material/InputLabel'
@@ -21,6 +21,9 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import Chip from '@mui/material/Chip'
 
 const PlantAdd = () => {
+
+  const navigate = useNavigate()
+
   const [ formData, setFormData ] = useState({
     name: '',
     scientificName: '',
@@ -81,6 +84,7 @@ const PlantAdd = () => {
         },
       })
       console.log(response)
+      navigate(`/plants/${response.data._id}`)
     } catch (error) {
       console.log(error)
     }
@@ -355,7 +359,7 @@ const PlantAdd = () => {
           <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
             <FormControlLabel control={
               <Checkbox value={formData.characteristics.isIndoor} onChange={(e) => handleNestedChange('characteristics', 'isIndoor', e.target.checked)} />
-            } label="Indoor Plant" />
+            } label="Can Be Indoor Plant" />
           </Grid>
           {/* Submit Button */}
           <Grid item xs={12}>

@@ -23,7 +23,7 @@ export default [
   {
     name: 'Cactus',
     scientificName: 'Cactaceae',
-    images: 'https://www.thespruce.com/thmb/nBaspJ0QqNPD9SGtquy5RJkGWho=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/how-to-grow-cactus-1902954-04-69e55884693744de924906ddd41c2a81.jpg',
+    images: 'https://f.eu1.jwwb.nl/public/h/c/v/temp-eqtctkvnawfrziwiqoaw/yrr06i/ba3d3458-a817-4609-bed2-ce2495072755.jpg',
     upkeep: {
       watering: 'Monthly',
       sunExposure: 'Full sun',
@@ -65,7 +65,7 @@ export default [
   {
     name: 'Gardenia',
     scientificName: 'Gardenia jasminoides',
-    images: 'https://www.thespruce.com/thmb/TkpADOZbV-q90yCKuL_UDenRQTI=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-gardenia-indoors-1902758-hero-c96146bbee274d978322af1510eebf8c.jpg',
+    images: 'https://www.seedsoflife.com/mm5/graphics/00000001/S1GP_552x745.jpg',
     upkeep: {
       watering: 'Weekly',
       sunExposure: 'Partial sun',
@@ -86,7 +86,7 @@ export default [
   {
     name: 'Majesty Palm',
     scientificName: 'Ravenea revularis',
-    images: 'https://www.thespruce.com/thmb/fFSIGqyvNGcBEb50PW0Sv21reuE=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/KaraRileyMajestyPalm-2-74654dcf85dc4515b209bdb500b705b5.jpg',
+    images: 'https://www.thespruce.com/thmb/A433fmqw63BXMdBsXf1aQzIQfKQ=/2300x2300/smart/filters:no_upscale()/KaraRileyMajestyPalm-2-74654dcf85dc4515b209bdb500b705b5.jpg',
     upkeep: {
       watering: 'Weekly',
       sunExposure: 'Partial sun',
@@ -106,7 +106,7 @@ export default [
   {
     name: 'Venus Fly Trap',
     scientificName: 'Dionaea muscipula',
-    images: 'https://www.thespruce.com/thmb/767Peil_b2YRZvCTELZ55Pu3I28=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/venus-fly-trap-plant-profile-4688605-1-b73c65ea9627409092847039054f3848.jpg',
+    images: 'https://imagesvc.meredithcorp.io/v3/mm/image?url=https%3A%2F%2Fstatic.onecms.io%2Fwp-content%2Fuploads%2Fsites%2F37%2F2021%2F08%2F13%2Fvenus-flytrap-houseplant.jpg',
     upkeep: {
       watering: 'Weekly',
       sunExposure: 'Full sun',
@@ -126,7 +126,7 @@ export default [
   {
     name: 'Zebra Plant',
     scientificName: 'Aphelandra squarrosa',
-    images: 'https://www.thespruce.com/thmb/TkpADOZbV-q90yCKuL_UDenRQTI=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-gardenia-indoors-1902758-hero-c96146bbee274d978322af1510eebf8c.jpg',
+    images: 'https://cdn.shopify.com/s/files/1/0260/3037/4957/products/medium-plant-zebra-basket_1080x.jpg?v=1646330183',
     upkeep: {
       watering: 'Weekly',
       sunExposure: 'Partial sun',
@@ -147,7 +147,7 @@ export default [
   {
     name: 'Red Spider Lily',
     scientificName: 'Lycoris radiata',
-    images: 'https://www.thespruce.com/thmb/TkpADOZbV-q90yCKuL_UDenRQTI=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-gardenia-indoors-1902758-hero-c96146bbee274d978322af1510eebf8c.jpg',
+    images: 'https://www.thespruce.com/thmb/KRcoI58xaU2QLsUIohNE_wgcBS0=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/growing-red-spider-lily-5093664-hero-6e311153f91e4f32b043c76b4f510469.jpg',
     upkeep: {
       watering: 'Weekly',
       sunExposure: 'Full sun',
@@ -168,7 +168,7 @@ export default [
   {
     name: 'Dwarf Iris',
     scientificName: 'Iris reticulata',
-    images: 'https://www.thespruce.com/thmb/TkpADOZbV-q90yCKuL_UDenRQTI=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-gardenia-indoors-1902758-hero-c96146bbee274d978322af1510eebf8c.jpg',
+    images: 'https://h2.commercev3.net/cdn.brecks.com/images/500/78395.jpg',
     upkeep: {
       watering: 'Weekly',
       sunExposure: 'Full sun',
@@ -230,7 +230,7 @@ export default [
   {
     name: 'Rose',
     scientificName: 'Rosa spp.',
-    images: 'https://www.thespruce.com/thmb/LY21QoSLIekYLMCsWK7QO_qzIFo=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-and-care-for-rosemary-plants-1403406-light-4dd44d0caadc43599697261dd6351d57.jpg',
+    images: 'https://www.saferbrand.com/media/Articles/Safer-Brand/What-Type-of-Rose-Should-I-Plant.jpg',
     upkeep: {
       watering: 'Bi-Weekly',
       sunExposure: 'Full sun',
