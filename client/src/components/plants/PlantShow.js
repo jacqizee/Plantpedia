@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
-import { getPayload, getTokenFromLocalStorage, userIsOwner } from '../../helpers/auth'
+import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 
 //mui
 import Container from '@mui/material/Container'
@@ -22,7 +22,16 @@ import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import Chip from '@mui/material/Chip'
-
+//icon images
+import wateringCan from '../../images/icons/watering-can.png'
+import sun from '../../images/icons/sun.png'
+import soil from '../../images/icons/soil.png'
+import flower from '../../images/icons/flower.png'
+import globe from '../../images/icons/globe.png'
+import calendar from '../../images/icons/calendar.png'
+import emotions from '../../images/icons/emotions.png'
+import ruler from '../../images/icons/ruler.png'
+import width from '../../images/icons/width.png'
 
 const PlantShow = () => {
   const navigate = useNavigate()
@@ -31,6 +40,9 @@ const PlantShow = () => {
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
   const [plantComments, setPlantComments] = useState(false)
+  const [filteredPlantComments, setFilteredPlantComments] = useState(false)
+  const [plantCommentsLength, setPlantCommentsLength] = useState()
+  const [commentDropdown, setCommentDropdown] = useState('newest')
 
   const [show, setShow] = useState(false)
 
@@ -40,13 +52,14 @@ const PlantShow = () => {
     username: '',
   })
 
+  //get plant data
   useEffect(() => {
     const getPlant = async () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant(data)
         setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
-
+        setPlantCommentsLength(data.comments.length)
       } catch (error) {
         console.log(error)
         // setErrors(true)
@@ -55,6 +68,7 @@ const PlantShow = () => {
     getPlant()
   }, [id])
 
+  //check if user has already favorited the plant
   const plantIsFavorite = (singlePlant) => {
     const payload = getPayload()
     if (!payload) return
@@ -62,7 +76,7 @@ const PlantShow = () => {
     return singlePlant.favorites.includes(payload.sub)
   }
 
-
+  //update state when user clicks fav icon
   useEffect(() => {
     const isFavorite = (singlePlant) => {
       setFavorite(plantIsFavorite(singlePlant))
@@ -70,6 +84,7 @@ const PlantShow = () => {
     isFavorite(plant)
   }, [plant])
 
+  //send request to favorites
   const toggleFavorite = async (plant) => {
     try {
       await axios.put(`/api/plants/${plant._id}/favorite`, null, {
@@ -84,15 +99,36 @@ const PlantShow = () => {
     }
   }
 
+  //navigates user to edit page
   const handleEdit = () => {
     navigate(`/plants/${plant._id}/edit`)
   }
 
+  const handleDropdown = (e) => {
+    setCommentDropdown(e.target.value)
+  }
+
+  const filterComments = () => {
+    const sortedArray = [...plantComments]
+    if (commentDropdown === 'newest') {
+      setFilteredPlantComments(sortedArray.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
+    } else if (commentDropdown === 'oldest') {
+      setFilteredPlantComments(sortedArray.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
+    }
+  }
+
+  useEffect(() => {
+    if (!plant) return
+    filterComments()
+  }, [commentDropdown])
+
+  //input for comment data
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
 
+  //submit comment
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.text.length) return
@@ -104,19 +140,28 @@ const PlantShow = () => {
         },
       })
       const { data } = await axios.get(`/api/plants/${id}`)
-      setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
+      setFilteredPlantComments(data.comments)
+      filterComments()
+      setPlantCommentsLength(data.comments.length)
       setFormData({
         text: '',
         owner: '',
       })
+      toggleShowOff()
     } catch (err) {
       console.log(err)
     }
   }
 
+  //unfocus comment section after comment is sent
+  const shouldBlur = (e) => {
+    if ((e.keyCode === 13)) {
+      e.target.blur()
+    }
+  }
 
 
-
+  //show/hide comment buttons
   const toggleShowOn = () => {
     setShow(true)
   }
@@ -127,7 +172,7 @@ const PlantShow = () => {
       owner: '',
     })
   }
-
+  //disable comment button untill user has typed message
   const isTextDisabled = formData.text.length === 0
 
 
@@ -162,29 +207,132 @@ const PlantShow = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <Box sx={{ p: 2, border: '1px solid grey', borderRadius: 1 }}>
                   <Typography>
-                    Name
-                  </Typography>
-                  <Typography>
-                    Description
+                    {plant.scientificName}
                   </Typography>
                 </Box>
-                <Box mt={2} sx={{ p: 2, border: '1px solid grey', borderRadius: 1, flexGrow: 1 }}>
-                  hello
+                <Box mt={2} sx={{
+                  p: 2,
+                  border: '1px solid grey',
+                  borderRadius: 1,
+                  flexGrow: 1,
+                  display: 'flex',
+                }}>
+                  <Box width='50%'>
+                    <Typography>
+                      Upkeep
+                    </Typography>
+                    <Box >
+                      <Chip
+                        label={plant.upkeep.watering}
+                        icon={<Box as='img' src={wateringCan} sx={{ width: '24px' }} />}
+                        variant="filled"
+                        sx={{ width: '120px', mb: 1 }}
+                      />
+                      <Chip
+                        label={plant.upkeep.sunExposure}
+                        icon={<Box as='img' src={sun} sx={{ width: '24px' }} />}
+                        variant="filled"
+                        sx={{ width: '120px', mb: 1 }}
+                      />
+                      <Chip
+                        label={plant.upkeep.soilType}
+                        icon={<Box as='img' src={soil} sx={{ width: '24px' }} />}
+                        variant="filled"
+                        sx={{ width: '120px', mb: 1 }}
+                      />
+                    </Box>
+                    <Box>
+                      Flower Colour
+                      <Box>
+                        {plant.characteristics.flowerColor.map((color, i) => {
+                          return (
+                            <Chip
+                              key={i}
+                              label={color}
+                              icon={<Box as='img' src={flower} sx={{ width: '24px' }} />}
+                              variant="outlined"
+                              sx={{ width: '120px', mb: 1, mr: 1, bgcolor: [color], borderColor: 'rgba(0,0,0,0.15)' }}
+                            />
+                          )
+                        })}
+                      </Box>
+                    </Box>
+
+
+                  </Box>
+                  <Box width='50%'>
+                    <Typography>
+                      Native to
+                    </Typography>
+                    {plant.characteristics.nativeArea.map((area, i) => {
+                      return (
+                        <Chip
+                          key={i}
+                          label={area}
+                          icon={<Box as='img' src={globe} sx={{ width: '24px' }} />}
+                          variant="filled"
+                          sx={{ mb: 1, mr: 1 }}
+                        />
+                      )
+                    })}
+                    <Typography>
+                      Lifecycle
+                    </Typography>
+                    <Chip
+                      label={plant.characteristics.lifespan}
+                      icon={<Box as='img' src={calendar} sx={{ width: '24px' }} />}
+                      variant="filled"
+                      sx={{ mb: 1, mr: 1 }}
+                    />
+                    <Typography>
+                      Mood
+                    </Typography>
+                    <Chip
+                      label={plant.characteristics.mood}
+                      icon={<Box as='img' src={emotions} sx={{ width: '24px' }} />}
+                      variant="filled"
+                      sx={{ mb: 1, mr: 1 }}
+                    />
+                    <Box display='flex'>
+                      <Box>
+                        <Typography >
+                          Height
+                        </Typography>
+                        <Chip
+                          label={plant.characteristics.matureSize.height}
+                          icon={<Box as='img' src={ruler} sx={{ width: '24px' }} />}
+                          variant="filled"
+                          sx={{ mb: 1, mr: 1 }}
+                        />
+                      </Box>
+                      <Box>
+                        <Typography >
+                          Width
+                        </Typography>
+                        <Chip
+                          label={plant.characteristics.matureSize.width}
+                          icon={<Box as='img' src={width} sx={{ width: '24px' }} />}
+                          variant="filled"
+                          sx={{ mb: 1, mr: 1 }}
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
                 </Box>
               </Box>
-              <Chip
+              {userIsAuthenticated() ? <Chip
                 label="Edit"
                 onClick={handleEdit}
                 icon={<EditRoundedIcon sx={{ width: 15 }} />}
                 variant="outlined"
                 sx={{ float: 'right', mt: 1 }}
-              />
+              /> : null}
             </Grid>
           </Grid>
 
           {/* comment info */}
           <Box display='flex' mb={3} alignItems='flex-end'>
-            <Typography> {plant.comments.length} comments</Typography>
+            <Typography> {plantCommentsLength} comments</Typography>
 
             {/* comment sort select */}
             <Box sx={{ minWidth: 120, mx: 3 }} >
@@ -193,69 +341,69 @@ const PlantShow = () => {
                 <Select
                   labelId="sort-comments"
                   id="sort-comments"
-                  value=''
+                  value={commentDropdown}
                   label="sort"
+                  onChange={handleDropdown}
                   sx={{ p: 'none' }}
                 >
-                  <MenuItem value='Newest' >Newest</MenuItem>
-                  <MenuItem value='Oldest'>Oldest</MenuItem>
-                  <MenuItem value='Popular'>Popular</MenuItem>
+                  <MenuItem value='newest' >Newest</MenuItem>
+                  <MenuItem value='oldest'>Oldest</MenuItem>
                 </Select>
               </FormControl>
             </Box>
           </Box>
 
           {/* add commment */}
-          <Stack direction='row' spacing={2}>
-            <Avatar sx={{ width: 24, height: 24 }} alt="" src="" />
-            <Box width='100%' as='form' onSubmit={handleSubmit}>
-              <TextField
-                name='text'
-                value={formData.text}
-                size='small'
-                variant='standard'
-                fullWidth
-                placeholder='Add comment'
-                autoComplete='off'
-                onChange={handleInput}
-                onFocus={toggleShowOn} />
-              {show ?
-                <>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ mt: 3, float: 'right', display: show }}
-                    disabled={isTextDisabled}
-                  >
-                    Add comment
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ mr: 2, mt: 3, float: 'right', display: show }}
-                    onClick={toggleShowOff}
-                  >
-                    Cancel
-                  </Button>
-                </>
-                : null}
+          {userIsAuthenticated() ?
+            <Stack direction='row' spacing={2}>
+              <Avatar sx={{ width: 24, height: 24 }} alt="" src="" />
+              <Box width='100%' as='form' onSubmit={handleSubmit}>
+                <TextField
+                  name='text'
+                  value={formData.text}
+                  size='small'
+                  variant='standard'
+                  fullWidth
+                  placeholder='Add comment'
+                  autoComplete='off'
+                  onChange={handleInput}
+                  onKeyUp={shouldBlur}
+                  onFocus={toggleShowOn} />
+                {show ?
+                  <>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{ mt: 3, float: 'right', display: show }}
+                      disabled={isTextDisabled}
+                    >
+                      Add comment
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{ mr: 2, mt: 3, float: 'right', display: show }}
+                      onClick={toggleShowOff}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                  : null}
 
-            </Box>
-          </Stack>
+              </Box>
+            </Stack> : null}
 
           {/* comment section */}
           {plantComments.length ?
-            plantComments.map(comment => {
+            (filteredPlantComments ? filteredPlantComments : plantComments).map(comment => {
               const { username, _id, text, createdAt } = comment
               const date = new Date(createdAt)
-              console.log(comment)
-              console.log(username)
               return (
                 <Stack key={_id} direction='row' spacing={2} my={3}>
                   <Avatar sx={{ width: 24, height: 24 }} />
                   <Box >
-                    <Typography sx={{ fontSize: 14 }}>
-                      {username}
+                    <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
+                      {username.charAt(0).toUpperCase() + username.slice(1)}
                       <Typography as='span' sx={{
                         ml: 1,
                         fontSize: 10,
