@@ -30,6 +30,9 @@ const PageNavbar  = () => {
   // Navigate
   const navigate = useNavigate()
 
+  // Payload
+  const payload = getPayload()
+
   const [anchorElNav, setAnchorElNav] = useState(null)
   const [anchorElUser, setAnchorElUser] = useState(null)
 
@@ -45,7 +48,6 @@ const PageNavbar  = () => {
     } else if (pageName === 'profile') {
       handleCloseUserMenu()
 
-      const payload = getPayload()
       navigate(`/${pageName}/${payload.username}`)
     } else if (pageName === 'logout') {
       window.localStorage.removeItem('plantpedia')
@@ -95,7 +97,7 @@ const PageNavbar  = () => {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Philip Sopher" src={philip} />
+                    <Avatar alt={payload.username} src={payload.profilePicture} />
                   </IconButton>
                 </Tooltip>
                 <Menu

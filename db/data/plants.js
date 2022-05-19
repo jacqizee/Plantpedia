@@ -2,7 +2,7 @@ export default [
   {
     name: 'Cherry Plum',
     scientificName: 'Prunus cerasifera',
-    images: 'https://www.thespruce.com/thmb/IDgU_vXQok2Fxor-NN4ZeM-ISQQ=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/purple-leaf-plum-growing-tips-3269344-06-01e5062c07c3454288035906fb88e8bb.jpg',
+    images: 'https://www.thespruce.com/thmb/2Y3lqOTlLt9Xp7ktbKQ_-vGFjpg=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/purple-leaf-plum-growing-tips-3269344-02-d5ce69e0f28d41a2b5d05bfb9a6e119b.jpg',
     watering: 'Weekly',
     sunExposure: 'Full sun',
     soilType: 'Loamy',
@@ -90,7 +90,7 @@ export default [
   {
     name: 'Zebra Plant',
     scientificName: 'Aphelandra squarrosa',
-    images: 'https://www.thespruce.com/thmb/TkpADOZbV-q90yCKuL_UDenRQTI=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-gardenia-indoors-1902758-hero-c96146bbee274d978322af1510eebf8c.jpg',
+    images: 'https://www.thespruce.com/thmb/4k-68-xIFcSEXokojjKS_LVJoBo=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/kararileyzebra-1-b6d6d94f553a481c89711cf56883ae59.jpg',
     watering: 'Weekly',
     sunExposure: 'Partial sun',
     soilType: 'Peaty',
@@ -105,7 +105,7 @@ export default [
   {
     name: 'Red Spider Lily',
     scientificName: 'Lycoris radiata',
-    images: 'https://www.thespruce.com/thmb/TkpADOZbV-q90yCKuL_UDenRQTI=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-gardenia-indoors-1902758-hero-c96146bbee274d978322af1510eebf8c.jpg',
+    images: 'https://www.thespruce.com/thmb/KRcoI58xaU2QLsUIohNE_wgcBS0=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/growing-red-spider-lily-5093664-hero-6e311153f91e4f32b043c76b4f510469.jpg',
     watering: 'Weekly',
     sunExposure: 'Full sun',
     soilType: 'Sandy',
@@ -120,7 +120,7 @@ export default [
   {
     name: 'Dwarf Iris',
     scientificName: 'Iris reticulata',
-    images: 'https://www.thespruce.com/thmb/TkpADOZbV-q90yCKuL_UDenRQTI=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-gardenia-indoors-1902758-hero-c96146bbee274d978322af1510eebf8c.jpg',
+    images: 'https://h2.commercev3.net/cdn.brecks.com/images/500/78395.jpg',
     watering: 'Weekly',
     sunExposure: 'Full sun',
     soilType: 'Loamy',
@@ -164,7 +164,7 @@ export default [
   {
     name: 'Rose',
     scientificName: 'Rosa spp.',
-    images: 'https://www.thespruce.com/thmb/LY21QoSLIekYLMCsWK7QO_qzIFo=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-and-care-for-rosemary-plants-1403406-light-4dd44d0caadc43599697261dd6351d57.jpg',
+    images: 'https://www.thespruce.com/thmb/YORe6E30Qzex7j8w-T21bQTgQ3Y=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/formula-for-growing-rose-bushes-2132676-hero-bab5cf61ac534988828827d83c59d6f3.jpeg',
     watering: 'Bi-Weekly',
     sunExposure: 'Full sun',
     soilType: 'Loamy',
