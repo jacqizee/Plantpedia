@@ -37,6 +37,7 @@ const PlantShow = () => {
   const [formData, setFormData] = useState({
     text: '',
     owner: '',
+    username: '',
   })
 
   useEffect(() => {
@@ -95,7 +96,7 @@ const PlantShow = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.text.length) return
-    setFormData({ ...formData, owner: getPayload().sub })
+    setFormData({ ...formData, owner: getPayload().sub, username: getPayload().username })
     try {
       await axios.post(`/api/plants/${plant._id}/comments`, formData, {
         headers: {
@@ -245,14 +246,16 @@ const PlantShow = () => {
           {/* comment section */}
           {plantComments.length ?
             plantComments.map(comment => {
-              const { owner, _id, text, createdAt } = comment
+              const { username, _id, text, createdAt } = comment
               const date = new Date(createdAt)
+              console.log(comment)
+              console.log(username)
               return (
                 <Stack key={_id} direction='row' spacing={2} my={3}>
                   <Avatar sx={{ width: 24, height: 24 }} />
                   <Box >
                     <Typography sx={{ fontSize: 14 }}>
-                      {owner}
+                      {username}
                       <Typography as='span' sx={{
                         ml: 1,
                         fontSize: 10,
