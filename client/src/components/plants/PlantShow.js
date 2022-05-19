@@ -41,6 +41,7 @@ const PlantShow = () => {
   const [favorite, setFavorite] = useState(false)
   const [plantComments, setPlantComments] = useState(false)
   const [plantCommentsLength, setPlantCommentsLength] = useState()
+  const [commentDropdown, setCommentDropdown] = useState('newest')
 
   const [show, setShow] = useState(false)
 
@@ -50,12 +51,13 @@ const PlantShow = () => {
     username: '',
   })
 
+  //get plant data
   useEffect(() => {
     const getPlant = async () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant(data)
-        setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
+        setPlantComments(data.comments)
         setPlantCommentsLength(data.comments.length)
       } catch (error) {
         console.log(error)
@@ -65,6 +67,7 @@ const PlantShow = () => {
     getPlant()
   }, [id])
 
+  //check if user has already favorited the plant
   const plantIsFavorite = (singlePlant) => {
     const payload = getPayload()
     if (!payload) return
@@ -72,7 +75,7 @@ const PlantShow = () => {
     return singlePlant.favorites.includes(payload.sub)
   }
 
-
+  //update state when user clicks fav icon
   useEffect(() => {
     const isFavorite = (singlePlant) => {
       setFavorite(plantIsFavorite(singlePlant))
@@ -80,6 +83,7 @@ const PlantShow = () => {
     isFavorite(plant)
   }, [plant])
 
+  //send request to favorites
   const toggleFavorite = async (plant) => {
     try {
       await axios.put(`/api/plants/${plant._id}/favorite`, null, {
@@ -94,15 +98,32 @@ const PlantShow = () => {
     }
   }
 
+  //navigates user to edit page
   const handleEdit = () => {
     navigate(`/plants/${plant._id}/edit`)
   }
 
+  const handleDropdown = (e) => {
+    setCommentDropdown(e.target.value)
+    filterComments()
+  }
+
+  const filterComments = () => {
+    const sortedArray = [...plantComments]
+    if (commentDropdown === 'newest') {
+      setPlantComments(sortedArray.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
+    } else if (commentDropdown === 'oldest') {
+      setPlantComments(sortedArray.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
+    }
+  }
+
+  //input for comment data
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
 
+  //submit comment
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.text.length) return
@@ -114,7 +135,8 @@ const PlantShow = () => {
         },
       })
       const { data } = await axios.get(`/api/plants/${id}`)
-      setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
+      setPlantComments(data.comments)
+      filterComments()
       setPlantCommentsLength(data.comments.length)
       setFormData({
         text: '',
@@ -126,15 +148,15 @@ const PlantShow = () => {
     }
   }
 
+  //unfocus comment section after comment is sent
   const shouldBlur = (e) => {
     if ((e.keyCode === 13)) {
       e.target.blur()
     }
-
   }
 
 
-
+  //show/hide comment buttons
   const toggleShowOn = () => {
     setShow(true)
   }
@@ -145,7 +167,7 @@ const PlantShow = () => {
       owner: '',
     })
   }
-
+  //disable comment button untill user has typed message
   const isTextDisabled = formData.text.length === 0
 
 
@@ -193,7 +215,7 @@ const PlantShow = () => {
                   <Box width='50%'>
                     <Typography>
                       Upkeep
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Box >
                         <Chip
                           label={plant.upkeep.watering}
                           icon={<Box as='img' src={wateringCan} sx={{ width: '24px' }} />}
@@ -313,13 +335,13 @@ const PlantShow = () => {
                 <Select
                   labelId="sort-comments"
                   id="sort-comments"
-                  value=''
+                  value={commentDropdown}
                   label="sort"
+                  onChange={handleDropdown}
                   sx={{ p: 'none' }}
                 >
                   <MenuItem value='Newest' >Newest</MenuItem>
-                  <MenuItem value='Oldest'>Oldest</MenuItem>
-                  <MenuItem value='Popular'>Popular</MenuItem>
+                  <MenuItem value='Oldest'>Oldest</MenuItem>                
                 </Select>
               </FormControl>
             </Box>
