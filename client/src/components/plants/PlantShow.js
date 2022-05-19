@@ -22,6 +22,9 @@ import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import Chip from '@mui/material/Chip'
+import wateringCan from '../../images/icons/watering-can.png'
+import sun from '../../images/icons/sun.png'
+import soil from '../../images/icons/soil.png'
 
 
 const PlantShow = () => {
@@ -109,11 +112,18 @@ const PlantShow = () => {
         text: '',
         owner: '',
       })
+      toggleShowOff()
     } catch (err) {
       console.log(err)
     }
   }
 
+  const shouldBlur = (e) => {
+    if ((e.keyCode === 13)) {
+      e.target.blur()
+    }
+
+  }
 
 
 
@@ -162,14 +172,55 @@ const PlantShow = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <Box sx={{ p: 2, border: '1px solid grey', borderRadius: 1 }}>
                   <Typography>
-                    Name
-                  </Typography>
-                  <Typography>
                     Description
                   </Typography>
                 </Box>
-                <Box mt={2} sx={{ p: 2, border: '1px solid grey', borderRadius: 1, flexGrow: 1 }}>
-                  hello
+                <Box mt={2} sx={{
+                  p: 2,
+                  border: '1px solid grey',
+                  borderRadius: 1,
+                  flexGrow: 1,
+                  display: 'flex',
+                }}>
+                  <Box width='50%'>
+                    <Typography mb={3} >
+                      Scientific Name:
+                      <br />
+                      {plant.scientificName}
+                    </Typography>
+                    <Typography>
+                      Upkeep
+                      <br />
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Chip
+                          label={plant.upkeep.watering}
+                          icon={<Box as='img' src={wateringCan} sx={{ width: '24px' }} />}
+                          variant="outlined"
+                          sx={{ width: '120px', mb: 1 }}
+                        />
+                        <Chip
+                          label={plant.upkeep.sunExposure}
+                          icon={<Box as='img' src={sun} sx={{ width: '24px' }} />}
+                          variant="outlined"
+                          sx={{ width: '120px',  mb: 1 }}
+                        />
+                        <Chip
+                          label={plant.upkeep.soilType}
+                          icon={<Box as='img' src={soil} sx={{ width: '24px' }} />}
+                          variant="outlined"
+                          sx={{ width: '120px',  mb: 1 }}
+                        />
+                      </Box>
+                      <Box>
+                        Flower Colour
+                       
+                      </Box>
+
+                    </Typography>
+                  </Box>
+                  <Box width='50%'>
+                    2
+                  </Box>
                 </Box>
               </Box>
               <Chip
@@ -218,6 +269,7 @@ const PlantShow = () => {
                 placeholder='Add comment'
                 autoComplete='off'
                 onChange={handleInput}
+                onKeyUp={shouldBlur}
                 onFocus={toggleShowOn} />
               {show ?
                 <>
@@ -248,14 +300,12 @@ const PlantShow = () => {
             plantComments.map(comment => {
               const { username, _id, text, createdAt } = comment
               const date = new Date(createdAt)
-              console.log(comment)
-              console.log(username)
               return (
                 <Stack key={_id} direction='row' spacing={2} my={3}>
                   <Avatar sx={{ width: 24, height: 24 }} />
                   <Box >
-                    <Typography sx={{ fontSize: 14 }}>
-                      {username}
+                    <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
+                      {username.charAt(0).toUpperCase() + username.slice(1)}
                       <Typography as='span' sx={{
                         ml: 1,
                         fontSize: 10,
