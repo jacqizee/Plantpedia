@@ -27,9 +27,6 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body
    
     const userToLogin = await User.findOne({ email: email })
-    
-
-   
     if (!userToLogin || !userToLogin.validatePassword(password)){
       throw new Error()
     }

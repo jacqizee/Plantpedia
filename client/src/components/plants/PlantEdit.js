@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { getTokenFromLocalStorage } from '../../helpers/auth.js'
+import { getPayload, getTokenFromLocalStorage, userIsOwner } from '../../helpers/auth.js'
 import { useNavigate, useParams } from 'react-router-dom'
 
 // MUI Imports
@@ -25,6 +25,7 @@ const PlantEdit = () => {
   const { plantId } = useParams()
   const navigate = useNavigate()
 
+  const [ formLoaded, setFormLoaded ] = useState(false)
   const [ formData, setFormData ] = useState({
     name: '',
     scientificName: '',
@@ -57,12 +58,19 @@ const PlantEdit = () => {
       try {
         const { data } = await axios.get(`/api/plants/${plantId}`)
         setFormData(data)
+        setFormLoaded(true)
       } catch (error) {
         console.log(error)
       }
     }
     getFormData()
   }, [plantId])
+
+  useEffect(() => {
+    if (formLoaded) {
+      !userIsOwner(formData) && navigate(`/plants/${plantId}`)
+    }
+  }, [formData, formLoaded, plantId])
 
   const handleNestedChange = (objectName, keyName, value) => {
     setFormData({ ...formData, [objectName]: {
@@ -106,7 +114,7 @@ const PlantEdit = () => {
 
   const handleDelete = async (e) => {
     try {
-      const response = await axios.delete(`/api/plants/${plantId}/`, {
+      await axios.delete(`/api/plants/${plantId}/`, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
