@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getTokenFromLocalStorage } from '../../helpers/auth.js'
-import { Link } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 // MUI Imports
 import Container from '@mui/material/InputLabel'
@@ -14,13 +14,17 @@ import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
-import Autocomplete from '@mui/material/Autocomplete'
 import Slider from '@mui/material/Slider'
 import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
-
+import OutlinedInput from '@mui/material/OutlinedInput'
+import Chip from '@mui/material/Chip'
 
 const PlantEdit = () => {
+
+  const { plantId } = useParams()
+  const navigate = useNavigate()
+
   const [ formData, setFormData ] = useState({
     name: '',
     scientificName: '',
@@ -36,8 +40,8 @@ const PlantEdit = () => {
       lifespan: '',
       isIndoor: false,
       matureSize: {
-        height: 0,
-        width: 0,
+        height: 25,
+        width: 25,
       },
       nativeArea: [],
     },
@@ -47,6 +51,19 @@ const PlantEdit = () => {
   const upkeep = ['watering', 'sunExposure', 'soilType']
   const chars = ['mood', 'lifespan', 'isIndoor']
 
+  // Get existing form data from API and populate in form
+  useEffect(() => {
+    const getFormData = async () => {
+      try {
+        const { data } = await axios.get(`/api/plants/${plantId}`)
+        setFormData(data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getFormData()
+  }, [plantId])
+
   const handleNestedChange = (objectName, keyName, value) => {
     setFormData({ ...formData, [objectName]: {
       ...formData[objectName],
@@ -54,9 +71,11 @@ const PlantEdit = () => {
     } })
   }
 
-  const handleMultiChange = (selected, objectName, keyName) => {
-    console.log(selected.target, objectName, keyName)
-    console.log(selected)
+  const handleNestedNestedChange = (objectName, nestedObjectName, keyName, value) => {
+    setFormData({ ...formData, [objectName]: {
+      ...formData[objectName],
+      [nestedObjectName]: { ...formData[objectName][nestedObjectName], [keyName]: value },
+    } })
   }
 
   const handleChange = (e) => {
@@ -73,12 +92,26 @@ const PlantEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/api/plants', formData, {
+      const response = await axios.put(`/api/plants/${plantId}`, formData, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
       })
       console.log(response)
+      navigate(`/plants/${plantId}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleDelete = async (e) => {
+    try {
+      const response = await axios.delete(`/api/plants/${plantId}/`, {
+        headers: {
+          Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        },
+      })
+      navigate('/')
     } catch (error) {
       console.log(error)
     }
@@ -102,7 +135,8 @@ const PlantEdit = () => {
     'Europe',
     'Middle East',
     'Africa',
-    'Asia'
+    'Asia',
+    'Australia'
   ]
 
   return (
@@ -115,7 +149,7 @@ const PlantEdit = () => {
           alignItems: 'center' }}
         onSubmit={handleSubmit}
       >
-        <Typography variant='h3'>Add a Plant</Typography>
+        <Typography variant='h3'>Edit a Plant</Typography>
         <Grid
           container
           sx={{ width: .5 }}
@@ -214,18 +248,23 @@ const PlantEdit = () => {
               </Select>
             </FormControl>
           </Grid>
-          {/* Flower Colors */}
+          {/* Lifespan */}
           <Grid item xs={12} md={6}>
-            <Autocomplete
-              disablePortal
-              id='colors'
-              name='flowerColor'
-              options={colors}
-              fullWidth
-              multiple
-              onChange={(selected) => handleMultiChange(selected, 'characteristics', 'flowerColor')}
-              renderInput={(params) => <TextField {...params} label="Flower Color" />}
-            />
+            <FormControl required fullWidth>
+              <InputLabel id="lifespan-label">Lifespan</InputLabel>
+              <Select
+                labelId="lifespan-label"
+                id="lifespan"
+                name='lifespan'
+                value={formData.characteristics.lifespan}
+                label='lifespan'
+                onChange={handleChange}
+              >
+                <MenuItem value={'Perennial'}>Perennial</MenuItem>
+                <MenuItem value={'Biennial'}>Biennial</MenuItem>
+                <MenuItem value={'Annual'}>Annual</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           {/* Mood */}
           <Grid item xs={12} md={6}>
@@ -247,21 +286,33 @@ const PlantEdit = () => {
               </Select>
             </FormControl>
           </Grid>
-          {/* Lifespan */}
+          {/* Flower Colors */}
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="lifespan-label">Lifespan</InputLabel>
+              <InputLabel id="flowerColor">Flower Color</InputLabel>
               <Select
-                labelId="lifespan-label"
-                id="lifespan"
-                name='lifespan'
-                value={formData.characteristics.lifespan}
-                label='lifespan'
-                onChange={handleChange}
+                labelId="flowerColor"
+                id="flowerColor"
+                multiple
+                value={formData.characteristics.flowerColor}
+                onChange={(e) => handleNestedChange('characteristics', 'flowerColor', e.target.value)}
+                input={<OutlinedInput id="color" label="Color" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
               >
-                <MenuItem value={'Perennial'}>Perennial</MenuItem>
-                <MenuItem value={'Biennial'}>Biennial</MenuItem>
-                <MenuItem value={'Annual'}>Annual</MenuItem>
+                {colors.map((color) => (
+                  <MenuItem
+                    key={color}
+                    value={color}
+                  >
+                    {color}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -271,13 +322,15 @@ const PlantEdit = () => {
               Height:
             </Typography>
             <Slider
-              // value={value}
-              onChange={handleChange}
+              value={formData.characteristics.matureSize.height}
+              onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'height', e.target.value)}
               valueLabelDisplay="auto"
               name="height"
               size="small"
               min={1}
-              max={100}
+              max={50}
+              marks
+              step={5}
               sx={{ width: .9, align: 'center' }}
             />
           </Grid>
@@ -287,36 +340,59 @@ const PlantEdit = () => {
               Width: 
             </Typography>
             <Slider
-              // value={value}
-              onChange={handleChange}
+              value={formData.characteristics.matureSize.width}
+              onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'width', e.target.value)}
               valueLabelDisplay="auto"
               name='width'
               size="small"
               min={1}
-              max={100}
+              max={50}
+              marks
+              step={5}
               sx={{ width: .9, align: 'center' }}
             />
           </Grid>
           {/* Native Area */}
-          <Grid item xs={12} md={9}>
-            <Autocomplete
-              disablePortal
-              id='nativeArea'
-              options={regions}
-              fullWidth
-              multiple
-              onChange={(selected) => handleMultiChange(selected, 'characteristics', 'nativeArea')}
-              renderInput={(params) => <TextField {...params} label="Native Area" />}
-            />
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="nativeArea">Native Area</InputLabel>
+              <Select
+                labelId="nativeArea"
+                id="nativeArea"
+                multiple
+                value={formData.characteristics.nativeArea}
+                onChange={(e) => handleNestedChange('characteristics', 'nativeArea', e.target.value)}
+                input={<OutlinedInput id="regions" label="Regions" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+              >
+                {regions.map((region) => (
+                  <MenuItem
+                    key={region}
+                    value={region}
+                  >
+                    {region}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
           {/* Is Indoor? */}
-          <Grid item xs={12} md={3} sx={{ display: 'flex', alignItems: 'center' }}>
-            <FormControlLabel control={<Checkbox defaultChecked />} label="Indoor Plant" />
+          <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
+            <FormControlLabel control={
+              <Checkbox value={formData.characteristics.isIndoor} onChange={(e) => handleNestedChange('characteristics', 'isIndoor', e.target.checked)} />
+            } label="Indoor Plant" />
           </Grid>
           {/* Submit Button */}
           <Grid item xs={12}>
             <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Button variant="contained" type="submit" size='large' sx={{ width: .70 }}>Submit</Button>
+              <Button variant="contained" type="submit" size='large' sx={{ width: .70, mx: 2 }}>Submit</Button>
+              <Button variant="contained" onClick={handleDelete} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button>
             </Container>
           </Grid>
         </Grid>
