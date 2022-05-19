@@ -40,6 +40,7 @@ const PlantShow = () => {
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
   const [plantComments, setPlantComments] = useState(false)
+  const [filteredPlantComments, setFilteredPlantComments] = useState(false)
   const [plantCommentsLength, setPlantCommentsLength] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
 
@@ -57,7 +58,7 @@ const PlantShow = () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant(data)
-        setPlantComments(data.comments)
+        setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
         setPlantCommentsLength(data.comments.length)
       } catch (error) {
         console.log(error)
@@ -105,17 +106,21 @@ const PlantShow = () => {
 
   const handleDropdown = (e) => {
     setCommentDropdown(e.target.value)
-    filterComments()
   }
 
   const filterComments = () => {
     const sortedArray = [...plantComments]
     if (commentDropdown === 'newest') {
-      setPlantComments(sortedArray.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
+      setFilteredPlantComments(sortedArray.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
     } else if (commentDropdown === 'oldest') {
-      setPlantComments(sortedArray.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
+      setFilteredPlantComments(sortedArray.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
     }
   }
+
+  useEffect(() => {
+    if (!plant) return
+    filterComments()
+  }, [commentDropdown])
 
   //input for comment data
   const handleInput = (e) => {
@@ -135,7 +140,7 @@ const PlantShow = () => {
         },
       })
       const { data } = await axios.get(`/api/plants/${id}`)
-      setPlantComments(data.comments)
+      setFilteredPlantComments(data.comments)
       filterComments()
       setPlantCommentsLength(data.comments.length)
       setFormData({
@@ -215,43 +220,44 @@ const PlantShow = () => {
                   <Box width='50%'>
                     <Typography>
                       Upkeep
-                      <Box >
-                        <Chip
-                          label={plant.upkeep.watering}
-                          icon={<Box as='img' src={wateringCan} sx={{ width: '24px' }} />}
-                          variant="filled"
-                          sx={{ width: '120px', mb: 1 }}
-                        />
-                        <Chip
-                          label={plant.upkeep.sunExposure}
-                          icon={<Box as='img' src={sun} sx={{ width: '24px' }} />}
-                          variant="filled"
-                          sx={{ width: '120px', mb: 1 }}
-                        />
-                        <Chip
-                          label={plant.upkeep.soilType}
-                          icon={<Box as='img' src={soil} sx={{ width: '24px' }} />}
-                          variant="filled"
-                          sx={{ width: '120px', mb: 1 }}
-                        />
-                      </Box>
-                      <Box>
-                        Flower Colour
-                        <Box>
-                          {plant.characteristics.flowerColor.map((color, i) => {
-                            return (
-                              <Chip
-                                key={i}
-                                label={color}
-                                icon={<Box as='img' src={flower} sx={{ width: '24px' }} />}
-                                variant="outlined"
-                                sx={{ width: '120px', mb: 1, mr: 1, bgcolor: [color], borderColor: 'rgba(0,0,0,0.15)' }}
-                              />
-                            )
-                          })}
-                        </Box>
-                      </Box>
                     </Typography>
+                    <Box >
+                      <Chip
+                        label={plant.upkeep.watering}
+                        icon={<Box as='img' src={wateringCan} sx={{ width: '24px' }} />}
+                        variant="filled"
+                        sx={{ width: '120px', mb: 1 }}
+                      />
+                      <Chip
+                        label={plant.upkeep.sunExposure}
+                        icon={<Box as='img' src={sun} sx={{ width: '24px' }} />}
+                        variant="filled"
+                        sx={{ width: '120px', mb: 1 }}
+                      />
+                      <Chip
+                        label={plant.upkeep.soilType}
+                        icon={<Box as='img' src={soil} sx={{ width: '24px' }} />}
+                        variant="filled"
+                        sx={{ width: '120px', mb: 1 }}
+                      />
+                    </Box>
+                    <Box>
+                      Flower Colour
+                      <Box>
+                        {plant.characteristics.flowerColor.map((color, i) => {
+                          return (
+                            <Chip
+                              key={i}
+                              label={color}
+                              icon={<Box as='img' src={flower} sx={{ width: '24px' }} />}
+                              variant="outlined"
+                              sx={{ width: '120px', mb: 1, mr: 1, bgcolor: [color], borderColor: 'rgba(0,0,0,0.15)' }}
+                            />
+                          )
+                        })}
+                      </Box>
+                    </Box>
+
 
                   </Box>
                   <Box width='50%'>
@@ -340,8 +346,8 @@ const PlantShow = () => {
                   onChange={handleDropdown}
                   sx={{ p: 'none' }}
                 >
-                  <MenuItem value='Newest' >Newest</MenuItem>
-                  <MenuItem value='Oldest'>Oldest</MenuItem>                
+                  <MenuItem value='newest' >Newest</MenuItem>
+                  <MenuItem value='oldest'>Oldest</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -389,7 +395,7 @@ const PlantShow = () => {
 
           {/* comment section */}
           {plantComments.length ?
-            plantComments.map(comment => {
+            (filteredPlantComments ? filteredPlantComments : plantComments).map(comment => {
               const { username, _id, text, createdAt } = comment
               const date = new Date(createdAt)
               return (
