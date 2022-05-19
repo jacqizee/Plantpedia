@@ -123,6 +123,7 @@ const PageNavbar  = () => {
             </>
             :
             <>
+              {/* Pages Shown */}
               <Box sx={{ flexGrow: 1, justifyContent: 'end', display: 'flex' }}>
                 {pagesNoLogin.map((page, index) => (
                   <Button

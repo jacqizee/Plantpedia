@@ -27,15 +27,12 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body
    
     const userToLogin = await User.findOne({ email: email })
-    
-
-   
     if (!userToLogin || !userToLogin.validatePassword(password)){
       throw new Error()
     }
 
     
-    const token = jwt.sign({ sub: userToLogin._id }, process.env.SECRET, { expiresIn: '2d' })
+    const token = jwt.sign({ sub: userToLogin._id, username: userToLogin.username }, process.env.SECRET, { expiresIn: '2d' })
    
 
 
