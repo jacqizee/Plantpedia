@@ -18,12 +18,16 @@ export const getAllPlants = async (req, res) => {
 // plants/:id
 // get single plant
 export const getSinglePlant = async (req, res) => {
+  console.log('get single plant fires 🔥')
   const { id } = req.params
   try {
     const plant = await Plant.findById(id).populate('comments')
     if (!plant) {
+      console.log('no plant 👎')
       return res.status(404).json({ message: "Plant not found" })
     }
+    console.log('yes plant 👍🏻')
+    console.log('what is plant: ', plant)
     return res.status(200).json(plant)
   } catch (err) {
     console.log(err)
