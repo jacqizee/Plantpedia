@@ -248,7 +248,7 @@ const UserProfile = () => {
               </Container>
               : myPlants.length > 0 ?
                 <Container maxWidth='lg' sx={{ my: 0 }}>
-                  <Masonry columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
+                  <Masonry columns={3} spacing={1}>
                     {myPlants.map(plant => {
                       return (
                         <>
@@ -288,7 +288,7 @@ const UserProfile = () => {
               </Container>
               : favoritePlants.length > 0 ?
                 <Container maxWidth='lg' sx={{ my: 0 }}>
-                  <Masonry columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
+                  <Masonry columns={3} spacing={1}>
                     {favoritePlants.map(plant => {
                       return (
                         <>
@@ -328,7 +328,7 @@ const UserProfile = () => {
               </Container>
               : editedPlants.length > 0 ?
                 <Container maxWidth='lg' sx={{ my: 0 }}>
-                  <Masonry columns={{ xs: 3, sm: 3, md: 3 }} spacing={1}>
+                  <Masonry columns={3} spacing={1}>
                     {editedPlants.map(plant => {
                       return (
                         <>
