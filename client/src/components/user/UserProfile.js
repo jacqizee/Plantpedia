@@ -138,7 +138,6 @@ const UserProfile = () => {
         </Box>
 
         {/* Image Lists */}
-
         {/* My Plants  */}
         <TabPanel value={value} index={0}>
           {loading ?

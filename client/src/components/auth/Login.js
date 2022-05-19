@@ -115,7 +115,7 @@ const Login = () => {
               value={formData.password} 
               onChange={handleChange}
             />
-            {errors && <p className='text-danger text-center'>Unauthorised</p>}
+            {errors && <Typography variant='p'>Unauthorised</Typography>}
             <Button
               type="submit"
               fullWidth

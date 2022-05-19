@@ -1,5 +1,6 @@
 import Plant from '../models/plants.js'
 import { Comment } from '../models/comments.js'
+import User from '../models/users.js'
 
 // METHOD: POST
 // Endpoint: /plants/:id/comments
@@ -9,9 +10,14 @@ export const addComment = async (req, res) => {
   try {
     const plantToUpdate = await Plant.findById(id)
     if (!plantToUpdate) throw new Error('Plant not found')
-
+      
     // Create a comment with an owner
-    const commentWithOwner = { ...req.body, owner: req.verifiedUser._id }
+    const commentWithOwner = { ...req.body, owner: req.verifiedUser._id, username: req.verifiedUser.username }
+   
+    //check comment owner username matches username of commenter
+    const checkUser = await User.findById(req.verifiedUser._id)
+    if (checkUser.username !== req.verifiedUser.username) throw new Error('Username does not match!')
+
     await Comment.create(commentWithOwner)
     console.log('commentWithOwner', commentWithOwner)
 
