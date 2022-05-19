@@ -20,11 +20,12 @@ import Select from '@mui/material/Select'
 import Avatar from '@mui/material/Avatar'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
-import { red } from '@mui/material/colors'
-const omg = red[500]
+import EditRoundedIcon from '@mui/icons-material/EditRounded'
+import Chip from '@mui/material/Chip'
+
 
 const PlantShow = () => {
-
+  const navigate = useNavigate()
   const { id } = useParams()
 
   const [plant, setPlant] = useState(false)
@@ -82,6 +83,10 @@ const PlantShow = () => {
     }
   }
 
+  const handleEdit = () => {
+    navigate(`/plants/${plant._id}/edit`)
+  }
+
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
@@ -107,6 +112,8 @@ const PlantShow = () => {
       console.log(err)
     }
   }
+
+
 
 
   const toggleShowOn = () => {
@@ -164,6 +171,13 @@ const PlantShow = () => {
                   hello
                 </Box>
               </Box>
+              <Chip
+                label="Edit"
+                onClick={handleEdit}
+                icon={<EditRoundedIcon sx={{ width: 15 }} />}
+                variant="outlined"
+                sx={{ float: 'right', mt: 1 }}
+              />
             </Grid>
           </Grid>
 
@@ -254,7 +268,7 @@ const PlantShow = () => {
               )
             })
             :
-            <Box>
+            <Box mt={4}>
               No comments!
             </Box>
           }
