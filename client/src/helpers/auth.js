@@ -27,7 +27,7 @@ export const userIsOwner = (singlePlant) => {
   // get payload and check it has a value
   const payload = getPayload()
   if (!payload) return
-  return singlePlant.user._id === payload.sub
+  return singlePlant.owner === payload.sub
 }
 
 
