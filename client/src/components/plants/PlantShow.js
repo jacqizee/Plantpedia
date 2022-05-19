@@ -20,7 +20,8 @@ import Select from '@mui/material/Select'
 import Avatar from '@mui/material/Avatar'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
-
+import { red } from '@mui/material/colors'
+const omg = red[500]
 
 const PlantShow = () => {
 
@@ -29,6 +30,8 @@ const PlantShow = () => {
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
   const [plantComments, setPlantComments] = useState(false)
+
+  const [show, setShow] = useState(false)
 
   const [formData, setFormData] = useState({
     text: '',
@@ -103,6 +106,18 @@ const PlantShow = () => {
     } catch (err) {
       console.log(err)
     }
+  }
+
+
+  const toggleShowOn = () => {
+    setShow(true)
+  }
+  const toggleShowOff = () => {
+    setShow(false)
+    setFormData({
+      text: '',
+      owner: '',
+    })
   }
 
   const isTextDisabled = formData.text.length === 0
@@ -187,15 +202,29 @@ const PlantShow = () => {
                 fullWidth
                 placeholder='Add comment'
                 autoComplete='off'
-                onChange={handleInput} />
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ mt: 3, float: 'right' }}
-                disabled={isTextDisabled}
-              >
-                Add comment
-              </Button>
+                onChange={handleInput}
+                onFocus={toggleShowOn} />
+              {show ?
+                <>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ mt: 3, float: 'right', display: show }}
+                    disabled={isTextDisabled}
+                  >
+                    Add comment
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{ mr: 2, mt: 3, float: 'right', display: show }}
+                    onClick={toggleShowOff}
+                  >
+                    Cancel
+                  </Button>
+                </>
+                : null}
+
             </Box>
           </Stack>
 
@@ -209,7 +238,7 @@ const PlantShow = () => {
                   <Avatar sx={{ width: 24, height: 24 }} />
                   <Box >
                     <Typography sx={{ fontSize: 14 }}>
-                      {owner} 
+                      {owner}
                       <Typography as='span' sx={{
                         ml: 1,
                         fontSize: 10,
@@ -236,7 +265,7 @@ const PlantShow = () => {
         :
         <Box>Loading</Box>
       }
-    </Container>
+    </Container >
   )
 }
 
