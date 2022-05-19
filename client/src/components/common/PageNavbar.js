@@ -21,7 +21,6 @@ import philip from '../../images/philip.png'
 
 import { userIsAuthenticated } from '../../helpers/auth'
 
-
 const pages = ['Add']
 const pagesNoLogin = ['Login', 'Register']
 const settings = ['Profile', 'Logout']
@@ -31,25 +30,23 @@ const PageNavbar  = () => {
   // Navigate
   const navigate = useNavigate()
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null)
-  const [anchorElUser, setAnchorElUser] = React.useState(null)
+  const [anchorElNav, setAnchorElNav] = useState(null)
+  const [anchorElUser, setAnchorElUser] = useState(null)
 
   const handleAdd = (event) => {
-    console.log('plus clicked')
     setAnchorElNav(event.currentTarget)
-
     navigate('/plants/add')
   }
 
   const navigateToSelected = (event) => {
     const pageName = event.currentTarget.innerText.toLowerCase()
-    console.log('page to navigate', pageName)
-
     if (pageName === 'login' || pageName === 'register') {
       navigate(`/${pageName}`)
     } else if (pageName === 'profile') {
       handleCloseUserMenu()
       navigate(`/${pageName}/username`)
+    } else if (pageName === 'logout') {
+      window.localStorage.removeItem('plantpedia')
     }
   }
 
