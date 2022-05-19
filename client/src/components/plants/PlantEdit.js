@@ -32,46 +32,49 @@ const PlantEdit = () => {
     name: '',
     scientificName: '',
     images: '',
-    upkeep: {
-      watering: '',
-      sunExposure: '',
-      soilType: '',
-    },
-    characteristics: {
-      flowerColor: [],
-      mood: '',
-      lifespan: '',
-      isIndoor: false,
-      matureSize: {
-        height: 25,
-        width: 25,
-      },
-      nativeArea: [],
-    },
+    watering: '',
+    sunExposure: '',
+    soilType: '',
+    flowerColor: [],
+    mood: '',
+    lifespan: '',
+    isIndoor: false,
+    height: 50,
+    width: 50,
+    nativeArea: [],
   })
 
   // Setting units for height/width
+  const [ matureSize, setMatureSize ] = useState({ height: formData.height, width: formData.width })
   const [ unit, setUnit ] = useState('in')
-  const [ max, setMax ] = useState(50)
+  const [ max, setMax ] = useState(150)
+
   const handleUnitChange = (e) => {
-    const { height, width } = formData.characteristics.matureSize
+    const { height, width } = matureSize
     setUnit(e.target.value)
-    const convertedObject = {}
     if (e.target.value === 'in') {
-      convertedObject.height = Math.ceil(height / 2.54)
-      convertedObject.width = Math.ceil(width / 2.54)
-      setMax(50)
+      setMatureSize({ height: Math.ceil(height / 2.54), width: Math.ceil(width / 2.54) })
+      setMax(150)
     } else if (e.target.value === 'cm') {
-      convertedObject.height = Math.ceil(height * 2.54)
-      convertedObject.width = Math.ceil(width * 2.54)
-      setMax(130)
+      setMatureSize({ height: Math.ceil(height * 2.54), width: Math.ceil(width * 2.54) })
+      setMax(380)
     }
-    handleNestedChange('characteristics', 'matureSize', convertedObject)
   }
 
-  // Nested Objects and Their Keys
-  const upkeep = ['watering', 'sunExposure', 'soilType']
-  const chars = ['mood', 'lifespan', 'isIndoor']
+  const handleSizeChange = (e) => {
+    const { name, value } = e.target
+    setMatureSize({ ...matureSize, [name]: value })
+    if (unit === 'cm') {
+      setFormData({ ...formData, [name]: Math.ceil(value / 2.54) })
+    } else {
+      setFormData({ ...formData, [name]: value })
+    }
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData({ ...formData, [name]: value })
+  }
 
   // Get existing form data from API and populate in form
   useEffect(() => {
@@ -80,6 +83,7 @@ const PlantEdit = () => {
         const { data } = await axios.get(`/api/plants/${plantId}`)
         setFormData(data)
         setFormLoaded(true)
+        setMatureSize({ height: data.height, width: data.width })
       } catch (error) {
         console.log(error)
       }
@@ -92,31 +96,6 @@ const PlantEdit = () => {
       !userIsAuthenticated(formData) && navigate(`/plants/${plantId}`)
     }
   }, [formData, formLoaded, plantId])
-
-  const handleNestedChange = (objectName, keyName, value) => {
-    setFormData({ ...formData, [objectName]: {
-      ...formData[objectName],
-      [keyName]: value,
-    } })
-  }
-
-  const handleNestedNestedChange = (objectName, nestedObjectName, keyName, value) => {
-    setFormData({ ...formData, [objectName]: {
-      ...formData[objectName],
-      [nestedObjectName]: { ...formData[objectName][nestedObjectName], [keyName]: value },
-    } })
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    if (upkeep.includes(name)) {
-      handleNestedChange('upkeep', name, value)
-    } else if (chars.includes(name)) {
-      handleNestedChange('characteristics', name, value)
-    } else {
-      setFormData({ ...formData, [name]: value })
-    }
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -233,7 +212,7 @@ const PlantEdit = () => {
                 labelId="water-label"
                 id="water"
                 name='watering'
-                value={formData.upkeep.watering}
+                value={formData.watering}
                 label='water'
                 onChange={handleChange}
               >
@@ -249,7 +228,7 @@ const PlantEdit = () => {
                 labelId="sunExposure-label"
                 id="sunExposure"
                 name='sunExposure'
-                value={formData.upkeep.sunExposure}
+                value={formData.sunExposure}
                 label='sunExposure'
                 onChange={handleChange}
               >
@@ -265,7 +244,7 @@ const PlantEdit = () => {
                 labelId="soilType-label"
                 id="soilType"
                 name='soilType'
-                value={formData.upkeep.soilType}
+                value={formData.soilType}
                 label='soilType'
                 onChange={handleChange}
               >
@@ -281,7 +260,7 @@ const PlantEdit = () => {
                 labelId="lifespan-label"
                 id="lifespan"
                 name='lifespan'
-                value={formData.characteristics.lifespan}
+                value={formData.lifespan}
                 label='lifespan'
                 onChange={handleChange}
               >
@@ -297,7 +276,7 @@ const PlantEdit = () => {
                 labelId="mood-label"
                 id="mood"
                 name='mood'
-                value={formData.characteristics.mood}
+                value={formData.mood}
                 label='soilType'
                 onChange={handleChange}
               >
@@ -313,8 +292,8 @@ const PlantEdit = () => {
                 labelId="flowerColor"
                 id="flowerColor"
                 multiple
-                value={formData.characteristics.flowerColor}
-                onChange={(e) => handleNestedChange('characteristics', 'flowerColor', e.target.value)}
+                value={formData.flowerColor}
+                onChange={handleChange}
                 input={<OutlinedInput id="color" label="Color" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -338,11 +317,11 @@ const PlantEdit = () => {
           {/* Height */}
           <Grid item xs={12} md={5}>
             <Typography id="height-slider" gutterBottom>
-              Height: {formData.characteristics.matureSize.height} {unit}
+              Height: {matureSize.height} {unit}
             </Typography>
             <Slider
-              value={formData.characteristics.matureSize.height}
-              onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'height', e.target.value)}
+              value={matureSize.height}
+              onChange={handleSizeChange}
               valueLabelDisplay="auto"
               name='height'
               size="small"
@@ -356,11 +335,11 @@ const PlantEdit = () => {
           {/* Width */}
           <Grid item xs={12} md={5}>
             <Typography id="width-slider" gutterBottom>
-              Width: {formData.characteristics.matureSize.width} {unit}
+              Width: {matureSize.width} {unit}
             </Typography>
             <Slider
-              value={formData.characteristics.matureSize.width}
-              onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'width', e.target.value)}
+              value={matureSize.width}
+              onChange={handleSizeChange}
               valueLabelDisplay="auto"
               name='width'
               size="small"
@@ -392,8 +371,8 @@ const PlantEdit = () => {
                 labelId="nativeArea"
                 id="nativeArea"
                 multiple
-                value={formData.characteristics.nativeArea}
-                onChange={(e) => handleNestedChange('characteristics', 'nativeArea', e.target.value)}
+                value={formData.nativeArea}
+                onChange={handleChange}
                 input={<OutlinedInput id="regions" label="Regions" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -417,7 +396,7 @@ const PlantEdit = () => {
           {/* Is Indoor? */}
           <Grid item xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
             <FormControlLabel control={
-              <Checkbox value={formData.characteristics.isIndoor} onChange={(e) => handleNestedChange('characteristics', 'isIndoor', e.target.checked)} />
+              <Checkbox value={formData.isIndoor} onChange={handleChange} />
             } label="Indoor Plant" />
           </Grid>
           {/* Submit Button */}
