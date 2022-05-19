@@ -19,7 +19,7 @@ import AddIcon from '@mui/icons-material/Add'
 import logo from '../../images/logo.png'
 import philip from '../../images/philip.png'
 
-import { userIsAuthenticated } from '../../helpers/auth'
+import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 
 const pages = ['Add']
 const pagesNoLogin = ['Login', 'Register']
@@ -44,7 +44,9 @@ const PageNavbar  = () => {
       navigate(`/${pageName}`)
     } else if (pageName === 'profile') {
       handleCloseUserMenu()
-      navigate(`/${pageName}/username`)
+
+      const payload = getPayload()
+      navigate(`/${pageName}/${payload.username}`)
     } else if (pageName === 'logout') {
       window.localStorage.removeItem('plantpedia')
       navigate('/login')
