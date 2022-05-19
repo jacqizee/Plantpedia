@@ -38,7 +38,7 @@ const PageNavbar  = () => {
     navigate('/plants/add')
   }
 
-  const navigateToSelected = (event) => {
+  const handleNavClick = (event) => {
     const pageName = event.currentTarget.innerText.toLowerCase()
     if (pageName === 'login' || pageName === 'register') {
       navigate(`/${pageName}`)
@@ -47,6 +47,7 @@ const PageNavbar  = () => {
       navigate(`/${pageName}/username`)
     } else if (pageName === 'logout') {
       window.localStorage.removeItem('plantpedia')
+      navigate('/login')
     }
   }
 
@@ -111,8 +112,9 @@ const PageNavbar  = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
+                  {/* Settings on Profile Click */}
                   {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={navigateToSelected}>
+                    <MenuItem key={setting} onClick={handleNavClick}>
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))}
@@ -125,7 +127,7 @@ const PageNavbar  = () => {
                 {pagesNoLogin.map((page, index) => (
                   <Button
                     key={index}
-                    onClick={navigateToSelected}
+                    onClick={handleNavClick}
                     sx={{ my: 2, color: 'white', display: 'block' }}
                   >
                     {page}
