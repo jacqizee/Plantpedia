@@ -106,7 +106,7 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              {errors.username && <p className='text-danger'>{errors.username}</p>}
+              {errors.username && <Typography variant='p'>{errors.username}</Typography>}
 
               <Grid item xs={12}>
                 <TextField
@@ -120,7 +120,7 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              {errors.email && <p className='text-danger'>{errors.email}</p>}
+              {errors.email && <Typography variant='p'>{errors.email}</Typography>}
 
               <Grid item xs={12}>
                 <TextField
@@ -135,7 +135,7 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              {errors.password && <p className='text-danger'>{errors.password}</p>}
+              {errors.password && <Typography variant='p'>{errors.password}</Typography>}
 
               <Grid item xs={12}>
                 <TextField
@@ -150,7 +150,7 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              {errors.passwordConfirmation && <p className='text-danger'>{errors.passwordConfirmation}</p>}
+              {errors.passwordConfirmation && <Typography variant='p'>{errors.passwordConfirmation}</Typography>}
 
             </Grid>
             <Button

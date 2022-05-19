@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   image: { type: String, default: 'https://png.pngtree.com/element_our/20190531/ourlarge/pngtree-cartoon-square-green-vine-image_1316677.jpg'},
-  favorites: []
+  favorites: [],
+  myEdits: []
 }, { id: false })
 
 userSchema.virtual('createdPlants', {

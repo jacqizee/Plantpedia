@@ -65,7 +65,7 @@ export default [
   {
     name: 'Gardenia',
     scientificName: 'Gardenia jasminoides',
-    images: 'https://www.seedsoflife.com/mm5/graphics/00000001/S1GP_552x745.jpg',
+    images: 'https://www.thespruce.com/thmb/mLoqzNWjCjelpkxwh_zHqEoEH7g=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/grow-gardenia-indoors-1902758-03-2f25cc9d152342fb8561d8d3cef6ae4b.jpg',
     upkeep: {
       watering: 'Weekly',
       sunExposure: 'Partial sun',
