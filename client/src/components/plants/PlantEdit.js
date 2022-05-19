@@ -147,6 +147,12 @@ const PlantEdit = () => {
     'Australia'
   ]
 
+  const waterTypes = ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly']
+  const sunTypes = ['Full sun', 'Partial sun', 'Shade']
+  const soilTypes = ['Loamy', 'Chalky', 'Peaty', 'Silty', 'Sandy', 'Clay']
+  const lifespanTypes = ['Perennial', 'Biennial', 'Annual']
+  const moodTypes = ['Cheerful', 'Emo', 'Mysterious', 'Classy', 'Bright']
+
   return (
     <Container>
       <Box
@@ -210,10 +216,7 @@ const PlantEdit = () => {
                 label='water'
                 onChange={handleChange}
               >
-                <MenuItem value={'Daily'}>Daily</MenuItem>
-                <MenuItem value={'Weekly'}>Weekly</MenuItem>
-                <MenuItem value={'Bi-Weekly'}>Bi-Weekly</MenuItem>
-                <MenuItem value={'Monthly'}>Monthly</MenuItem>
+                {waterTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -229,9 +232,7 @@ const PlantEdit = () => {
                 label='sunExposure'
                 onChange={handleChange}
               >
-                <MenuItem value={'Full sun'}>Full Sun</MenuItem>
-                <MenuItem value={'Partial sun'}>Partial Sun</MenuItem>
-                <MenuItem value={'Shade'}>Shade</MenuItem>
+                {sunTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -247,12 +248,7 @@ const PlantEdit = () => {
                 label='soilType'
                 onChange={handleChange}
               >
-                <MenuItem value={'Loamy'}>Loamy</MenuItem>
-                <MenuItem value={'Chalky'}>Chalky</MenuItem>
-                <MenuItem value={'Peaty'}>Peaty</MenuItem>
-                <MenuItem value={'Silty'}>Silty</MenuItem>
-                <MenuItem value={'Sandy'}>Sandy</MenuItem>
-                <MenuItem value={'Clay'}>Clay</MenuItem>
+                {soilTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -268,9 +264,7 @@ const PlantEdit = () => {
                 label='lifespan'
                 onChange={handleChange}
               >
-                <MenuItem value={'Perennial'}>Perennial</MenuItem>
-                <MenuItem value={'Biennial'}>Biennial</MenuItem>
-                <MenuItem value={'Annual'}>Annual</MenuItem>
+                {lifespanTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
@@ -286,11 +280,7 @@ const PlantEdit = () => {
                 label='soilType'
                 onChange={handleChange}
               >
-                <MenuItem value={'Cheerful'}>Cheerful</MenuItem>
-                <MenuItem value={'Emo'}>Emo</MenuItem>
-                <MenuItem value={'Mysterious'}>Mysterious</MenuItem>
-                <MenuItem value={'Classy'}>Classy</MenuItem>
-                <MenuItem value={'Bright'}>Bright</MenuItem>
+                {moodTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
               </Select>
             </FormControl>
           </Grid>
