@@ -52,8 +52,16 @@ const PlantAdd = () => {
   const [ unit, setUnit ] = useState('in')
   const [ max, setMax ] = useState(50)
   const handleUnitChange = (e) => {
+    const { height, width } = formData.characteristics.matureSize
     setUnit(e.target.value)
-    e.target.value === 'in' ? setMax(50) : setMax(130)
+    if (e.target.value === 'in') {
+      handleNestedChange('characteristics', 'matureSize', { height: Math.ceil(height / 2.54), width: Math.ceil(width / 2.54) })
+      setMax(50)
+    } else if (e.target.value === 'cm') {
+      handleNestedChange('characteristics', 'matureSize', { height: Math.ceil(height * 2.54), width: Math.ceil(width * 2.54) })
+      setMax(130)
+    }
+    
   }
 
   // Nested Objects and Their Keys
@@ -87,6 +95,10 @@ const PlantAdd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (unit === 'cm') {
+      const { height, width } = formData.characteristics.matureSize
+      handleNestedChange('characteristics', 'matureSize', { height: Math.ceil(height / 2.54), width: Math.ceil(width / 2.54) })
+    }
     try {
       const response = await axios.post('/api/plants', formData, {
         headers: {
@@ -298,7 +310,7 @@ const PlantAdd = () => {
               value={formData.characteristics.matureSize.height}
               onChange={(e) => handleNestedNestedChange('characteristics', 'matureSize', 'height', e.target.value)}
               valueLabelDisplay="auto"
-              name="height"
+              name='height'
               size="small"
               min={1}
               max={max}
@@ -325,7 +337,7 @@ const PlantAdd = () => {
               sx={{ width: .9, align: 'center' }}
             />
           </Grid>
-          {/* Height/Width Units */}
+          {/* Unit Toggler */}
           <Grid item xs={12} md={2}>
             <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
               <ToggleButtonGroup value={unit} exclusive onChange={handleUnitChange} aria-label="measurement unit">
