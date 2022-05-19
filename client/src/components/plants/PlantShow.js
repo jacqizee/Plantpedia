@@ -20,11 +20,12 @@ import Select from '@mui/material/Select'
 import Avatar from '@mui/material/Avatar'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
-import { red } from '@mui/material/colors'
-const omg = red[500]
+import EditRoundedIcon from '@mui/icons-material/EditRounded'
+import Chip from '@mui/material/Chip'
+
 
 const PlantShow = () => {
-
+  const navigate = useNavigate()
   const { id } = useParams()
 
   const [plant, setPlant] = useState(false)
@@ -36,6 +37,7 @@ const PlantShow = () => {
   const [formData, setFormData] = useState({
     text: '',
     owner: '',
+    username: '',
   })
 
   useEffect(() => {
@@ -82,6 +84,10 @@ const PlantShow = () => {
     }
   }
 
+  const handleEdit = () => {
+    navigate(`/plants/${plant._id}/edit`)
+  }
+
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
@@ -90,7 +96,7 @@ const PlantShow = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.text.length) return
-    setFormData({ ...formData, owner: getPayload().sub })
+    setFormData({ ...formData, owner: getPayload().sub, username: getPayload().username })
     try {
       await axios.post(`/api/plants/${plant._id}/comments`, formData, {
         headers: {
@@ -107,6 +113,8 @@ const PlantShow = () => {
       console.log(err)
     }
   }
+
+
 
 
   const toggleShowOn = () => {
@@ -164,6 +172,13 @@ const PlantShow = () => {
                   hello
                 </Box>
               </Box>
+              <Chip
+                label="Edit"
+                onClick={handleEdit}
+                icon={<EditRoundedIcon sx={{ width: 15 }} />}
+                variant="outlined"
+                sx={{ float: 'right', mt: 1 }}
+              />
             </Grid>
           </Grid>
 
@@ -231,14 +246,16 @@ const PlantShow = () => {
           {/* comment section */}
           {plantComments.length ?
             plantComments.map(comment => {
-              const { owner, _id, text, createdAt } = comment
+              const { username, _id, text, createdAt } = comment
               const date = new Date(createdAt)
+              console.log(comment)
+              console.log(username)
               return (
                 <Stack key={_id} direction='row' spacing={2} my={3}>
                   <Avatar sx={{ width: 24, height: 24 }} />
                   <Box >
                     <Typography sx={{ fontSize: 14 }}>
-                      {owner}
+                      {username}
                       <Typography as='span' sx={{
                         ml: 1,
                         fontSize: 10,
@@ -254,7 +271,7 @@ const PlantShow = () => {
               )
             })
             :
-            <Box>
+            <Box mt={4}>
               No comments!
             </Box>
           }
