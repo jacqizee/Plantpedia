@@ -223,19 +223,19 @@ const PlantShow = () => {
                     </Typography>
                     <Box >
                       <Chip
-                        label={plant.upkeep.watering}
+                        label={plant.watering}
                         icon={<Box as='img' src={wateringCan} sx={{ width: '24px' }} />}
                         variant="filled"
                         sx={{ width: '120px', mb: 1 }}
                       />
                       <Chip
-                        label={plant.upkeep.sunExposure}
+                        label={plant.sunExposure}
                         icon={<Box as='img' src={sun} sx={{ width: '24px' }} />}
                         variant="filled"
                         sx={{ width: '120px', mb: 1 }}
                       />
                       <Chip
-                        label={plant.upkeep.soilType}
+                        label={plant.soilType}
                         icon={<Box as='img' src={soil} sx={{ width: '24px' }} />}
                         variant="filled"
                         sx={{ width: '120px', mb: 1 }}
@@ -244,7 +244,7 @@ const PlantShow = () => {
                     <Box>
                       Flower Colour
                       <Box>
-                        {plant.characteristics.flowerColor.map((color, i) => {
+                        {plant.flowerColor.map((color, i) => {
                           return (
                             <Chip
                               key={i}
@@ -264,7 +264,7 @@ const PlantShow = () => {
                     <Typography>
                       Native to
                     </Typography>
-                    {plant.characteristics.nativeArea.map((area, i) => {
+                    {plant.nativeArea.map((area, i) => {
                       return (
                         <Chip
                           key={i}
@@ -279,7 +279,7 @@ const PlantShow = () => {
                       Lifecycle
                     </Typography>
                     <Chip
-                      label={plant.characteristics.lifespan}
+                      label={plant.lifespan}
                       icon={<Box as='img' src={calendar} sx={{ width: '24px' }} />}
                       variant="filled"
                       sx={{ mb: 1, mr: 1 }}
@@ -288,7 +288,7 @@ const PlantShow = () => {
                       Mood
                     </Typography>
                     <Chip
-                      label={plant.characteristics.mood}
+                      label={plant.mood}
                       icon={<Box as='img' src={emotions} sx={{ width: '24px' }} />}
                       variant="filled"
                       sx={{ mb: 1, mr: 1 }}
@@ -299,7 +299,7 @@ const PlantShow = () => {
                           Height
                         </Typography>
                         <Chip
-                          label={plant.characteristics.matureSize.height}
+                          label={plant.height}
                           icon={<Box as='img' src={ruler} sx={{ width: '24px' }} />}
                           variant="filled"
                           sx={{ mb: 1, mr: 1 }}
@@ -310,7 +310,7 @@ const PlantShow = () => {
                           Width
                         </Typography>
                         <Chip
-                          label={plant.characteristics.matureSize.width}
+                          label={plant.width}
                           icon={<Box as='img' src={width} sx={{ width: '24px' }} />}
                           variant="filled"
                           sx={{ mb: 1, mr: 1 }}
