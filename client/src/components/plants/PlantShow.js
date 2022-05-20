@@ -47,7 +47,7 @@ const PlantShow = () => {
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
   const [plantComments, setPlantComments] = useState(false)
-  const [filteredPlantComments, setFilteredPlantComments] = useState(false)
+
   const [commentCount, setcommentCount] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
 
@@ -107,23 +107,11 @@ const PlantShow = () => {
     navigate(`/plants/${plant._id}/edit`)
   }
 
+  //dropdown menu
   const handleDropdown = (e) => {
     setCommentDropdown(e.target.value)
   }
-
-  const filterComments = () => {
-    const sortedArray = [...plantComments]
-    if (commentDropdown === 'newest') {
-      setFilteredPlantComments(sortedArray.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
-    } else if (commentDropdown === 'oldest') {
-      setFilteredPlantComments(sortedArray.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
-    }
-  }
-
-  useEffect(() => {
-    if (!plant) return
-    filterComments()
-  }, [commentDropdown])
+ 
 
   //input for comment data
   const handleInput = (e) => {
@@ -141,10 +129,12 @@ const PlantShow = () => {
           Authorization: `Bearer ${token}`,
         },
       })
+      //get new plant comments
       const { data } = await axios.get(`/api/plants/${id}`)
-      // setFilteredPlantComments(data.comments)
-      filterComments()
+      //set state and sort by time
+      setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
       setcommentCount(data.comments.length)
+      //reset form
       setFormData({
         text: '',
         owner: '',
@@ -446,7 +436,7 @@ const PlantShow = () => {
 
           {/* comment section */}
           {plantComments.length ?
-            (filteredPlantComments ? filteredPlantComments : plantComments).map(comment => {
+            plantComments.map(comment => {
               const { username, _id, text, createdAt } = comment
               const date = new Date(createdAt)
               return (
