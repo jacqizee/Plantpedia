@@ -57,6 +57,7 @@ const PlantShow = () => {
     const getPlant = async () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
+
         setPlant(data)
         setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
         setPlantCommentsLength(data.comments.length)
