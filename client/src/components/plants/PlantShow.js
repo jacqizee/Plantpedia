@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
+import Spinner from '../utilities/Spinner'
 
 //mui
 import Container from '@mui/material/Container'
@@ -40,6 +41,8 @@ import width from '../../images/icons/width.png'
 const PlantShow = () => {
   const navigate = useNavigate()
   const { id } = useParams()
+  const payload = getPayload()
+  const token = getTokenFromLocalStorage()
 
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
@@ -49,7 +52,6 @@ const PlantShow = () => {
   const [commentDropdown, setCommentDropdown] = useState('newest')
 
   const [show, setShow] = useState(false)
-
   const [formData, setFormData] = useState({
     text: '',
     owner: '',
@@ -74,7 +76,6 @@ const PlantShow = () => {
 
   //check if user has already favorited the plant
   const plantIsFavorite = (singlePlant) => {
-    const payload = getPayload()
     if (!payload || !singlePlant) return
     return singlePlant.favorites.includes(payload.sub)
   }
@@ -92,11 +93,10 @@ const PlantShow = () => {
     try {
       await axios.put(`/api/plants/${plant._id}/favorite`, null, {
         headers: {
-          Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       favorite ? setFavorite(false) : setFavorite(true)
-
     } catch (error) {
       console.log(error)
     }
@@ -130,16 +130,15 @@ const PlantShow = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-
   //submit comment
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.text.length) return
-    setFormData({ ...formData, owner: getPayload().sub, username: getPayload().username })
+    setFormData({ ...formData, owner: payload.sub, username: payload.username })
     try {
       await axios.post(`/api/plants/${plant._id}/comments`, formData, {
         headers: {
-          Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       const { data } = await axios.get(`/api/plants/${id}`)
@@ -181,9 +180,8 @@ const PlantShow = () => {
   return (
     <Container maxWidth='lg' >
       {plant ?
-        <>
+        <Container>
           <Grid container spacing={2} sx={{ my: 1 }}>
-
             {/* Title */}
             <Grid item xs={12} sx={{ textAlign: 'center', mb: 1 }}>
               <Typography variant='h4'>
@@ -196,8 +194,9 @@ const PlantShow = () => {
 
             {/* Image and favorite */}
             <Grid item md={6}>
-              <Box component='img' src={plant.images} alt={plant.name} sx={{ height: '50vh', objectFit: 'cover' }} />
-              <IconButton sx={{ position: 'absolute', top: '3%', right: 0 }}
+              <Box component='img' src={plant.images} alt={plant.name} sx={{ height: '100%', objectFit: 'cover' }} />
+              <IconButton
+                sx={{ bottom: 55, left: 5, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }}
                 onClick={() => toggleFavorite(plant)} >
                 {favorite ? <FavoriteIcon sx={{ color: 'red' }}/> : <FavoriteBorderIcon sx={{ color: 'white' }} />}
               </IconButton>
@@ -205,7 +204,7 @@ const PlantShow = () => {
 
             <Grid item md={6}>
               {/* Description Accordion */}
-              <Accordion>
+              <Accordion disableGutters>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="description-content"
@@ -217,8 +216,9 @@ const PlantShow = () => {
                   <Typography>- Description goes here -</Typography>
                 </AccordionDetails>
               </Accordion>
+
               {/* Upkeep Accordion */}
-              <Accordion>
+              <Accordion disableGutters>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="upkeep-content"
@@ -230,17 +230,18 @@ const PlantShow = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Grid container columnSpacing={1} sx={{ mt: 1 }}>
+                    {/* Watering */}
                     <Grid item xs={4}>
                       <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center' }}>
                         <Typography>Watering</Typography>
                         <Chip
                           label={plant.watering}
                           icon={<Box as='img' src={wateringCan} sx={{ width: '24px' }} />}
-                          // variant="filled"
                           sx={{ width: '120px', mb: 1 }}
                         />
                       </Box>
                     </Grid>
+                    {/* Sun Exposure */}
                     <Grid item xs={4}>
                       <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 10, textAlign: 'center' }}>
                         <Typography>Sun</Typography>
@@ -252,6 +253,7 @@ const PlantShow = () => {
                         />
                       </Box>
                     </Grid>
+                    {/* Soil Type */}
                     <Grid item xs={4}>
                       <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center' }}>
                         <Typography>Soil Type</Typography>
@@ -266,8 +268,9 @@ const PlantShow = () => {
                   </Grid>
                 </AccordionDetails>
               </Accordion>
-              {/* Characteristics */}
-              <Accordion>
+
+              {/* Characteristics Accordion */}
+              <Accordion disableGutters>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="characteristics-content"
@@ -277,7 +280,8 @@ const PlantShow = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Grid container rowSpacing={1} columnSpacing={1} sx={{ mt: 1 }}>
-                    <Grid item xs={4}>
+                    {/* Lifecycle */}
+                    <Grid item xs={3}>
                       <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center' }}>
                         <Typography>
                           Lifecycle
@@ -290,7 +294,8 @@ const PlantShow = () => {
                         />
                       </Box>
                     </Grid>
-                    <Grid item xs={8}>
+                    {/* Mature Size (Height/Width) */}
+                    <Grid item xs={6}>
                       <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 10, textAlign: 'center' }}>
                         <Typography>Mature Size</Typography>
                         <Chip
@@ -307,6 +312,21 @@ const PlantShow = () => {
                         />
                       </Box>
                     </Grid>
+                    {/* Mood */}
+                    <Grid item xs={3}>
+                      <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center' }}>
+                        <Typography>
+                          Mood
+                        </Typography>
+                        <Chip
+                          label={plant.mood}
+                          icon={<Box as='img' src={emotions} sx={{ width: '24px' }} />}
+                          variant="filled"
+                          sx={{ mb: 1, mr: 1 }}
+                        />
+                      </Box>
+                    </Grid>
+                    {/* Native Area */}
                     {plant.nativeArea.length ? <Grid item xs={12}>
                       <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center' }}>
                         <Typography>
@@ -325,31 +345,26 @@ const PlantShow = () => {
                         })}
                       </Box>
                     </Grid> : ''}
+                    {/* Flower Color */}
+                    {plant.flowerColor.length ? <Grid item xs={12}>
+                      <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center' }}>
+                        <Typography>
+                          Flower Color
+                        </Typography>
+                        {plant.flowerColor.map((color, i) => {
+                          return (
+                            <Chip
+                              key={i}
+                              label={color}
+                              icon={<Box as='img' src={flower} sx={{ width: '24px' }} />}
+                              variant="outlined"
+                              sx={{ width: '120px', mb: 1, mr: 1, bgcolor: [color], borderColor: 'rgba(0,0,0,0.15)' }}
+                            />
+                          )
+                        })}
+                      </Box>
+                    </Grid> : ''}
                   </Grid>    
-                  <Typography>
-                    Mood
-                  </Typography>
-                  <Chip
-                    label={plant.mood}
-                    icon={<Box as='img' src={emotions} sx={{ width: '24px' }} />}
-                    variant="filled"
-                    sx={{ mb: 1, mr: 1 }}
-                  />
-                  {/* Flower Color */}
-                  <Typography>
-                    Flower Color
-                  </Typography>
-                  {plant.flowerColor.map((color, i) => {
-                    return (
-                      <Chip
-                        key={i}
-                        label={color}
-                        icon={<Box as='img' src={flower} sx={{ width: '24px' }} />}
-                        variant="outlined"
-                        sx={{ width: '120px', mb: 1, mr: 1, bgcolor: [color], borderColor: 'rgba(0,0,0,0.15)' }}
-                      />
-                    )
-                  })}
                 </AccordionDetails>
               </Accordion>
               {userIsAuthenticated() ? <Chip
@@ -361,132 +376,6 @@ const PlantShow = () => {
               /> : null}
             </Grid>
           </Grid>
-
-          {/* description and content */}
-          {/* <Grid item md={6}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <Box sx={{ p: 2, border: '1px solid grey', borderRadius: 1 }}>
-                <Typography>
-                  - Description goes here -
-                </Typography>
-              </Box>
-              <Box mt={2} sx={{
-                p: 2,
-                border: '1px solid grey',
-                borderRadius: 1,
-                flexGrow: 1,
-                display: 'flex',
-              }}>
-                <Box width='50%'>
-                  <Typography>
-                    Upkeep
-                  </Typography>
-                  <Box >
-                    <Chip
-                      label={plant.watering}
-                      icon={<Box as='img' src={wateringCan} sx={{ width: '24px' }} />}
-                      variant="filled"
-                      sx={{ width: '120px', mb: 1 }}
-                    />
-                    <Chip
-                      label={plant.sunExposure}
-                      icon={<Box as='img' src={sun} sx={{ width: '24px' }} />}
-                      variant="filled"
-                      sx={{ width: '120px', mb: 1 }}
-                    />
-                    <Chip
-                      label={plant.soilType}
-                      icon={<Box as='img' src={soil} sx={{ width: '24px' }} />}
-                      variant="filled"
-                      sx={{ width: '120px', mb: 1 }}
-                    />
-                  </Box>
-                  <Box>
-                    Flower Color
-                    <Box>
-                      {plant.flowerColor.map((color, i) => {
-                        return (
-                          <Chip
-                            key={i}
-                            label={color}
-                            icon={<Box as='img' src={flower} sx={{ width: '24px' }} />}
-                            variant="outlined"
-                            sx={{ width: '120px', mb: 1, mr: 1, bgcolor: [color], borderColor: 'rgba(0,0,0,0.15)' }}
-                          />
-                        )
-                      })}
-                    </Box>
-                  </Box>
-                </Box>
-                <Box width='50%'>
-                  <Typography>
-                    Native to
-                  </Typography>
-                  {plant.nativeArea.map((area, i) => {
-                    return (
-                      <Chip
-                        key={i}
-                        label={area}
-                        icon={<Box as='img' src={globe} sx={{ width: '24px' }} />}
-                        variant="filled"
-                        sx={{ mb: 1, mr: 1 }}
-                      />
-                    )
-                  })}
-                  <Typography>
-                    Lifecycle
-                  </Typography>
-                  <Chip
-                    label={plant.lifespan}
-                    icon={<Box as='img' src={calendar} sx={{ width: '24px' }} />}
-                    variant="filled"
-                    sx={{ mb: 1, mr: 1 }}
-                  />
-                  <Typography>
-                    Mood
-                  </Typography>
-                  <Chip
-                    label={plant.mood}
-                    icon={<Box as='img' src={emotions} sx={{ width: '24px' }} />}
-                    variant="filled"
-                    sx={{ mb: 1, mr: 1 }}
-                  />
-                  <Box display='flex'>
-                    <Box>
-                      <Typography >
-                        Height
-                      </Typography>
-                      <Chip
-                        label={plant.height}
-                        icon={<Box as='img' src={ruler} sx={{ width: '24px' }} />}
-                        variant="filled"
-                        sx={{ mb: 1, mr: 1 }}
-                      />
-                    </Box>
-                    <Box>
-                      <Typography >
-                        Width
-                      </Typography>
-                      <Chip
-                        label={plant.width}
-                        icon={<Box as='img' src={width} sx={{ width: '24px' }} />}
-                        variant="filled"
-                        sx={{ mb: 1, mr: 1 }}
-                      />
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-            {userIsAuthenticated() ? <Chip
-              label="Edit"
-              onClick={handleEdit}
-              icon={<EditRoundedIcon sx={{ width: 15 }} />}
-              variant="outlined"
-              sx={{ float: 'right', mt: 1 }}
-            /> : null}
-          </Grid> */}
-          
 
           {/* comment info */}
           <Box display='flex' mb={3} alignItems='flex-end'>
@@ -581,12 +470,9 @@ const PlantShow = () => {
               No comments!
             </Box>
           }
-
-        </>
-
-
+        </Container>
         :
-        <Box>Loading</Box>
+        <Box sx={{ height: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spinner /></Box>
       }
     </Container >
   )
