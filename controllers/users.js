@@ -24,3 +24,10 @@ export const getProfile = async (req, res) => {
     return res.status(401).json({ message: 'Unauthorised' })
   }
 }
+
+// METHOD: PUT
+// Endpoint: /profile/:userId
+// Description: Modifies the current user's bio
+export const updateProfile = async (req, res) => {
+  console.log('update profile hit')
+}
