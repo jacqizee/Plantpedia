@@ -41,7 +41,9 @@ const Login = () => {
     if (formData.email && formData.password) {
       try {
         const { data } = await axios.post('api/login', formData)
+        
         setTokenToLocalStorage(data.token)
+        
         navigate('/')
       } catch (err) {
         console.log(err)

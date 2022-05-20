@@ -32,6 +32,7 @@ const PageNavbar  = () => {
 
   // Payload
   const payload = getPayload()
+  console.log('payload in pageNavBar is: ', payload)
 
   const [anchorElNav, setAnchorElNav] = useState(null)
   const [anchorElUser, setAnchorElUser] = useState(null)
