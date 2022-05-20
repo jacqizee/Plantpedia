@@ -187,16 +187,16 @@ const PlantShow = () => {
               <Typography variant='h4'>
                 {plant.name}
               </Typography>
-              <Typography variant='h6'>
+              <Typography variant='subtitle1' fontStyle='italic' sx={{ mt: -1 }}>
                 {plant.scientificName}
               </Typography>
             </Grid>
 
             {/* Image and favorite */}
-            <Grid item md={6}>
+            <Grid item md={6} sx={{ textAlign: 'right' }}>
               <Box component='img' src={plant.images} alt={plant.name} sx={{ height: '100%', objectFit: 'cover' }} />
               <IconButton
-                sx={{ bottom: 55, left: 5, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }}
+                sx={{ bottom: 55, right: 5, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }}
                 onClick={() => toggleFavorite(plant)} >
                 {favorite ? <FavoriteIcon sx={{ color: 'red' }}/> : <FavoriteBorderIcon sx={{ color: 'white' }} />}
               </IconButton>
