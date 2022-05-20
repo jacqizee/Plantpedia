@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import Spinner from '../utilities/Spinner.js'
@@ -71,7 +71,12 @@ const UserProfile = () => {
   // Navigate
   const navigate = useNavigate()
 
+  //Params
+  const { username } = useParams()
+  console.log('username params is: ', username)
+
   const payload = getPayload()
+  console.log('payload username is: ', payload.username)
 
   const [value, setValue] = useState(0)
 
@@ -85,27 +90,11 @@ const UserProfile = () => {
   const [favoritePlants, setFavoritePlants] = useState([])
   const [editedPlants, setEditedPlants] = useState([])
   const [user, setUser] = useState({
-    username: payload.username,
+    username: username,
     numberOfPosts: 0,
-    bio: '',
-    image: logo,
+    bio: payload.bio,
+    image: payload.profilePicture,
   })
-
-
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       const { data } = await axios.get('/api/plants')
-  //       setPlants(data)
-  //     } catch (error) {
-  //       console.log(error)
-  //       setErrors(true)
-  //     }
-  //     setLoading(false)
-  //   }
-  //   getData()
-  // }, [])
 
 
 
@@ -192,6 +181,13 @@ const UserProfile = () => {
     setValue(newValue)
   }
 
+  const handleEdit = (e) => {
+    e.preventDefault()
+    if (username === payload.username) {
+      navigate(`/profile/${username}/edit`)
+    }
+  }
+
   return (
     <>
       <Container maxWidth='lg' sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
@@ -204,10 +200,18 @@ const UserProfile = () => {
           {/* About Me */}
           <Grid item xs={6} sx={{ ml: 8 }} >
             <Stack spacing={0} >
-              <Box sx={{ flexGrow: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex' }}>
-                <Typography variant="h6">{user.username}</Typography>
-                <Button href="#">Edit</Button>
-              </Box>
+              {username === payload.username ?
+                <>
+                  <Box sx={{ flexGrow: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex' }}>
+                    <Typography variant="h6">{user.username}</Typography>
+                    <Button onClick={handleEdit}>Edit</Button>
+                  </Box>
+                </>
+                :
+                <>
+                  <Typography variant="h6">{user.username}</Typography>
+                </>
+              }
               <Box>
                 <Typography sx={{ mt: 0, mb: 0 }}><strong>{user.numberOfPosts}</strong> posts </Typography>
               </Box>
