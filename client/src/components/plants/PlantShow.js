@@ -185,7 +185,7 @@ const PlantShow = () => {
     <Container maxWidth='lg' >
       {plant ?
         <Container>
-          <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', padding: 2, my: 5 }}>
+          <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', padding: 2, my: 5, borderRadius: 1 }}>
             <Grid container spacing={2} sx={{ my: 1 }}>
               {/* Title */}
               <Grid item xs={12} sx={{ textAlign: 'center', mb: 1 }}>
@@ -296,7 +296,7 @@ const PlantShow = () => {
                             label={plant.lifespan}
                             icon={<Box as='img' src={calendar} sx={{ width: '24px' }} />}
                             variant="filled"
-                            sx={{ mb: 1, mr: 1 }}
+                            sx={{ mb: 1 }}
                           />
                         </Box>
                       </Grid>
@@ -308,13 +308,13 @@ const PlantShow = () => {
                             label={`Length: ${plant.height}"`}
                             icon={<Box as='img' src={ruler} sx={{ width: '24px' }} />}
                             variant="filled"
-                            sx={{ mb: 1, mr: 1 }}
+                            sx={{ mb: 1, mr: '2px' }}
                           />
                           <Chip
                             label={`Width: ${plant.width}"`}
                             icon={<Box as='img' src={width} sx={{ width: '24px' }} />}
                             variant="filled"
-                            sx={{ mb: 1, mr: 1 }}
+                            sx={{ mb: 1, ml: '2px' }}
                           />
                         </Box>
                       </Grid>
@@ -328,7 +328,7 @@ const PlantShow = () => {
                             label={plant.mood}
                             icon={<Box as='img' src={emotions} sx={{ width: '24px' }} />}
                             variant="filled"
-                            sx={{ mb: 1, mr: 1 }}
+                            sx={{ mb: 1 }}
                           />
                         </Box>
                       </Grid>
