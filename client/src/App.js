@@ -9,11 +9,12 @@ import PlantShow from './components/plants/PlantShow'
 import PlantAdd from './components/plants/PlantAdd'
 import PlantEdit from './components/plants/PlantEdit'
 import NotFound from './components/common/NotFound'
+import UserProfile from './components/user/UserProfile'
+import EditProfile from './components/user/EditProfile'
 
 // Auth components
 import Register from './components/auth/Register'
 import Login from './components/auth/Login'
-import UserProfile from './components/user/UserProfile'
 
 const App = () => {
 
@@ -36,6 +37,7 @@ const App = () => {
 
           {/* User routes */}
           <Route path="/profile/:username" element={<UserProfile />} />
+          <Route path="/profile/:username/edit" element={<EditProfile />} />
 
           
           {/* The following path matches any path specified, so it needs to come last */}

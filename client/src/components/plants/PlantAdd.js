@@ -100,7 +100,6 @@ const PlantAdd = () => {
     'Pink',
     'Purple',
     'Violet',
-    'Cream',
     'White'
   ]
 
