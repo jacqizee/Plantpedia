@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth.js'
+import { getTokenFromLocalStorage, userIsAuthenticated, userIsOwner } from '../../helpers/auth.js'
 import { useNavigate, useParams } from 'react-router-dom'
 
 // MUI Imports
@@ -158,7 +158,7 @@ const PlantEdit = () => {
   const moodTypes = ['Cheerful', 'Emo', 'Mysterious', 'Classy', 'Bright']
 
   return (
-    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Container maxWidth='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
       <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream' }} >
         <Box
           component='form'
@@ -410,7 +410,7 @@ const PlantEdit = () => {
             <Grid item xs={12}>
               <Container sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button variant="contained" type="submit" size='large' sx={{ width: .70, mx: 2 }}>Submit</Button>
-                <Button variant="contained" onClick={handleDelete} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button>
+                { !formLoaded ? '' : userIsOwner(formData) ? <Button variant="contained" onClick={handleDelete} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button> : ''}
               </Container>
             </Grid>
           </Grid>

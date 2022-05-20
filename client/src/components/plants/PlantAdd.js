@@ -120,7 +120,7 @@ const PlantAdd = () => {
   const moodTypes = ['Cheerful', 'Emo', 'Mysterious', 'Classy', 'Bright']
 
   return (
-    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Container maxWidth='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
       <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream' }} >
         <Box
           component='form'
