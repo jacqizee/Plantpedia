@@ -197,9 +197,9 @@ const PlantShow = () => {
             {/* Image and favorite */}
             <Grid item md={6} sx={{ position: 'relative' }}>
               <img src={plant.images} alt={plant.name} sx={{ position: 'relative' }} />
-              <IconButton sx={{ color: 'white', position: 'absolute', bottom: '1%', right: 0 }}
+              <IconButton sx={{ position: 'absolute', top: '3%', right: 0 }}
                 onClick={() => toggleFavorite(plant)} >
-                {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                {favorite ? <FavoriteIcon sx={{ color: 'red' }}/> : <FavoriteBorderIcon sx={{ color: 'white' }} />}
               </IconButton>
             </Grid>
 
