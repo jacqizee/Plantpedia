@@ -142,7 +142,7 @@ const PlantShow = () => {
         },
       })
       const { data } = await axios.get(`/api/plants/${id}`)
-      setFilteredPlantComments(data.comments)
+      // setFilteredPlantComments(data.comments)
       filterComments()
       setcommentCount(data.comments.length)
       setFormData({
@@ -166,6 +166,7 @@ const PlantShow = () => {
   const toggleShowOn = () => {
     setShow(true)
   }
+
   const toggleShowOff = () => {
     setShow(false)
     setFormData({
@@ -173,6 +174,7 @@ const PlantShow = () => {
       owner: '',
     })
   }
+
   //disable comment button until user has typed message
   const isTextDisabled = formData.text.length === 0
 
@@ -395,7 +397,7 @@ const PlantShow = () => {
                   onChange={handleDropdown}
                   sx={{ p: 'none' }}
                 >
-                  <MenuItem value='newest' >Newest</MenuItem>
+                  <MenuItem value='newest'>Newest</MenuItem>
                   <MenuItem value='oldest'>Oldest</MenuItem>
                 </Select>
               </FormControl>
