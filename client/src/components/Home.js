@@ -64,10 +64,19 @@ const Home = () => {
   }, [])
 
   //filterSearch by search term
-  const handleSearch = () => {
-
+  const handleSearch = (event, value) => {
+    if (value) {
+      setSearchTerm(value)
+    }    
   } 
 
+
+  useEffect(() => {
+    const filterArray = plants.filter(plant => plant.flowerColor.filter(color => searchTerm.includes(color))) 
+    setFilteredPlants(filterArray)
+    console.log(filteredPlants)
+   
+  }, [searchTerm])
 
 
   //! WIP
@@ -93,17 +102,16 @@ const Home = () => {
           id="tags-filled"
           options={[]}
           freeSolo
-          onChange={(event, value) => console.log(value)}
+          onChange={(event, value) => handleSearch(event, value)}
           renderTags={(items, getTagProps) =>
             items.map((item, i) => {
               if (colors.includes(item.charAt(0).toUpperCase() + item.slice(1))) {
                 return (
                   <Chip
                     key={i}                    
-                    variant="outlined"
                     icon={<CircleIcon sx={{ '&&': { color: [item], width: '15px' } }} />}
                     label={item.charAt(0).toUpperCase() + item.slice(1)}
-                    sx={{ width: '100px' }}
+                    sx={{ width: '110px' }}
                     {...getTagProps({ i })}
                   />
                 )
@@ -130,8 +138,7 @@ const Home = () => {
                     <Chip
                       onClick={handleChipClick}
                       key={i}
-                      label={color}
-                      variant="outline"                    
+                      label={color}                   
                       icon={<CircleIcon sx={{ '&&': { color: [color], width: '15px' } }} />}
                       sx={{ width: '100px', mb: 1, mr: 1 }}
                     />
@@ -162,7 +169,7 @@ const Home = () => {
           // images
           <Container maxWidth='lg' sx={{ my: 4 }}>
             <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1}>
-              {plants.map(plant => {
+              {(filteredPlants.length && searchTerm.length ? filteredPlants : plants).map(plant => {
                 return (
                   <ImageListItem key={plant._id} >
                     <Box as={Link} to={`/plants/${plant._id}`} >
