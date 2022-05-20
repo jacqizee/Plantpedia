@@ -35,7 +35,7 @@ const Home = () => {
 
 
   //search bar
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState([])
   const [show, setShow] = useState(false)
 
   const colors = [
@@ -47,6 +47,23 @@ const Home = () => {
     'Violet',
     'White',
     'Orange'
+  ]
+
+  const soilType = [
+    'Loamy',
+    'Chalky',
+    'Peaty',
+    'Silty',
+    'Sandy',
+    'Clay'
+  ]
+
+  const mood = [
+    'Cheerful',
+    'Emo',
+    'Mysterious',
+    'Classy',
+    'Bright'
   ]
 
   useEffect(() => {
@@ -94,6 +111,9 @@ const Home = () => {
   const handleChipClick = (color) => {
     // setShow(true)
     console.log(color)
+    const searchArr = [...searchTerm]
+    searchArr.push(color)
+    setSearchTerm(searchArr)
   }
 
 
@@ -111,7 +131,7 @@ const Home = () => {
           value={searchTerm}
           onChange={(event, value) => handleSearch(event, value)}
           renderTags={(items, getTagProps) => {
-            items[0] = items[0].trim()            
+            items[0] = items[0].trim()
             return (/\s/g.test(items[0]) ? items[0].split(' ') : items).map((item, i) => {
               const newItem = item.charAt(0).toUpperCase() + item.slice(1)
               if (colors.includes(newItem)) {
@@ -136,7 +156,7 @@ const Home = () => {
               }
             })
           }
-            
+
           }
           renderInput={(params) => (
             <TextField
@@ -152,13 +172,13 @@ const Home = () => {
             <Grid item md={4}>
               <h2>Flower Colors</h2>
               <Box>
-                {colors.map((color, i) => {
+                {colors.map((item, i) => {
                   return (
                     <Chip
-                      onClick={() => handleChipClick(color)}
+                      onClick={() => handleChipClick(item)}
                       key={i}
-                      label={color}
-                      icon={<CircleIcon sx={{ '&&': { color: [color], width: '15px' } }} />}
+                      label={item}
+                      icon={<CircleIcon sx={{ '&&': { color: [item], width: '15px' } }} />}
                       sx={{ width: '100px', mb: 1, mr: 1 }}
                     />
                   )
@@ -167,10 +187,33 @@ const Home = () => {
             </Grid>
             <Grid item md={4}>
               <h2>Soil Type</h2>
-
+              <Box>
+                {soilType.map((item, i) => {
+                  return (
+                    <Chip
+                      onClick={() => handleChipClick(item)}
+                      key={i}
+                      label={item}
+                      sx={{ width: '100px', mb: 1, mr: 1 }}
+                    />
+                  )
+                })}
+              </Box>
             </Grid>
             <Grid item md={4}>
-              <h2>Upkeep</h2>
+              <h2>Mood</h2>
+              <Box>
+                {mood.map((item, i) => {
+                  return (
+                    <Chip
+                      onClick={() => handleChipClick(item)}
+                      key={i}
+                      label={item}
+                      sx={{ width: '100px', mb: 1, mr: 1 }}
+                    />
+                  )
+                })}
+              </Box>
             </Grid>
           </Grid>
           : null}
