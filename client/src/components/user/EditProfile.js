@@ -18,26 +18,57 @@ import InputLabel from '@mui/material/InputLabel'
 import Slider from '@mui/material/Slider'
 import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import PhotoCamera from '@mui/icons-material/PhotoCamera'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Chip from '@mui/material/Chip'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Paper from '@mui/material/Paper'
+import AddIcon from '@mui/icons-material/Add'
+import { styled } from '@mui/material/styles'
 
 const EditProfile = () => {
 
+  const Input = styled('input')({
+    display: 'none',
+  })
+
   const { username } = useParams()
-  console.log('username from params is: ', username)
+  // console.log('username from params is: ', username)
 
   const payload = getPayload()
 
   const navigate = useNavigate()
+
+  const uploadURL = process.env.REACT_APP_CLOUDINARY_URL
+  const preset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+
+  console.log(uploadURL, preset)
 
   const [ formData, setFormData ] = useState({
     username: username,
     image: payload.profilePicture,
     bio: payload.bio,
   })
+
+  const handleImageUpload = async e => {
+    
+    const data = new FormData()
+
+
+    // console.log('e target file 0 is: ', e.target.files[0])
+    console.log('upload preset is: ', preset)
+    
+    data.append('file', e.target.files[0])
+    data.append('upload_preset', preset)
+
+    const res = await axios.post(uploadURL, data)
+
+    console.log(res.data)
+    // Set the profileImage url to state
+    setFormData({ ...formData, image: res.data.url })
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -48,6 +79,15 @@ const EditProfile = () => {
         },
       })
       console.log(response)
+
+      console.log('response token is: ', response.data.token)
+
+      const token = response.data.token
+
+
+      window.localStorage.removeItem('plantpedia')
+      localStorage.setItem('plantpedia', token)
+
       navigate(`/profile/${username}`)
     } catch (error) {
       console.log(error)
@@ -83,7 +123,7 @@ const EditProfile = () => {
             rowSpacing={1}
             columnSpacing={1}>
             {/* Username */}
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <TextField
                 id='username'
                 placeholder='Username * (max 30 characters)'
@@ -93,9 +133,20 @@ const EditProfile = () => {
                 required
                 onChange={handleChange}
                 fullWidth />
+            </Grid> */}
+            {/* Images */}
+            <Grid item xs={12} sx={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+              <Box component='img' src={formData.image} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
+              <label htmlFor="icon-button-file">
+                <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
+                <IconButton aria-label="upload picture" component="span" sx={{ position: 'absolute', top: 145, left: 315 }} >
+                  <PhotoCamera />
+                </IconButton>
+              </label>
             </Grid>
+
             {/* Bio */}
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ my: 1 }}>
               <TextField
                 id='bio' 
                 placeholder='Bio * (max 150 characters)'
@@ -106,22 +157,12 @@ const EditProfile = () => {
                 onChange={handleChange}
                 fullWidth />
             </Grid>
-            {/* Images */}
-            <Grid item xs={12}>
-              <TextField id='image'
-                placeholder='Image URL *'
-                variant='outlined'
-                name='image'
-                value={formData.image}
-                required
-                onChange={handleChange}
-                fullWidth />
-            </Grid>
+
             {/* Submit Button */}
             <Grid item xs={12}>
-              <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="contained" type="submit" size='large' sx={{ width: .70, mx: 2 }}>Submit</Button>
-                <Button variant="contained" onClick={handleCancel} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Cancel</Button>
+              <Container sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
+                <Button variant="contained" type="submit" size='large' sx={{ width: .48, mx: 0 }}>Submit</Button>
+                <Button variant="contained" onClick={handleCancel} size='small' sx={{ width: .48, mx: 0, backgroundColor: 'red' }}>Cancel</Button>
               </Container>
             </Grid>
           </Grid>
