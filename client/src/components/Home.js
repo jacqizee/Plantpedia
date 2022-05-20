@@ -40,13 +40,13 @@ const Home = () => {
 
   const colors = [
     'Red',
-    'Orange',
-    'Yellow',
-    'Blue',
-    'Pink',
     'Purple',
+    'Pink',
+    'Blue',
+    'Yellow',
     'Violet',
-    'White'
+    'White',
+    'Orange'
   ]
 
   useEffect(() => {
@@ -68,13 +68,15 @@ const Home = () => {
   //filterSearch by search term
   const handleSearch = (event, value) => {
     if (value) {
-      setSearchTerm(value)
+      /\s/g.test(value[0]) ? value[0] = value[0].trim() : value
+      setSearchTerm(/\s/g.test(value[0]) ? value[0].split(' ') : value)
+      console.log(searchTerm)
     }
   }
 
   // works for typing in a color and pressing enter
   useEffect(() => {
-    if (!searchTerm.length) return 
+    if (!searchTerm.length) return
     const filterArray = plants.filter(plant => searchTerm.some(color => plant.flowerColor.includes(color)))
     setFilteredPlants(filterArray)
   }, [searchTerm])
@@ -85,11 +87,13 @@ const Home = () => {
     setShow(true)
   }
   const handleBlur = () => {
-    setShow(false)
+    // setShow(false)
+
   }
 
-  const handleChipClick = (e) => {
-    setSearchTerm(e.target.innerText)
+  const handleChipClick = (color) => {
+    // setShow(true)
+    console.log(color)
   }
 
 
@@ -104,15 +108,18 @@ const Home = () => {
           id="tags-filled"
           options={[]}
           freeSolo
+          value={searchTerm}
           onChange={(event, value) => handleSearch(event, value)}
-          renderTags={(items, getTagProps) =>
-            items.map((item, i) => {
-              if (colors.includes(item.charAt(0).toUpperCase() + item.slice(1))) {
+          renderTags={(items, getTagProps) => {
+            items[0] = items[0].trim()            
+            return (/\s/g.test(items[0]) ? items[0].split(' ') : items).map((item, i) => {
+              const newItem = item.charAt(0).toUpperCase() + item.slice(1)
+              if (colors.includes(newItem)) {
                 return (
                   <Chip
                     key={i}
                     icon={<CircleIcon sx={{ '&&': { color: [item], width: '15px' } }} />}
-                    label={item.charAt(0).toUpperCase() + item.slice(1)}
+                    label={newItem}
                     sx={{ width: '110px' }}
                     {...getTagProps({ i })}
                   />
@@ -129,25 +136,26 @@ const Home = () => {
               }
             })
           }
+            
+          }
           renderInput={(params) => (
             <TextField
               {...params}
               placeholder="Search with flower colors, soil types etc..."
               onFocus={handleFocus}
-              value={searchTerm}
-              onKeyDown={handleSearch}
+              onBlur={handleBlur}
             />
           )}
         />
         {show ?
-          <Grid container>
+          <Grid container textAlign='center'>
             <Grid item md={4}>
               <h2>Flower Colors</h2>
               <Box>
                 {colors.map((color, i) => {
                   return (
                     <Chip
-                      onClick={handleChipClick}
+                      onClick={() => handleChipClick(color)}
                       key={i}
                       label={color}
                       icon={<CircleIcon sx={{ '&&': { color: [color], width: '15px' } }} />}
@@ -159,11 +167,13 @@ const Home = () => {
             </Grid>
             <Grid item md={4}>
               <h2>Soil Type</h2>
+
             </Grid>
             <Grid item md={4}>
               <h2>Upkeep</h2>
             </Grid>
-          </Grid> : null}
+          </Grid>
+          : null}
 
       </Container >
       {loading ?
