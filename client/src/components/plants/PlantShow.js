@@ -46,33 +46,112 @@ const PlantShow = () => {
 
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
-  const [plantComments, setPlantComments] = useState(false)
+  const [comments, setComments] = useState([])
+  const [ loading, setLoading ] = useState(true)
+  const [ commentLoading, setCommentLoading ] = useState(true)
 
-  const [commentCount, setcommentCount] = useState()
+  const [commentCount, setCommentCount] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
-
-  const [show, setShow] = useState(false)
+  const [showComments, setShowComments] = useState(false)
+  
   const [formData, setFormData] = useState({
     text: '',
     owner: '',
     username: '',
   })
 
-  //get plant data
+  //get plant data & set initial comments
   useEffect(() => {
     const getPlant = async () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant(data)
-        setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
-        setcommentCount(data.comments.length)
       } catch (error) {
         console.log(error)
         // setErrors(true)
       }
+      setLoading(false)
     }
     getPlant()
   }, [id])
+
+  // comment dropdown menu
+  const handleDropdown = (e) => {
+    setCommentDropdown(e.target.value)
+  }
+
+  // when comment or commentdropdown states are loaded & on page load
+  useEffect(() => {
+    if (!loading) {
+      setCommentCount(plant.comments.length)
+      if (commentDropdown === 'oldest') {
+        console.log('oldest')
+        setComments(plant.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
+      } else if (commentDropdown === 'newest') {
+        console.log('newest')
+        setComments(plant.comments.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
+      } 
+    }
+  }, [loading, commentDropdown])
+
+  // ? Comment Functions
+
+  //input for comment data
+  const handleInput = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  //submit comment
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!formData.text.length) return
+    setFormData({ ...formData, owner: payload.sub, username: payload.username })
+    try {
+      await axios.post(`/api/plants/${plant._id}/comments`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      //get new plant comments
+      const { data } = await axios.get(`/api/plants/${id}`)
+      //set state and sort by time
+      setComments(data.comments)
+      setPlant({ ...plant, comments: data.comments })
+      //reset form
+      setFormData({
+        text: '',
+        owner: '',
+      })
+      toggleShowOff()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  //unfocus comment section after comment is sent
+  const shouldBlur = (e) => {
+    if ((e.keyCode === 13)) {
+      e.target.blur()
+    }
+  }
+
+  //show/hide comment buttons
+  const toggleShowOn = () => {
+    setShowComments(true)
+  }
+
+  const toggleShowOff = () => {
+    setShowComments(false)
+    setFormData({
+      text: '',
+      owner: '',
+    })
+  }
+
+  //disable comment button until user has typed message
+  const isTextDisabled = formData.text.length === 0
+
+  // ? Favorite Functions
 
   //check if user has already favorited the plant
   const plantIsFavorite = (singlePlant) => {
@@ -101,72 +180,6 @@ const PlantShow = () => {
       console.log(error)
     }
   }
-
-  //navigates user to edit page
-  const handleEdit = () => {
-    navigate(`/plants/${plant._id}/edit`)
-  }
-
-  //dropdown menu
-  const handleDropdown = (e) => {
-    setCommentDropdown(e.target.value)
-  }
- 
-
-  //input for comment data
-  const handleInput = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  //submit comment
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!formData.text.length) return
-    setFormData({ ...formData, owner: payload.sub, username: payload.username })
-    try {
-      await axios.post(`/api/plants/${plant._id}/comments`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      //get new plant comments
-      const { data } = await axios.get(`/api/plants/${id}`)
-      //set state and sort by time
-      setPlantComments(data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
-      setcommentCount(data.comments.length)
-      //reset form
-      setFormData({
-        text: '',
-        owner: '',
-      })
-      toggleShowOff()
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  //unfocus comment section after comment is sent
-  const shouldBlur = (e) => {
-    if ((e.keyCode === 13)) {
-      e.target.blur()
-    }
-  }
-
-  //show/hide comment buttons
-  const toggleShowOn = () => {
-    setShow(true)
-  }
-
-  const toggleShowOff = () => {
-    setShow(false)
-    setFormData({
-      text: '',
-      owner: '',
-    })
-  }
-
-  //disable comment button until user has typed message
-  const isTextDisabled = formData.text.length === 0
 
   return (
     <Container maxWidth='lg' >
@@ -337,7 +350,7 @@ const PlantShow = () => {
                             )
                           })}
                         </Box>
-                      </Grid> : ''}
+                      </Grid> : null}
                       {/* Flower Color */}
                       {plant.flowerColor.length ? <Grid item xs={12}>
                         <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center' }}>
@@ -356,13 +369,13 @@ const PlantShow = () => {
                             )
                           })}
                         </Box>
-                      </Grid> : ''}
+                      </Grid> : null}
                     </Grid>    
                   </AccordionDetails>
                 </Accordion>
                 {userIsAuthenticated() ? <Chip
                   label="Edit"
-                  onClick={handleEdit}
+                  onClick={() => navigate(`/plants/${plant._id}/edit`)}
                   icon={<EditRoundedIcon sx={{ width: 15 }} />}
                   variant="outlined"
                   sx={{ float: 'right', mt: 1 }}
@@ -410,12 +423,12 @@ const PlantShow = () => {
                   onChange={handleInput}
                   onKeyUp={shouldBlur}
                   onFocus={toggleShowOn} />
-                {show ?
+                {showComments ?
                   <>
                     <Button
                       type="submit"
                       variant="contained"
-                      sx={{ mt: 3, float: 'right', display: show }}
+                      sx={{ mt: 3, float: 'right', display: showComments }}
                       disabled={isTextDisabled}
                     >
                       Add comment
@@ -423,7 +436,7 @@ const PlantShow = () => {
                     <Button
                       type="submit"
                       variant="contained"
-                      sx={{ mr: 2, mt: 3, float: 'right', display: show }}
+                      sx={{ mr: 2, mt: 3, float: 'right', display: showComments }}
                       onClick={toggleShowOff}
                     >
                       Cancel
@@ -435,14 +448,14 @@ const PlantShow = () => {
             </Stack> : null}
 
           {/* comment section */}
-          {plantComments.length ?
-            plantComments.map(comment => {
+          { !loading ?
+            comments.map(comment => {
               const { username, _id, text, createdAt } = comment
               const date = new Date(createdAt)
               return (
                 <Stack key={_id} direction='row' spacing={2} my={3}>
                   <Avatar sx={{ width: 24, height: 24 }} />
-                  <Box >
+                  <Box>
                     <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
                       {username.charAt(0).toUpperCase() + username.slice(1)}
                       <Typography as='span' sx={{
