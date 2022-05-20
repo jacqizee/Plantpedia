@@ -87,7 +87,6 @@ const Home = () => {
     if (value) {
       /\s/g.test(value[0]) ? value[0] = value[0].trim() : value
       setSearchTerm(/\s/g.test(value[0]) ? value[0].split(' ') : value)
-      console.log(searchTerm)
     }
   }
 
@@ -103,14 +102,14 @@ const Home = () => {
   const handleFocus = () => {
     setShow(true)
   }
-  const handleBlur = () => {
-    // setShow(false)
+  const handleBlur = (e) => {
+
+    setShow(false)
 
   }
 
   const handleChipClick = (color) => {
     // setShow(true)
-    console.log(color)
     const searchArr = [...searchTerm]
     searchArr.push(color)
     setSearchTerm(searchArr)
@@ -132,6 +131,7 @@ const Home = () => {
           onChange={(event, value) => handleSearch(event, value)}
           renderTags={(items, getTagProps) => {
             items[0] = items[0].trim()
+
             return (/\s/g.test(items[0]) ? items[0].split(' ') : items).map((item, i) => {
               const newItem = item.charAt(0).toUpperCase() + item.slice(1)
               if (colors.includes(newItem)) {
@@ -161,7 +161,7 @@ const Home = () => {
           renderInput={(params) => (
             <TextField
               {...params}
-              placeholder="Search with flower colors, soil types etc..."
+              placeholder={searchTerm.length ? 'Add tag' : 'Search by flower color, soil type or mood...'}
               onFocus={handleFocus}
               onBlur={handleBlur}
             />
@@ -172,13 +172,13 @@ const Home = () => {
             <Grid item md={4}>
               <h2>Flower Colors</h2>
               <Box>
-                {colors.map((item, i) => {
+                {colors.map((chip, i) => {
                   return (
                     <Chip
-                      onClick={() => handleChipClick(item)}
+                      onClick={() => handleChipClick(chip)}
                       key={i}
-                      label={item}
-                      icon={<CircleIcon sx={{ '&&': { color: [item], width: '15px' } }} />}
+                      label={chip}
+                      icon={<CircleIcon sx={{ '&&': { color: [chip], width: '15px' } }} />}
                       sx={{ width: '100px', mb: 1, mr: 1 }}
                     />
                   )
@@ -188,12 +188,12 @@ const Home = () => {
             <Grid item md={4}>
               <h2>Soil Type</h2>
               <Box>
-                {soilType.map((item, i) => {
+                {soilType.map((chip, i) => {
                   return (
                     <Chip
-                      onClick={() => handleChipClick(item)}
+                      onClick={() => handleChipClick(chip)}
                       key={i}
-                      label={item}
+                      label={chip}
                       sx={{ width: '100px', mb: 1, mr: 1 }}
                     />
                   )
@@ -203,12 +203,12 @@ const Home = () => {
             <Grid item md={4}>
               <h2>Mood</h2>
               <Box>
-                {mood.map((item, i) => {
+                {mood.map((chip, i) => {
                   return (
                     <Chip
-                      onClick={() => handleChipClick(item)}
+                      onClick={() => handleChipClick(chip)}
                       key={i}
-                      label={item}
+                      label={chip}
                       sx={{ width: '100px', mb: 1, mr: 1 }}
                     />
                   )

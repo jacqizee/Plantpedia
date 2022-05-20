@@ -117,8 +117,8 @@ const PageNavbar  = () => {
                   onClose={handleCloseUserMenu}
                 >
                   {/* Settings on Profile Click */}
-                  {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleNavClick}>
+                  {settings.map((setting, i) => (
+                    <MenuItem key={i} onClick={handleNavClick}>
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))}
