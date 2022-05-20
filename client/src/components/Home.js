@@ -63,6 +63,8 @@ const Home = () => {
     getData()
   }, [])
 
+
+  //! WIP
   //filterSearch by search term
   const handleSearch = (event, value) => {
     if (value) {
@@ -72,6 +74,7 @@ const Home = () => {
 
   // works for typing in a color and pressing enter
   useEffect(() => {
+    if (!searchTerm.length) return 
     const filterArray = plants.filter(plant => searchTerm.some(color => plant.flowerColor.includes(color)))
     setFilteredPlants(filterArray)
   }, [searchTerm])
@@ -87,8 +90,8 @@ const Home = () => {
 
   const handleChipClick = (e) => {
     setSearchTerm(e.target.innerText)
-
   }
+
 
 
   return (
