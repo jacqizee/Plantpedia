@@ -46,11 +46,48 @@ const EditProfile = () => {
 
   console.log(uploadURL, preset)
 
+  //loading and error state
+  const [loading, setLoading] = useState(true)
+  const [errors, setErrors] = useState(false)
+
   const [ formData, setFormData ] = useState({
     username: username,
     image: payload.profilePicture,
-    bio: payload.bio,
+    bio: '',
   })
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        if (!payload) {
+          navigate('/login')
+        }
+        console.log('payload is: ', payload)
+        console.log('payload.sub is: ', payload.sub)
+
+        const { data } = await axios.get(`/api/profile/${payload.sub}`, {
+          headers: {
+            Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          },
+        })
+
+        console.log('retrieved data is: ', data)
+
+        setFormData(
+          { 
+            ...formData,
+            bio: data.bio,
+          }
+        )
+
+      } catch (error) {
+        console.log(error)
+        setErrors(true)
+      }
+      setLoading(false)
+    }
+    getData()
+  }, [])
 
   const handleImageUpload = async e => {
     
@@ -88,6 +125,7 @@ const EditProfile = () => {
       window.localStorage.removeItem('plantpedia')
       localStorage.setItem('plantpedia', token)
 
+      console.log('this fires')
       navigate(`/profile/${username}`)
     } catch (error) {
       console.log(error)
