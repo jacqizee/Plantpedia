@@ -19,7 +19,7 @@ import Grid from '@mui/material/Grid'
 import Chip from '@mui/material/Chip'
 import Autocomplete from '@mui/material/Autocomplete'
 import CircleIcon from '@mui/icons-material/Circle'
-import { bgcolor } from '@mui/system'
+
 
 
 const Home = () => {
@@ -31,7 +31,7 @@ const Home = () => {
 
   //plant arrays  
   const [plants, setPlants] = useState([])
-  const [filteredPlants, setFilteredPlants] = useState([])
+  const [filteredPlants, setFilteredPlants] = useState()
 
 
   //search bar
@@ -67,15 +67,13 @@ const Home = () => {
   const handleSearch = (event, value) => {
     if (value) {
       setSearchTerm(value)
-    }    
-  } 
+    }
+  }
 
-
+  // works for typing in a color and pressing enter
   useEffect(() => {
-    const filterArray = plants.filter(plant => plant.flowerColor.filter(color => searchTerm.includes(color))) 
+    const filterArray = plants.filter(plant => searchTerm.some(color => plant.flowerColor.includes(color)))
     setFilteredPlants(filterArray)
-    console.log(filteredPlants)
-   
   }, [searchTerm])
 
 
@@ -89,6 +87,7 @@ const Home = () => {
 
   const handleChipClick = (e) => {
     setSearchTerm(e.target.innerText)
+
   }
 
 
@@ -108,8 +107,17 @@ const Home = () => {
               if (colors.includes(item.charAt(0).toUpperCase() + item.slice(1))) {
                 return (
                   <Chip
-                    key={i}                    
+                    key={i}
                     icon={<CircleIcon sx={{ '&&': { color: [item], width: '15px' } }} />}
+                    label={item.charAt(0).toUpperCase() + item.slice(1)}
+                    sx={{ width: '110px' }}
+                    {...getTagProps({ i })}
+                  />
+                )
+              } else {
+                return (
+                  <Chip
+                    key={i}
                     label={item.charAt(0).toUpperCase() + item.slice(1)}
                     sx={{ width: '110px' }}
                     {...getTagProps({ i })}
@@ -138,7 +146,7 @@ const Home = () => {
                     <Chip
                       onClick={handleChipClick}
                       key={i}
-                      label={color}                   
+                      label={color}
                       icon={<CircleIcon sx={{ '&&': { color: [color], width: '15px' } }} />}
                       sx={{ width: '100px', mb: 1, mr: 1 }}
                     />
@@ -169,7 +177,7 @@ const Home = () => {
           // images
           <Container maxWidth='lg' sx={{ my: 4 }}>
             <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1}>
-              {(filteredPlants.length && searchTerm.length ? filteredPlants : plants).map(plant => {
+              {(filteredPlants && searchTerm.length ? filteredPlants : plants).map(plant => {
                 return (
                   <ImageListItem key={plant._id} >
                     <Box as={Link} to={`/plants/${plant._id}`} >
