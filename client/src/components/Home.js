@@ -15,6 +15,11 @@ import Masonry from '@mui/lab/Masonry'
 import IconButton from '@mui/material/IconButton'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
+import Grid from '@mui/material/Grid'
+import Chip from '@mui/material/Chip'
+import Autocomplete from '@mui/material/Autocomplete'
+import CircleIcon from '@mui/icons-material/Circle'
+import { bgcolor } from '@mui/system'
 
 
 const Home = () => {
@@ -26,7 +31,23 @@ const Home = () => {
 
   //plant arrays  
   const [plants, setPlants] = useState([])
+  const [filteredPlants, setFilteredPlants] = useState([])
 
+
+  //search bar
+  const [searchTerm, setSearchTerm] = useState('')
+  const [show, setShow] = useState(false)
+
+  const colors = [
+    'Red',
+    'Orange',
+    'Yellow',
+    'Blue',
+    'Pink',
+    'Purple',
+    'Violet',
+    'White'
+  ]
 
   useEffect(() => {
     const getData = async () => {
@@ -42,11 +63,90 @@ const Home = () => {
     getData()
   }, [])
 
+  //filterSearch by search term
+  const handleSearch = () => {
+
+  } 
+
+
+
+  //! WIP
+  const handleFocus = () => {
+    setShow(true)
+  }
+  const handleBlur = () => {
+    setShow(false)
+  }
+
+  const handleChipClick = (e) => {
+    setSearchTerm(e.target.innerText)
+  }
+
+
   return (
     <>
       {/* search bar */}
       <Container maxWidth='lg' >
-        <TextField sx={{ mt: 4 }} fullWidth placeholder='Search...' value="hello" />
+        <Autocomplete
+          sx={{ mt: 3 }}
+          multiple
+          id="tags-filled"
+          options={[]}
+          freeSolo
+          onChange={(event, value) => console.log(value)}
+          renderTags={(items, getTagProps) =>
+            items.map((item, i) => {
+              if (colors.includes(item.charAt(0).toUpperCase() + item.slice(1))) {
+                return (
+                  <Chip
+                    key={i}                    
+                    variant="outlined"
+                    icon={<CircleIcon sx={{ '&&': { color: [item], width: '15px' } }} />}
+                    label={item.charAt(0).toUpperCase() + item.slice(1)}
+                    sx={{ width: '100px' }}
+                    {...getTagProps({ i })}
+                  />
+                )
+              }
+            })
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              placeholder="Search with flower colors, soil types etc..."
+              onFocus={handleFocus}
+              value={searchTerm}
+              onKeyDown={handleSearch}
+            />
+          )}
+        />
+        {show ?
+          <Grid container>
+            <Grid item md={4}>
+              <h2>Flower Colors</h2>
+              <Box>
+                {colors.map((color, i) => {
+                  return (
+                    <Chip
+                      onClick={handleChipClick}
+                      key={i}
+                      label={color}
+                      variant="outline"                    
+                      icon={<CircleIcon sx={{ '&&': { color: [color], width: '15px' } }} />}
+                      sx={{ width: '100px', mb: 1, mr: 1 }}
+                    />
+                  )
+                })}
+              </Box>
+            </Grid>
+            <Grid item md={4}>
+              <h2>Soil Type</h2>
+            </Grid>
+            <Grid item md={4}>
+              <h2>Upkeep</h2>
+            </Grid>
+          </Grid> : null}
+
       </Container >
       {loading ?
         <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }}>
