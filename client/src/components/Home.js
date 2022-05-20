@@ -46,7 +46,7 @@ const Home = () => {
     <>
       {/* search bar */}
       <Container maxWidth='lg' >
-        <TextField sx={{ mt: 4 }} fullWidth placeholder='Search...' />
+        <TextField sx={{ mt: 4 }} fullWidth placeholder='Search...' value="hello" />
       </Container >
       {loading ?
         <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }}>
