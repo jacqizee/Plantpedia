@@ -71,7 +71,7 @@ const PageNavbar  = () => {
         <Toolbar disableGutters>
           
           {/* Logo */}
-          <Box as={Link} to="/" sx={{ width: 20, mr: 2 }}>
+          <Box as={Link} to="/" sx={{ width: 25, mr: 2 }}>
             <img src={logo} alt="Logo" />
           </Box>
 
