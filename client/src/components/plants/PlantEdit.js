@@ -227,29 +227,27 @@ const PlantEdit = () => {
                 fullWidth />
             </Grid>
             {/* Images */}
-            <Grid item xs={12} sx={{ mt: 2, flexGrow: 1, justifyContent: 'flex-start', alignItems: 'flex-start', display: 'flex', flexDirection: 'column' }} >
+            <Grid item xs={12} sx={{ mt: 2, textAlign: 'center' }} >
               {formData.images ? 
                 <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                 :
                 <></>
               }
-              <Box sx={{ mt: 1, mb: 2 }}>
-                <label htmlFor="contained-button-file">
-                  <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageUpload} />
-                  {formData.images ? 
-                    // <Button variant="contained" component="span">
-                    //   Change Image
-                    // </Button>
-                    <IconButton aria-label="upload picture" component="span" sx={{ position: 'absolute', top: 215, left: 85 }} >
-                      <PhotoCamera />
-                    </IconButton>
-                    :
-                    <Button variant="contained" component="span">
-                      Upload Image
-                    </Button>
-                  }
-                </label>
-              </Box>
+              <label htmlFor="contained-button-file">
+                <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageUpload} />
+                {formData.images ? 
+                  // <Button variant="contained" component="span">
+                  //   Change Image
+                  // </Button>
+                  <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                    <PhotoCamera />
+                  </IconButton>
+                  :
+                  <Button variant="contained" component="span">
+                    Upload Image
+                  </Button>
+                }
+              </label>
             </Grid>
             {/* Water Requirements */}
             <Grid item xs={12} md={4}>

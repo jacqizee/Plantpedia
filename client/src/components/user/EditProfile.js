@@ -173,11 +173,11 @@ const EditProfile = () => {
                 fullWidth />
             </Grid> */}
             {/* Images */}
-            <Grid item xs={12} sx={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
               <Box component='img' src={formData.image} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
               <label htmlFor="icon-button-file">
                 <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
-                <IconButton aria-label="upload picture" component="span" sx={{ position: 'absolute', top: 145, left: 315 }} >
+                <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                   <PhotoCamera />
                 </IconButton>
               </label>
