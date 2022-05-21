@@ -21,6 +21,6 @@ export default [
     password: 'pass',
     passwordConfirmation: 'pass',
     bio: '33 yo cactus lover ...and cherry plum LOVER',
-    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653054848/plantpedia/cyzbweszubkni2jeueqh.png'
+    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653054848/plantpedia/philip_vf4sz5.png'
   }
 ]
