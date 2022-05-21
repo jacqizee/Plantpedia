@@ -53,8 +53,6 @@ export const updateProfile = async (req, res) => {
       })
     }
 
-    // return res.status(200).json(updatedUser)
-    
     const token = jwt.sign({ sub: updatedUser._id, username: updatedUser.username, profilePicture: updatedUser.image }, process.env.SECRET, { expiresIn: '2d' })
     
     return res.status(200).json({ message: `Update profile successful, ${updatedUser.username}`, token: token })

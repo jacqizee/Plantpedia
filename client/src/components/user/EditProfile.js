@@ -27,6 +27,8 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Paper from '@mui/material/Paper'
 import AddIcon from '@mui/icons-material/Add'
 import { styled } from '@mui/material/styles'
+import ReactCrop from 'react-image-crop'
+import 'react-image-crop/src/ReactCrop.scss'
 
 const EditProfile = () => {
 
@@ -49,6 +51,21 @@ const EditProfile = () => {
   //loading and error state
   const [loading, setLoading] = useState(true)
   const [errors, setErrors] = useState(false)
+
+  //Cropping
+  const [srcImg, setSrcImg] = useState(null)
+  const [image, setImage] = useState(null)
+  const [crop, setCrop] = useState({
+    unit: 'px', // Can be 'px' or '%'
+    x: 0,
+    y: 0,
+    width: 300,
+    height: 300,
+    aspect: 1,
+    keepSelection: true,
+    // locked: true,
+  })
+  const [result, setResult] = useState(null)
 
   const [ formData, setFormData ] = useState({
     username: username,
@@ -90,26 +107,68 @@ const EditProfile = () => {
   }, [])
 
   const handleImageUpload = async e => {
-    
-    const data = new FormData()
-
-
-    // console.log('e target file 0 is: ', e.target.files[0])
-    console.log('upload preset is: ', preset)
-    
-    data.append('file', e.target.files[0])
-    data.append('upload_preset', preset)
-
-    const res = await axios.post(uploadURL, data)
-
-    console.log(res.data)
-    // Set the profileImage url to state
-    setFormData({ ...formData, image: res.data.url })
+    setResult(null)
+    const urlString = URL.createObjectURL(e.target.files[0])
+    console.log(e.target.files[0])
+    setSrcImg(urlString)
+    setImage(urlString)
   }
+
+  const getCroppedImg = async () => {
+
+    const img = new Image()
+    img.src = image
+
+    const isLandscape = img.width > img.height ? true : false
+    const heightMoreThan350px = img.height > 350 ? true : false
+
+    try {
+      const canvas = document.createElement('canvas')
+      let scale
+      if (heightMoreThan350px) {
+        scale = img.height / 350
+      } else {
+        scale = 1
+      }
+      const scaleX = img.naturalWidth / img.width
+      console.log('scale is: ', scale)
+      console.log('Image natural width is: ', img.naturalWidth)
+      canvas.width = crop.width
+      canvas.height = crop.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(
+        img,
+        crop.x * scale,
+        crop.y * scale,
+        crop.width * scale,
+        crop.height * scale,
+        0,
+        0,
+        crop.width,
+        crop.height
+      )
+      console.log('this runs 🏃🏻‍♂️')
+
+      setResult(canvas.toDataURL('image/png', 1))
+
+      const data = new FormData()
+      data.append('file', canvas.toDataURL('image/png', 1))
+      data.append('upload_preset', preset)
+      const res = await axios.post(uploadURL, data)
+      setFormData({ ...formData, image: res.data.url })
+
+    } catch (e) {
+      console.log('error cropping the image: ', e)
+    }
+  }
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
     try {
+      console.log('form data image is: ', formData.image)
       const response = await axios.put(`/api/profile/${payload.sub}`, formData, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
@@ -160,27 +219,40 @@ const EditProfile = () => {
             sx={{ width: .90 }}
             rowSpacing={1}
             columnSpacing={1}>
-            {/* Username */}
-            {/* <Grid item xs={12}>
-              <TextField
-                id='username'
-                placeholder='Username * (max 30 characters)'
-                variant='outlined'
-                name='username'
-                value={formData.username}
-                required
-                onChange={handleChange}
-                fullWidth />
-            </Grid> */}
+              
             {/* Images */}
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
-              <Box component='img' src={formData.image} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
-              <label htmlFor="icon-button-file">
-                <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
-                <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
-                  <PhotoCamera />
-                </IconButton>
-              </label>
+              {!srcImg || result ? 
+                <>
+                  <Box component='img' src={formData.image} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
+                  <label htmlFor="icon-button-file">
+                    <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
+                    <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                      <PhotoCamera />
+                    </IconButton>
+                  </label>
+                </>
+                :
+                <>
+                  <Box >
+                    <ReactCrop
+                      style={{ maxHeight: '350px' }}
+                      // src={srcImg}
+                      onImageLoaded={(image) => setImage(image)}
+                      crop={crop}
+                      onChange={c => setCrop(c)}
+                      className='ReactCrop--locked'
+                      locked={true}
+                    >
+                      <img src={srcImg} />
+                    </ReactCrop>
+                  
+                  </Box>
+                  <Button className="cropButton" onClick={getCroppedImg}>
+                    Crop
+                  </Button>
+                </>
+              }
             </Grid>
 
             {/* Bio */}
