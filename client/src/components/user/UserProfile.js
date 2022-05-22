@@ -103,8 +103,8 @@ const UserProfile = () => {
         if (!payload) {
           navigate('/login')
         }
-        console.log('payload is: ', payload)
-        console.log('payload.sub is: ', payload.sub)
+        // console.log('payload is: ', payload)
+        // console.log('payload.sub is: ', payload.sub)
 
         // const { data } = await axios.get(`/api/profile/${payload.sub}`, {
         //   headers: {

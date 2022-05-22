@@ -37,7 +37,6 @@ const EditProfile = () => {
   })
 
   const { username } = useParams()
-  // console.log('username from params is: ', username)
 
   const payload = getPayload()
 
@@ -45,8 +44,6 @@ const EditProfile = () => {
 
   const uploadURL = process.env.REACT_APP_CLOUDINARY_URL
   const preset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
-
-  console.log(uploadURL, preset)
 
   //loading and error state
   const [loading, setLoading] = useState(true)
@@ -79,16 +76,12 @@ const EditProfile = () => {
         if (!payload) {
           navigate('/login')
         }
-        console.log('payload is: ', payload)
-        console.log('payload.sub is: ', payload.sub)
 
         const { data } = await axios.get(`/api/profile/${payload.sub}`, {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
-
-        console.log('retrieved data is: ', data)
 
         setFormData(
           { 
@@ -109,7 +102,6 @@ const EditProfile = () => {
   const handleImageUpload = async e => {
     setResult(null)
     const urlString = URL.createObjectURL(e.target.files[0])
-    console.log(e.target.files[0])
     setSrcImg(urlString)
     setImage(urlString)
   }
@@ -119,7 +111,6 @@ const EditProfile = () => {
     const img = new Image()
     img.src = image
 
-    const isLandscape = img.width > img.height ? true : false
     const heightMoreThan350px = img.height > 350 ? true : false
 
     try {
@@ -131,8 +122,6 @@ const EditProfile = () => {
         scale = 1
       }
       const scaleX = img.naturalWidth / img.width
-      console.log('scale is: ', scale)
-      console.log('Image natural width is: ', img.naturalWidth)
       canvas.width = crop.width
       canvas.height = crop.height
       const ctx = canvas.getContext('2d')
@@ -147,18 +136,12 @@ const EditProfile = () => {
         crop.width,
         crop.height
       )
-      console.log('this runs 🏃🏻‍♂️')
 
-      setResult(canvas.toDataURL('image/png', 1))
-
-      const data = new FormData()
-      data.append('file', canvas.toDataURL('image/png', 1))
-      data.append('upload_preset', preset)
-      const res = await axios.post(uploadURL, data)
-      setFormData({ ...formData, image: res.data.url })
+      return canvas.toDataURL('image/png', 1)
 
     } catch (e) {
       console.log('error cropping the image: ', e)
+      return ''
     }
   }
 
@@ -167,16 +150,29 @@ const EditProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    let newForm = { ...formData }
+    let imageURL
+
+    if (srcImg) {
+      imageURL = await getCroppedImg()
+      if (imageURL) {
+        const data = new FormData()
+        data.append('file', imageURL)
+        data.append('upload_preset', preset)
+        const res = await axios.post(uploadURL, data)
+        setFormData({ ...formData, image: res.data.url })
+        newForm = { ...newForm, image: res.data.url }
+      }
+    }
+    
+
     try {
-      console.log('form data image is: ', formData.image)
-      const response = await axios.put(`/api/profile/${payload.sub}`, formData, {
+      const response = await axios.put(`/api/profile/${payload.sub}`, newForm, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
       })
-      console.log(response)
 
-      console.log('response token is: ', response.data.token)
 
       const token = response.data.token
 
@@ -184,7 +180,6 @@ const EditProfile = () => {
       window.localStorage.removeItem('plantpedia')
       localStorage.setItem('plantpedia', token)
 
-      console.log('this fires')
       navigate(`/profile/${username}`)
     } catch (error) {
       console.log(error)
@@ -203,7 +198,7 @@ const EditProfile = () => {
 
 
   return (
-    <Container maxWidth='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Container width='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
       <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream' }} >
         <Box
           component='form'
@@ -222,11 +217,11 @@ const EditProfile = () => {
               
             {/* Images */}
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
-              {!srcImg || result ? 
+              {!srcImg ? 
                 <>
                   <Box component='img' src={formData.image} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                   <label htmlFor="icon-button-file">
-                    <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
+                    <Input accept="image/*" classname="contained-button-file" type="file" onChange={handleImageUpload} />
                     <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                       <PhotoCamera />
                     </IconButton>
@@ -248,9 +243,9 @@ const EditProfile = () => {
                     </ReactCrop>
                   
                   </Box>
-                  <Button className="cropButton" onClick={getCroppedImg}>
+                  {/* <Button className="cropButton" onClick={getCroppedImg}>
                     Crop
-                  </Button>
+                  </Button> */}
                 </>
               }
             </Grid>
