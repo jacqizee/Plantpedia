@@ -55,8 +55,8 @@ const EditProfile = () => {
   const [image, setImage] = useState(null)
   const [crop, setCrop] = useState({
     unit: 'px', // Can be 'px' or '%'
-    x: 0,
-    y: 0,
+    x: 10,
+    y: 25,
     width: 300,
     height: 300,
     aspect: 1,
@@ -102,6 +102,11 @@ const EditProfile = () => {
 
   const handleImageUpload = async e => {
     setResult(null)
+    setCrop({
+      ...crop,
+      x: 10,
+      y: 25,
+    })
     const urlString = URL.createObjectURL(e.target.files[0])
     setSrcImg(urlString)
     setImage(urlString)
@@ -282,6 +287,12 @@ const EditProfile = () => {
                       </ReactCrop>
                     
                     </Box>
+                    <label htmlFor="icon-button-file">
+                      <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
+                      <IconButton textAlign="center" aria-label="upload picture" component="span" sx={{ bottom: 0, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                        <PhotoCamera />
+                      </IconButton>
+                    </label>
                     {/* <Button className="cropButton" onClick={getCroppedImg}>
                       Crop
                     </Button> */}
@@ -291,7 +302,7 @@ const EditProfile = () => {
                     <Box component='img' src={srcImg} alt='Uploaded' sx={{ height: '300px', objectFit: 'contain' }} />
                     <label htmlFor="icon-button-file">
                       <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
-                      <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                      <IconButton textAlign="center" aria-label="upload picture" component="span" sx={{ bottom: 25, right: '55%', border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                         <PhotoCamera />
                       </IconButton>
                     </label>
