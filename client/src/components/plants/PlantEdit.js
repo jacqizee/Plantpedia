@@ -128,7 +128,7 @@ const PlantEdit = () => {
 
   const handleDelete = async (e) => {
     try {
-      await axios.delete(`/api/plants/${plantId}/`, {
+      await axios.delete(`/api/plants/${plantId}`, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },

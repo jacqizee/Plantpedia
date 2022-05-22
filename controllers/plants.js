@@ -65,6 +65,9 @@ export const updatePlant = async (req, res) => {
 
     // Update myEdits and lastEdit
     editPlant.lastEdit = verifiedUser._id
+    if (!editPlant.editors.includes(verifiedUser._id) && !updatedPlant.owner.equals(verifiedUser._id)) {
+      editPlant.editors.push(verifiedUser._id)
+    } 
     if (!verifiedUser.myEdits.includes(id) && !updatedPlant.owner.equals(verifiedUser._id)) {
       console.log('The if statement runs 🏃🏻‍♂️')
       verifiedUser.myEdits.push(id)
@@ -107,12 +110,28 @@ export const deletePlant = async (req, res) => {
     // We can't send a body back due to the status code, so no need to save the response to a variable
     const plantToDelete = await Plant.findById(id)
 
-    // if (!plantToDelete.owner.equals(req.verifiedUser._id)){
-    //   console.log('🆘 Failed at owner check')
-    //   throw new Error('Unauthorised')
-    // }
-    // 
-    // await User.findByIdAndDelete(id)
+    // Removing references to the plant among people who favorited it
+    if (plantToDelete.favorites.length > 0) {
+      for (let i = 0; i < plantToDelete.favorites.length; i++) {
+        const userToModify = await User.findById(plantToDelete.favorites[i])
+        if (userToModify.favorites.includes(id)) {
+          userToModify.favorites.splice(userToModify.favorites.indexOf(id), 1)
+        }
+        await userToModify.save()
+      }
+    }
+
+    // Removing references to the plant among people who edited it
+    if (plantToDelete.editors.length > 0) {
+      for (let i = 0; i < plantToDelete.editors.length; i++) {
+        const userToModify = await User.findById(plantToDelete.editors[i])
+        if (userToModify.myEdits.includes(id)) {
+          userToModify.myEdits.splice(userToModify.myEdits.indexOf(id), 1)
+        }
+        await userToModify.save()
+      }
+    }
+
     await plantToDelete.remove()
     // 204 status doesn't accept a body in the response, so sendStatus ends the request as well as allowing us to still define the status
     return res.sendStatus(204)

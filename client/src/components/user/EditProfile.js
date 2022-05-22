@@ -50,6 +50,7 @@ const EditProfile = () => {
   const [errors, setErrors] = useState(false)
 
   //Cropping
+  const [isUndersized, setIsUndersized] = useState(false)
   const [srcImg, setSrcImg] = useState(null)
   const [image, setImage] = useState(null)
   const [crop, setCrop] = useState({
@@ -104,6 +105,28 @@ const EditProfile = () => {
     const urlString = URL.createObjectURL(e.target.files[0])
     setSrcImg(urlString)
     setImage(urlString)
+
+    const img = new Image()
+    img.src = urlString
+
+
+    img.onload = function() {
+      const w = img.width
+      const h = img.height
+      const heightMoreThan350px = img.height > 350 ? true : false
+      const widthMoreThan350px = img.width > 350 ? true : false
+      setIsUndersized(!heightMoreThan350px || !widthMoreThan350px )
+    }
+
+  }
+
+  const getBase64Image = (img) => {
+    const canvas = document.createElement('canvas')
+    canvas.width = img.width
+    canvas.height = img.height
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(img, 0, 0)
+    return canvas.toDataURL('image/jpg', 1)
   }
 
   const getCroppedImg = async () => {
@@ -112,6 +135,7 @@ const EditProfile = () => {
     img.src = image
 
     const heightMoreThan350px = img.height > 350 ? true : false
+    const widthMoreThan350px = img.width > 350 ? true : false
 
     try {
       const canvas = document.createElement('canvas')
@@ -136,9 +160,10 @@ const EditProfile = () => {
         crop.width,
         crop.height
       )
-
-      return canvas.toDataURL('image/png', 1)
-
+      
+      
+      return canvas.toDataURL('image/jpg', 1)
+      
     } catch (e) {
       console.log('error cropping the image: ', e)
       return ''
@@ -154,12 +179,20 @@ const EditProfile = () => {
     let imageURL
 
     if (srcImg) {
-      imageURL = await getCroppedImg()
+      if (isUndersized) {
+        const img = new Image()
+        img.src = image
+        imageURL = await getBase64Image(img)
+      } else {
+        imageURL = await getCroppedImg()
+      }
+      
       if (imageURL) {
         const data = new FormData()
         data.append('file', imageURL)
         data.append('upload_preset', preset)
         const res = await axios.post(uploadURL, data)
+        console.log('cloudinary response: ', res.data)
         setFormData({ ...formData, image: res.data.url })
         newForm = { ...newForm, image: res.data.url }
       }
@@ -233,25 +266,36 @@ const EditProfile = () => {
                   </label>
                 </>
                 :
-                <>
-                  <Box >
-                    <ReactCrop
-                      style={{ maxHeight: '350px' }}
-                      // src={srcImg}
-                      onImageLoaded={(image) => setImage(image)}
-                      crop={crop}
-                      onChange={c => setCrop(c)}
-                      className='ReactCrop--locked'
-                      locked={true}
-                    >
-                      <img src={srcImg} />
-                    </ReactCrop>
-                  
-                  </Box>
-                  {/* <Button className="cropButton" onClick={getCroppedImg}>
-                    Crop
-                  </Button> */}
-                </>
+                !isUndersized ? 
+                  <>
+                    <Box >
+                      <ReactCrop
+                        style={{ maxHeight: '350px' }}
+                        // src={srcImg}
+                        onImageLoaded={(image) => setImage(image)}
+                        crop={crop}
+                        onChange={c => setCrop(c)}
+                        className='ReactCrop--locked'
+                        locked={true}
+                      >
+                        <img src={srcImg} />
+                      </ReactCrop>
+                    
+                    </Box>
+                    {/* <Button className="cropButton" onClick={getCroppedImg}>
+                      Crop
+                    </Button> */}
+                  </>
+                  :
+                  <>
+                    <Box component='img' src={srcImg} alt='Uploaded' sx={{ height: '300px', objectFit: 'contain' }} />
+                    <label htmlFor="icon-button-file">
+                      <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
+                      <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                        <PhotoCamera />
+                      </IconButton>
+                    </label>
+                  </>
               }
             </Grid>
 
