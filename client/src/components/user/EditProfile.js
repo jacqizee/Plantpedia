@@ -214,6 +214,11 @@ const EditProfile = () => {
             sx={{ width: .90 }}
             rowSpacing={1}
             columnSpacing={1}>
+            
+            {/* This must be first input So that the file upload only fires when you press the button */}
+            <>
+              <Input type="text" autofocus="autofocus" />
+            </>
               
             {/* Images */}
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
@@ -221,7 +226,7 @@ const EditProfile = () => {
                 <>
                   <Box component='img' src={formData.image} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                   <label htmlFor="icon-button-file">
-                    <Input accept="image/*" classname="contained-button-file" type="file" onChange={handleImageUpload} />
+                    <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
                     <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                       <PhotoCamera />
                     </IconButton>
