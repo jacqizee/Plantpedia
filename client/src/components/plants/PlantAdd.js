@@ -144,7 +144,7 @@ const PlantAdd = () => {
   ]
 
   const waterTypes = ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly']
-  const sunTypes = ['Full sun', 'Partial sun', 'Shade']
+  const sunTypes = ['Full Sun', 'Partial Sun', 'Shade']
   const soilTypes = ['Loamy', 'Chalky', 'Peaty', 'Silty', 'Sandy', 'Clay']
   const lifespanTypes = ['Perennial', 'Biennial', 'Annual']
   const moodTypes = ['Cheerful', 'Emo', 'Mysterious', 'Classy', 'Bright']

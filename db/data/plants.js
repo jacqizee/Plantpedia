@@ -164,7 +164,7 @@ export default [
     watering: 'Weekly',
     sunExposure: 'Full Sun',
     soilType: 'Peaty',
-    flowerColor: ['Violet', 'Peach', 'White', 'Blue', 'Yellow', 'Cream', 'Purple'],
+    flowerColor: ['Violet', 'White', 'Blue', 'Yellow', 'Purple'],
     mood: 'Mysterious',
     nativeArea: ['North America', 'Europe'],
     lifespan: 'Perennial',
