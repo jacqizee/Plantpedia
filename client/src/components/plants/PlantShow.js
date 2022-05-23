@@ -65,6 +65,15 @@ const PlantShow = () => {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant({ ...data, comments: data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
         setCommentCount(data.comments.length)
+
+        if (payload.username) {
+          const { data: userData } = await axios.get(`/api/profile/${payload.sub}`, {
+            headers: {
+              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+            },
+          })
+          setUserCanEdit(userData.canEdit)
+        }  
       } catch (error) {
         console.log(error)
       }
@@ -172,6 +181,7 @@ const PlantShow = () => {
   }
 
   const handleEditPressed = () => {
+    console.log('userCanEdit is: ', userCanEdit)
     if (userCanEdit || plant.owner === payload.sub ) {
       navigate(`/plants/${plant._id}/edit`)
     } else {
@@ -375,10 +385,10 @@ const PlantShow = () => {
                 </Accordion>
 
                 {/* Plant Owner */}
-                <Typography sx={{ mt: 1 }} >Original Creator: {plant.ownerUsername[0].username}</Typography>
+                <Typography sx={{ mt: 1 }} >Original Creator: <a href={`/profile/${plant.ownerUsername[0].username}`}>{plant.ownerUsername[0].username}</a></Typography>
                 
                 {/* Last Editor */}
-                <Typography sx={{ mt: 1 }} >Last Edit: {plant.lastEditUsername[0].username}</Typography>
+                <Typography sx={{ mt: 1 }} >Last Edit: <a href={`/profile/${plant.lastEditUsername[0].username}`}>{plant.lastEditUsername[0].username}</a></Typography>
 
                 {/* Edit Chip */}
                 {userIsAuthenticated() ? <Chip
@@ -467,7 +477,7 @@ const PlantShow = () => {
                     <Avatar sx={{ width: 24, height: 24 }} />
                     <Box>
                       <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
-                        {username.charAt(0).toUpperCase() + username.slice(1)}
+                        <a href={`/profile/${username}`}>{username.charAt(0).toUpperCase() + username.slice(1)}</a>
                         <Typography as='span' sx={{
                           ml: 1,
                           fontSize: 10,
