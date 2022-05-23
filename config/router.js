@@ -5,6 +5,8 @@ import { registerUser, loginUser } from '../controllers/auth.js'
 import { secureRoute } from './secureRoute.js'
 import { addComment, deleteComment } from '../controllers/comments.js'
 import { getProfile, updateProfile, getProfileByUsername } from '../controllers/users.js'
+import { addEditorApplication } from '../controllers/editorApplications.js'
+
 
 const router = express.Router()
 // Routes
@@ -45,5 +47,9 @@ router.route('/profile/:userId')
 router.route('/profile/user/:username')
   .get(secureRoute, getProfileByUsername)
 
+
+//Editor Application
+router.route('/editor-application')
+  .post(secureRoute, addEditorApplication)
 
 export default router

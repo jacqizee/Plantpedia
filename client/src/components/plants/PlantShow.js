@@ -52,6 +52,8 @@ const PlantShow = () => {
   const [commentDropdown, setCommentDropdown] = useState('newest')
   const [showComments, setShowComments] = useState(false)
   
+  const [ userCanEdit, setUserCanEdit ] = useState(false)
+  
   const [formData, setFormData] = useState({
     text: '',
   })
@@ -61,8 +63,25 @@ const PlantShow = () => {
     const getPlant = async () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
+<<<<<<< HEAD
         setPlant({ ...data, comments: data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
         setCommentCount(data.comments.length)
+=======
+        console.log(data)
+        setPlant(data)
+        setComments(data.comments)
+
+        if (payload.username) {
+          const { data } = await axios.get(`/api/profile/user/${payload.username}`, {
+            headers: {
+              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+            },
+          })
+          const retrievedUser = data[0]
+
+          setUserCanEdit(retrievedUser.canEdit)
+        }
+>>>>>>> development
       } catch (error) {
         console.log(error)
       }
@@ -166,6 +185,14 @@ const PlantShow = () => {
       favorite ? setFavorite(false) : setFavorite(true)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const handleEditPressed = () => {
+    if (userCanEdit || plant.owner === payload.sub ) {
+      navigate(`/plants/${plant._id}/edit`)
+    } else {
+      navigate('/become-editor')
     }
   }
 
@@ -373,7 +400,7 @@ const PlantShow = () => {
                 {/* Edit Chip */}
                 {userIsAuthenticated() ? <Chip
                   label="Edit"
-                  onClick={() => navigate(`/plants/${plant._id}/edit`)}
+                  onClick={handleEditPressed}
                   icon={<EditRoundedIcon sx={{ width: 15 }} />}
                   variant="outlined"
                   sx={{ float: 'right', mt: 1, bottom: 65 }}

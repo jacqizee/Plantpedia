@@ -24,7 +24,7 @@ export const addComment = async (req, res) => {
     // Add commentWithOwner into plantToUpdate.comments
     plantToUpdate.comments.push(commentWithOwner)
 
-    // Save updated tapa
+    // Save updated plant
     await plantToUpdate.save()
 
     // Send new document back to user
