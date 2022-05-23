@@ -42,6 +42,7 @@ const PlantEdit = () => {
   const [ formData, setFormData ] = useState({
     name: '',
     scientificName: '',
+    description: '',
     images: '',
     watering: '',
     sunExposure: '',
@@ -226,8 +227,23 @@ const PlantEdit = () => {
                 onChange={handleChange}
                 fullWidth />
             </Grid>
+            {/* Description */}
+            <Grid item xs={12}>
+              <TextField
+                id='description' 
+                label='Description'
+                variant='outlined'
+                name='description'
+                value={formData.description}
+                required
+                multiline
+                minRows={2}
+                maxRows={4}
+                onChange={handleChange}
+                fullWidth />
+            </Grid>
             {/* Images */}
-            <Grid item xs={12} sx={{ mt: 2, textAlign: 'center' }} >
+            <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
               {formData.images ? 
                 <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                 :

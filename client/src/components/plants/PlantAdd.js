@@ -39,6 +39,7 @@ const PlantAdd = () => {
   const [ formData, setFormData ] = useState({
     name: '',
     scientificName: '',
+    description: '',
     images: '',
     watering: '',
     sunExposure: '',
@@ -58,6 +59,7 @@ const PlantAdd = () => {
   const [ max, setMax ] = useState(150)
   const [ step, setStep ] = useState(10)
   
+  // Handle change to units
   const handleUnitChange = (e) => {
     const { height, width } = matureSize
     setUnit(e.target.value)
@@ -72,6 +74,7 @@ const PlantAdd = () => {
     }
   }
 
+  // Handle size change in form data
   const handleSizeChange = (e) => {
     const { name, value } = e.target
     setMatureSize({ ...matureSize, [name]: value })
@@ -102,23 +105,11 @@ const PlantAdd = () => {
     }
   }
 
-
-
   const handleImageUpload = async e => {
-    
     const data = new FormData()
-
-
-    // console.log('e target file 0 is: ', e.target.files[0])
-    console.log('upload preset is: ', preset)
-    
     data.append('file', e.target.files[0])
     data.append('upload_preset', preset)
-
     const res = await axios.post(uploadURL, data)
-
-    console.log(res.data)
-    // Set the profileImage url to state
     setFormData({ ...formData, images: res.data.url })
   }
 
@@ -190,8 +181,23 @@ const PlantAdd = () => {
                 onChange={handleChange}
                 fullWidth />
             </Grid>
+            {/* Description */}
+            <Grid item xs={12}>
+              <TextField
+                id='description' 
+                label='Description'
+                variant='outlined'
+                name='description'
+                value={formData.description}
+                required
+                multiline
+                minRows={2}
+                maxRows={4}
+                onChange={handleChange}
+                fullWidth />
+            </Grid>
             {/* Images */}
-            <Grid item xs={12} sx={{ mt: 2, textAlign: 'center' }} >
+            <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
               {formData.images ? 
                 <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                 :
