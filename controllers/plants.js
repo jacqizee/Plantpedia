@@ -21,7 +21,7 @@ export const getSinglePlant = async (req, res) => {
   console.log('get single plant fires 🔥')
   const { id } = req.params
   try {
-    const plant = await Plant.findById(id).populate('comments')
+    const plant = await Plant.findById(id).populate('comments').populate('ownerUsername', 'username').populate('lastEditUsername', 'username')
     if (!plant) {
       console.log('no plant 👎')
       return res.status(404).json({ message: "Plant not found" })

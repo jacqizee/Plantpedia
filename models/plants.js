@@ -17,13 +17,32 @@ const plantSchema = new mongoose.Schema({
   width: { type: Number },
   nativeArea: { type: Array },
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
+  // ownerUsername: { type: mongoose.Schema.ObjectId, ref: 'User' },
   lastEdit: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
+  // lastEditUsername: { type: mongoose.Schema.ObjectId, ref: 'User' },
   comments: [commentSchema],
   favorites: [],
   editors: []
 }, {
   timestamps: true
 })
+
+plantSchema.virtual('ownerUsername', {
+  ref: 'User',
+  localField: 'owner',
+  foreignField: '_id',
+})
+
+plantSchema.virtual('lastEditUsername', {
+  ref: 'User',
+  localField: 'lastEdit',
+  foreignField: '_id',
+})
+
+plantSchema.set('toJSON', {
+  virtuals: true
+})
+
 
 plantSchema.plugin(mongooseUniqueValidator)
 export default mongoose.model('Plant', plantSchema)
