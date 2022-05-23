@@ -92,7 +92,10 @@ const PlantShow = () => {
         setComments(plant.comments.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
       } 
     }
+    console.log(comments)
   }, [loading, commentDropdown])
+
+ 
 
   // ? Comment Functions
 
