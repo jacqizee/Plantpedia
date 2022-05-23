@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { getTokenFromLocalStorage } from '../../helpers/auth.js'
 import { useNavigate } from 'react-router-dom'
+import { form, colors, regions, waterTypes, soilTypes, sunTypes, lifespanTypes, moodTypes } from '../../helpers/plantFormOptions'
 
 // MUI Imports
 import Container from '@mui/material/InputLabel'
@@ -36,22 +37,7 @@ const PlantAdd = () => {
   const preset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
 
   const navigate = useNavigate()
-  const [ formData, setFormData ] = useState({
-    name: '',
-    scientificName: '',
-    description: '',
-    images: '',
-    watering: '',
-    sunExposure: '',
-    soilType: '',
-    flowerColor: [],
-    mood: '',
-    lifespan: '',
-    isIndoor: false,
-    height: 0,
-    width: 0,
-    nativeArea: [],
-  })
+  const [ formData, setFormData ] = useState(form)
 
   // Setting units for height/width
   const [ matureSize, setMatureSize ] = useState({ height: 50, width: 50 })
@@ -113,33 +99,6 @@ const PlantAdd = () => {
     setFormData({ ...formData, images: res.data.url })
   }
 
-  const colors = [
-    'Red',
-    'Orange',
-    'Yellow',
-    'Blue',
-    'Pink',
-    'Purple',
-    'Violet',
-    'White'
-  ]
-
-  const regions = [
-    'North America',
-    'South America',
-    'Europe',
-    'Middle East',
-    'Africa',
-    'Asia',
-    'Australia'
-  ]
-
-  const waterTypes = ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly']
-  const sunTypes = ['Full Sun', 'Partial Sun', 'Shade']
-  const soilTypes = ['Loamy', 'Chalky', 'Peaty', 'Silty', 'Sandy', 'Clay']
-  const lifespanTypes = ['Perennial', 'Biennial', 'Annual']
-  const moodTypes = ['Cheerful', 'Emo', 'Mysterious', 'Classy', 'Bright']
-
   return (
     <Container sx={{ display: 'flex', justifyContent: 'center' }}>
       <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', maxWidth: 'sm' }} >
@@ -149,6 +108,7 @@ const PlantAdd = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center' }}
+          onClick={(e) => console.log(e)}
           onSubmit={handleSubmit}
         >
           <Typography variant='h3' sx={{ pb: 2 }}>Add a Plant</Typography>
