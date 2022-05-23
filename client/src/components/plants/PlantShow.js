@@ -48,16 +48,12 @@ const PlantShow = () => {
   const [favorite, setFavorite] = useState(false)
   const [ loading, setLoading ] = useState(true)
 
-  const [comments, setComments] = useState(false)
-  const [ commentLoading, setCommentLoading ] = useState(true)
-  const [commentCount, setCommentCount] = useState()
+  const [ commentCount, setCommentCount ] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
   const [showComments, setShowComments] = useState(false)
   
   const [formData, setFormData] = useState({
     text: '',
-    owner: '',
-    username: '',
   })
 
   //get plant data & set initial comments
@@ -65,9 +61,8 @@ const PlantShow = () => {
     const getPlant = async () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
-        console.log(data)
-        setPlant(data)
-        setComments(data.comments)
+        setPlant({ ...data, comments: data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
+        setCommentCount(data.comments.length)
       } catch (error) {
         console.log(error)
       }
@@ -81,26 +76,12 @@ const PlantShow = () => {
   // comment dropdown menu
   const handleDropdown = (e) => {
     setCommentDropdown(e.target.value)
+    if (e.target.value === 'oldest') {
+      setPlant({ ...plant, comments: plant.comments.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)) })
+    } else if (e.target.value === 'newest') {
+      setPlant({ ...plant, comments: plant.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
+    }
   }
-
-  // when comment or commentdropdown states are loaded & on page load
-  useEffect(() => {
-    console.log('fired')
-    const handleCommentFilter = () => {
-      setCommentCount(comments.length)
-      if (commentDropdown === 'oldest') {
-        console.log('oldest')
-        setComments(comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
-      } else {
-        console.log('newest')
-        setComments(comments.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
-      } 
-    }
-    if (comments) {
-      handleCommentFilter()
-      setCommentLoading(false)
-    }
-  }, [commentDropdown, comments])
 
   //input for comment data
   const handleInput = (e) => {
@@ -113,23 +94,27 @@ const PlantShow = () => {
     if (!formData.text.length) return
     setFormData({ ...formData, owner: payload.sub, username: payload.username })
     try {
+
       await axios.post(`/api/plants/${plant._id}/comments`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
+
       //get new plant comments
       const { data } = await axios.get(`/api/plants/${id}`)
 
-      //set state and sort by time
-      setPlant({ ...plant, comments: data.comments })
+      // update plant data with new comments and sort
+      commentDropdown === 'newest' ? setPlant({ ...data, comments: data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
+        : setPlant(data)
+      setCommentCount(data.comments.length)
       
       //reset form
       setFormData({
         text: '',
-        owner: '',
-        username: '',
       })
+
+      // hide comment text area
       toggleShowOff()
     } catch (err) {
       console.log(err)
@@ -188,6 +173,7 @@ const PlantShow = () => {
     <Container maxWidth='lg' >
       {plant ?
         <Container>
+          {/* Main Section */}
           <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', padding: 2, my: 5, borderRadius: 1 }}>
             <Grid container spacing={2} sx={{ my: 1 }}>
               {/* Title */}
@@ -211,9 +197,9 @@ const PlantShow = () => {
               </Grid>
 
               {/* Accordion Column */}
-              <Grid item md={6}>
+              <Grid item md={6} sx={{ textAlign: 'center', flexGrow: 1 }}>
                 {/* Description Accordion */}
-                <Accordion disableGutters>
+                <Accordion maxWidth disableGutters>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="description-content"
@@ -379,115 +365,119 @@ const PlantShow = () => {
                 </Accordion>
 
                 {/* Plant Owner */}
-                <Typography>Original Creator: {plant.ownerUsername[0].username}</Typography>
+                <Typography sx={{ mt: 1 }} >Original Creator: {plant.ownerUsername[0].username}</Typography>
                 
                 {/* Last Editor */}
-                <Typography>Last Edit: {plant.lastEditUsername[0].username}</Typography>
+                <Typography sx={{ mt: 1 }} >Last Edit: {plant.lastEditUsername[0].username}</Typography>
 
+                {/* Edit Chip */}
                 {userIsAuthenticated() ? <Chip
                   label="Edit"
                   onClick={() => navigate(`/plants/${plant._id}/edit`)}
                   icon={<EditRoundedIcon sx={{ width: 15 }} />}
                   variant="outlined"
-                  sx={{ float: 'right', mt: 1 }}
+                  sx={{ float: 'right', mt: 1, bottom: 65 }}
                 /> : null}
               </Grid>
             </Grid>
           </Container>
+          
+          {/* Comment Section */}
+          <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', height: '100%', p: 5, pt: 5, mb: 5 }}>
+            {/* comment info */}
+            <Box display='flex' mb={3} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography sx={{ borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.25)', p: 1, px: 2 }}>{commentCount} comments</Typography>
 
-          {/* comment info */}
-          <Box display='flex' mb={3} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography sx={{ backgroundColor: 'rgba(0,0,0,0.5)', p: 1 }}>{commentCount} comments</Typography>
-
-            {/* comment sort select */}
-            <Box sx={{ minWidth: 120, mx: 3 }} >
-              <FormControl variant='standard' fullWidth size='small'>
-                <InputLabel id="sort-comments">Sort by</InputLabel>
-                <Select
-                  labelId="sort-comments"
-                  id="sort-comments"
-                  value={commentDropdown}
-                  label="sort"
-                  onChange={handleDropdown}
-                  sx={{ p: 'none' }}
-                >
-                  <MenuItem value='newest'>Newest</MenuItem>
-                  <MenuItem value='oldest'>Oldest</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-          </Box>
-
-          {/* add commment */}
-          {userIsAuthenticated() ?
-            <Stack direction='row' spacing={2}>
-              <Avatar sx={{ width: 24, height: 24 }} alt="" src="" />
-              <Box width='100%' as='form' onSubmit={handleSubmit}>
-                <TextField
-                  name='text'
-                  value={formData.text}
-                  size='small'
-                  variant='standard'
-                  fullWidth
-                  placeholder='Add comment'
-                  autoComplete='off'
-                  onChange={handleInput}
-                  onKeyUp={shouldBlur}
-                  onFocus={toggleShowOn} />
-                {showComments ?
-                  <>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      sx={{ mt: 3, float: 'right', display: showComments }}
-                      disabled={isAddDisabled}
-                    >
-                      Add comment
-                    </Button>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      sx={{ mr: 2, mt: 3, float: 'right', display: showComments }}
-                      onClick={toggleShowOff}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                  : null}
-
+              {/* comment sort select */}
+              <Box sx={{ minWidth: 120, mx: 3 }} >
+                <FormControl variant='standard' fullWidth size='small'>
+                  <InputLabel id="sort-comments">Sort by</InputLabel>
+                  <Select
+                    labelId="sort-comments"
+                    id="sort-comments"
+                    value={commentDropdown}
+                    label="sort"
+                    onChange={handleDropdown}
+                    sx={{ p: 'none' }}
+                  >
+                    <MenuItem value='newest'>Newest</MenuItem>
+                    <MenuItem value='oldest'>Oldest</MenuItem>
+                  </Select>
+                </FormControl>
               </Box>
-            </Stack> : null}
-
-          {/* comment section */}
-          { !commentLoading && comments.length > 0 ?
-            comments.map(comment => {
-              const { username, _id, text, createdAt } = comment
-              const date = new Date(createdAt)
-              return (
-                <Stack key={_id} direction='row' spacing={2} my={3}>
-                  <Avatar sx={{ width: 24, height: 24 }} />
-                  <Box>
-                    <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
-                      {username.charAt(0).toUpperCase() + username.slice(1)}
-                      <Typography as='span' sx={{
-                        ml: 1,
-                        fontSize: 10,
-                        color: '#9c9c9c',
-                      }}>{date.getUTCMonth() + 1}/{date.getUTCDate()}/{date.getUTCFullYear()}
-                      </Typography>
-                    </Typography>
-                    <Typography>
-                      {text}
-                    </Typography>
-                  </Box>
-                </Stack>
-              )
-            })
-            :
-            <Box mt={4}>
-              No comments!
             </Box>
-          }
+
+            {/* add commment */}
+            {userIsAuthenticated() ?
+              <Stack direction='row' spacing={2}>
+                <Avatar sx={{ width: 24, height: 24 }} alt="" src="" />
+                <Box width='100%' as='form' onSubmit={handleSubmit}>
+                  <TextField
+                    name='text'
+                    value={formData.text}
+                    size='small'
+                    variant='standard'
+                    fullWidth
+                    placeholder='Add comment'
+                    autoComplete='off'
+                    onChange={handleInput}
+                    onKeyUp={shouldBlur}
+                    onFocus={toggleShowOn} />
+                  {showComments ?
+                    <>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ mt: 3, float: 'right', display: showComments }}
+                        disabled={isAddDisabled}
+                      >
+                        Add comment
+                      </Button>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ mr: 2, mt: 3, float: 'right', display: showComments }}
+                        onClick={toggleShowOff}
+                      >
+                        Cancel
+                      </Button>
+                    </>
+                    : null}
+
+                </Box>
+              </Stack> : null}
+
+            {/* comment section */}
+            { plant ?
+              plant.comments.map(comment => {
+                const { username, _id, text, createdAt } = comment
+                const date = new Date(createdAt)
+                return (
+                  <Stack key={_id} direction='row' spacing={2} my={3}>
+                    <Avatar sx={{ width: 24, height: 24 }} />
+                    <Box>
+                      <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
+                        {username.charAt(0).toUpperCase() + username.slice(1)}
+                        <Typography as='span' sx={{
+                          ml: 1,
+                          fontSize: 10,
+                          color: '#9c9c9c',
+                        }}>{date.getUTCMonth() + 1}/{date.getUTCDate()}/{date.getUTCFullYear()}
+                        </Typography>
+                      </Typography>
+                      <Typography>
+                        {text}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                )
+              })
+              :
+              <Box mt={4}>
+                No comments!
+              </Box>
+            }
+          </Container>
         </Container>
         :
         <Box sx={{ height: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spinner /></Box>
