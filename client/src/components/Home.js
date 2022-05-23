@@ -107,7 +107,8 @@ const Home = () => {
 
 
   const handleChipClick = (e, chip) => {
-    // e.target.className = 'styled'
+    // e.target.className ?  e.target.className = 'styled' : e.target.className = '' 
+    console.log(e.target.variant)
     if (colors.includes(chip)) {
       const filteredArray = plants.filter(plant => chip === plant.flowerColor)
       setFilteredPlants(filteredArray)
@@ -161,7 +162,7 @@ const Home = () => {
                               '&:hover': {
                                 cursor: 'pointer',
                                 backgroundColor: '#e0e0e0',
-                              },
+                              },                              
                             }}>
                             <CircleIcon sx={{ color: [chip], width: '15px', mr: 1 }} />
                             {chip}
@@ -181,6 +182,7 @@ const Home = () => {
                     return (
                       <Chip
                         onClick={(e) => handleChipClick(e, chip)}
+                        variant='outlined'
                         key={chip}
                         label={chip}
                         sx={{ width: '100px', mb: 1, mr: 1 }}
