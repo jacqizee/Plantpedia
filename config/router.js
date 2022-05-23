@@ -5,22 +5,24 @@ import { registerUser, loginUser } from '../controllers/auth.js'
 import { secureRoute } from './secureRoute.js'
 import { addComment, deleteComment } from '../controllers/comments.js'
 import { getProfile, updateProfile, getProfileByUsername } from '../controllers/users.js'
+import { addEditorApplication } from '../controllers/editorApplications.js'
+
 
 const router = express.Router()
-//Routes
+// Routes
 
-//Generic
+// Generic
 router.route('/plants')
   .get(getAllPlants)
   .post(secureRoute, addPlant)
 
-//specific
+// Specific
 router.route('/plants/:id')
   .get(getSinglePlant)
   .put(secureRoute, updatePlant)
   .delete(secureRoute, deletePlant)
 
-//comments
+// Comments
 router.route('/plants/:id/comments')
   .post(secureRoute, addComment)
 
@@ -28,12 +30,10 @@ router.route('/plants/:id/comments/:commentId')
   .delete(secureRoute, deleteComment)
 
 // Favorites
-
 router.route('/plants/:id/favorite')
   .put(secureRoute, clickFavorite)
 
-
-//users
+// Users
 router.route('/register')
   .post(registerUser)
 
@@ -44,8 +44,12 @@ router.route('/profile/:userId')
   .get(secureRoute, getProfile)
   .put(secureRoute, updateProfile)
 
-  router.route('/profile/user/:username')
-    .get(secureRoute, getProfileByUsername)
+router.route('/profile/user/:username')
+  .get(secureRoute, getProfileByUsername)
 
+
+//Editor Application
+router.route('/editor-application')
+  .post(secureRoute, addEditorApplication)
 
 export default router

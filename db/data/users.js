@@ -5,7 +5,9 @@ export default [
     password: 'pass',
     passwordConfirmation: 'pass',
     bio: 'My name is Rob and I like plants',
-    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653092024/plantpedia/rob_de9tfw.png'
+    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653092024/plantpedia/rob_de9tfw.png',
+    canEdit: true,
+    hasApplied: false
   },
   {
     username: 'jacqi',
@@ -13,7 +15,9 @@ export default [
     password: 'pass',
     passwordConfirmation: 'pass',
     bio: 'American plant enthusiast living in Holland',
-    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653092024/plantpedia/Screen_Shot_2022-05-19_at_4.15.45_PM_cbayiw.png'
+    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653092024/plantpedia/Screen_Shot_2022-05-19_at_4.15.45_PM_cbayiw.png',
+    canEdit: true,
+    hasApplied: false
   },
   {
     username: 'phil',
@@ -21,6 +25,8 @@ export default [
     password: 'pass',
     passwordConfirmation: 'pass',
     bio: '33 yo cactus lover ...and cherry plum LOVER',
-    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653054848/plantpedia/philip_vf4sz5.png'
+    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653054848/plantpedia/philip_vf4sz5.png',
+    canEdit: true,
+    hasApplied: false
   }
 ]

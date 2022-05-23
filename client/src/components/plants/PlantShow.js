@@ -54,6 +54,8 @@ const PlantShow = () => {
   const [commentDropdown, setCommentDropdown] = useState('newest')
   const [showComments, setShowComments] = useState(false)
   
+  const [ userCanEdit, setUserCanEdit ] = useState(false)
+  
   const [formData, setFormData] = useState({
     text: '',
     owner: '',
@@ -65,8 +67,20 @@ const PlantShow = () => {
     const getPlant = async () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
+        console.log(data)
         setPlant(data)
         setComments(data.comments)
+
+        if (payload.username) {
+          const { data } = await axios.get(`/api/profile/user/${payload.username}`, {
+            headers: {
+              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+            },
+          })
+          const retrievedUser = data[0]
+
+          setUserCanEdit(retrievedUser.canEdit)
+        }
       } catch (error) {
         console.log(error)
       }
@@ -89,22 +103,18 @@ const PlantShow = () => {
       setCommentCount(comments.length)
       if (commentDropdown === 'oldest') {
         console.log('oldest')
-        setComments(plant.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
+        setComments(comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
       } else {
         console.log('newest')
-        setComments(plant.comments.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
+        setComments(comments.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
       } 
     }
     if (comments) {
       handleCommentFilter()
       setCommentLoading(false)
     }
-  }, [plant, commentDropdown, comments])
-  
-  useEffect(() => {
-    console.log(comments)
-  }, [comments])
-  
+  }, [commentDropdown, comments])
+
   //input for comment data
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -131,6 +141,7 @@ const PlantShow = () => {
       setFormData({
         text: '',
         owner: '',
+        username: '',
       })
       toggleShowOff()
     } catch (err) {
@@ -183,6 +194,14 @@ const PlantShow = () => {
       favorite ? setFavorite(false) : setFavorite(true)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const handleEditPressed = () => {
+    if (userCanEdit || plant.owner === payload.sub ) {
+      navigate(`/plants/${plant._id}/edit`)
+    } else {
+      navigate('/become-editor')
     }
   }
 
@@ -245,6 +264,7 @@ const PlantShow = () => {
                       <Grid item xs={4}>
                         <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center' }}>
                           <Typography>Watering</Typography>
+                          <Box>{plant.ownerUsername.username}</Box>
                           <Chip
                             label={plant.watering}
                             icon={<Box as='img' src={wateringCan} sx={{ width: '24px' }} />}
@@ -378,9 +398,16 @@ const PlantShow = () => {
                     </Grid>    
                   </AccordionDetails>
                 </Accordion>
+
+                {/* Plant Owner */}
+                <Typography>Original Creator: {plant.ownerUsername[0].username}</Typography>
+                
+                {/* Last Editor */}
+                <Typography>Last Edit: {plant.lastEditUsername[0].username}</Typography>
+
                 {userIsAuthenticated() ? <Chip
                   label="Edit"
-                  onClick={() => navigate(`/plants/${plant._id}/edit`)}
+                  onClick={handleEditPressed}
                   icon={<EditRoundedIcon sx={{ width: 15 }} />}
                   variant="outlined"
                   sx={{ float: 'right', mt: 1 }}
