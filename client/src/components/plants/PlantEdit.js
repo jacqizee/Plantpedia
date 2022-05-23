@@ -101,24 +101,6 @@ const PlantEdit = () => {
     }
   }, [formData, formLoaded, plantId])
 
-  const getBase64Image = (img) => {
-    img.onload = function() {
-      console.log('image width: ', img.width)
-      console.log('image height: ', img.height)
-      const w = img.width
-      const h = img.height
-      // const heightMoreThan350px = img.height > 350 ? true : false
-      // const widthMoreThan350px = img.width > 350 ? true : false
-      // setIsUndersized(!heightMoreThan350px || !widthMoreThan350px )
-    }
-    const canvas = document.createElement('canvas')
-    canvas.width = img.width
-    canvas.height = img.height
-    const ctx = canvas.getContext('2d')
-    ctx.drawImage(img, 0, 0)
-    return canvas.toDataURL('image/jpg', 1)
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -205,14 +187,6 @@ const PlantEdit = () => {
 
       const squareImageURL = canvas.toDataURL('image/jpg', 1)
       setFormData({ ...formData, images: squareImageURL })
-      
-      // const data = new FormData()
-      // data.append('file', formData.images)
-      // data.append('upload_preset', preset)
-      // const res = await axios.post(uploadURL, data)
-      // setFormData({ ...formData, images: res.data.url })
-
-
     }
   }
 
@@ -233,6 +207,12 @@ const PlantEdit = () => {
             sx={{ width: .90 }}
             rowSpacing={1}
             columnSpacing={1}>
+
+            {/* This must be first input So that the file upload only fires when you press the button */}
+            <>
+              <Input type="text" autofocus="autofocus" />
+            </>
+            
             {/* Name */}
             <Grid item xs={12} md={6}>
               <TextField
@@ -275,11 +255,11 @@ const PlantEdit = () => {
             {/* Images */}
             <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
               {displayImage ? 
-                <Box component='img' id="uploadedImage" src={displayImage} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
+                <Box component='img' src={displayImage} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                 :
                 <>
                   {formData.images ? 
-                    <Box component='img' id="uploadedImage" src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
+                    <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                     :
                     <></>
                   }
