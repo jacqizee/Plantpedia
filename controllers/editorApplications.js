@@ -3,10 +3,10 @@ import User from '../models/users.js'
 import { EditorApplication } from '../models/editorApplications.js'
 
 // METHOD: POST
-// Endpoint: /editorapplication/:id
+// Endpoint: /editor-application
 // Description: Add an editor application
 export const addEditorApplication = async (req, res) => {
-  const { id } = req.params
+  console.log('req body is: ', req.body)
   try {
       
     // Create submitted application with an owner

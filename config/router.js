@@ -49,7 +49,7 @@ router.route('/profile/user/:username')
 
 
 //Editor Application
-router.route('/editorapplication/:id')
+router.route('/editor-application')
   .post(secureRoute, addEditorApplication)
 
 export default router

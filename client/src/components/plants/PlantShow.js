@@ -78,6 +78,8 @@ const PlantShow = () => {
             },
           })
           const retrievedUser = data[0]
+
+          setUserCanEdit(retrievedUser.canEdit)
         }
       } catch (error) {
         console.log(error)
@@ -192,6 +194,14 @@ const PlantShow = () => {
       favorite ? setFavorite(false) : setFavorite(true)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const handleEditPressed = () => {
+    if (userCanEdit || plant.owner === payload.sub ) {
+      navigate(`/plants/${plant._id}/edit`)
+    } else {
+      navigate('/become-editor')
     }
   }
 
@@ -397,7 +407,7 @@ const PlantShow = () => {
 
                 {userIsAuthenticated() ? <Chip
                   label="Edit"
-                  onClick={() => navigate(`/plants/${plant._id}/edit`)}
+                  onClick={handleEditPressed}
                   icon={<EditRoundedIcon sx={{ width: 15 }} />}
                   variant="outlined"
                   sx={{ float: 'right', mt: 1 }}
