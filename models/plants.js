@@ -3,11 +3,12 @@ import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { commentSchema } from './comments.js'
 
 const plantSchema = new mongoose.Schema({
-  name: { type: String, required: true, maxLength: 150 },
-  scientificName: { type: String, required: true, unique: true },
+  name: { type: String, required: true, maxLength: 35 },
+  scientificName: { type: String, required: true, unique: true, maxLength: 50 },
+  description: { type: String, required: true, maxLength: 500 },
   images: { type: String, required: true },
   watering: { type: String, enum: ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly'], required: true },
-  sunExposure: { type: String, enum: ['Full sun', 'Partial sun', 'Shade'], required: true },
+  sunExposure: { type: String, enum: ['Full Sun', 'Partial Sun', 'Shade'], required: true },
   soilType: { type: String, enum: ['Loamy', 'Chalky', 'Peaty', 'Silty', 'Sandy', 'Clay'], required: true },
   flowerColor: { type: Array },
   mood: { type: String, enum: ['Mysterious', 'Cheerful', 'Emo', 'Bright', 'Classy'] },
@@ -17,9 +18,7 @@ const plantSchema = new mongoose.Schema({
   width: { type: Number },
   nativeArea: { type: Array },
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
-  // ownerUsername: { type: mongoose.Schema.ObjectId, ref: 'User' },
   lastEdit: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
-  // lastEditUsername: { type: mongoose.Schema.ObjectId, ref: 'User' },
   comments: [commentSchema],
   favorites: [],
   editors: []
