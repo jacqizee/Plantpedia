@@ -100,7 +100,11 @@ const PlantShow = () => {
       setCommentLoading(false)
     }
   }, [plant, commentDropdown, comments])
-
+  
+  useEffect(() => {
+    console.log(comments)
+  }, [comments])
+  
   //input for comment data
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
