@@ -46,10 +46,10 @@ const PlantShow = () => {
 
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
-  const [comments, setComments] = useState([])
   const [ loading, setLoading ] = useState(true)
-  const [ commentLoading, setCommentLoading ] = useState(true)
 
+  const [comments, setComments] = useState(false)
+  const [ commentLoading, setCommentLoading ] = useState(true)
   const [commentCount, setCommentCount] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
   const [showComments, setShowComments] = useState(false)
@@ -66,14 +66,16 @@ const PlantShow = () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant(data)
+        setComments(data.comments)
       } catch (error) {
         console.log(error)
-        // setErrors(true)
       }
       setLoading(false)
     }
     getPlant()
   }, [id])
+
+  // ? Comment Functions
 
   // comment dropdown menu
   const handleDropdown = (e) => {
@@ -82,22 +84,22 @@ const PlantShow = () => {
 
   // when comment or commentdropdown states are loaded & on page load
   useEffect(() => {
-    if (!loading) {
-      setCommentCount(plant.comments.length)
+    console.log('fired')
+    const handleCommentFilter = () => {
+      setCommentCount(comments.length)
       if (commentDropdown === 'oldest') {
         console.log('oldest')
         setComments(plant.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)))
-      } else if (commentDropdown === 'newest') {
+      } else {
         console.log('newest')
         setComments(plant.comments.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)))
       } 
     }
-    console.log(comments)
-  }, [loading, commentDropdown])
-
- 
-
-  // ? Comment Functions
+    if (comments) {
+      handleCommentFilter()
+      setCommentLoading(false)
+    }
+  }, [plant, commentDropdown, comments])
 
   //input for comment data
   const handleInput = (e) => {
@@ -117,9 +119,10 @@ const PlantShow = () => {
       })
       //get new plant comments
       const { data } = await axios.get(`/api/plants/${id}`)
+
       //set state and sort by time
-      setComments(data.comments)
       setPlant({ ...plant, comments: data.comments })
+      
       //reset form
       setFormData({
         text: '',
@@ -152,20 +155,15 @@ const PlantShow = () => {
   }
 
   //disable comment button until user has typed message
-  const isTextDisabled = formData.text.length === 0
+  const isAddDisabled = formData.text.length === 0
 
   // ? Favorite Functions
 
-  //check if user has already favorited the plant
-  const plantIsFavorite = (singlePlant) => {
-    if (!payload || !singlePlant) return
-    return singlePlant.favorites.includes(payload.sub)
-  }
-
-  //update state when user clicks fav icon
+  //update state when user clicks fav icon and on page render
   useEffect(() => {
     const isFavorite = (singlePlant) => {
-      setFavorite(plantIsFavorite(singlePlant))
+      if (!payload || !singlePlant) return
+      setFavorite(singlePlant.favorites.includes(payload.sub))
     }
     isFavorite(plant)
   }, [plant])
@@ -432,7 +430,7 @@ const PlantShow = () => {
                       type="submit"
                       variant="contained"
                       sx={{ mt: 3, float: 'right', display: showComments }}
-                      disabled={isTextDisabled}
+                      disabled={isAddDisabled}
                     >
                       Add comment
                     </Button>
@@ -451,7 +449,7 @@ const PlantShow = () => {
             </Stack> : null}
 
           {/* comment section */}
-          { !loading ?
+          { !commentLoading && comments.length > 0 ?
             comments.map(comment => {
               const { username, _id, text, createdAt } = comment
               const date = new Date(createdAt)
