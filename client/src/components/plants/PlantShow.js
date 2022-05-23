@@ -25,6 +25,7 @@ import Chip from '@mui/material/Chip'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
+import Pagination from '@mui/material/Pagination'
 
 //icon images
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -228,7 +229,7 @@ const PlantShow = () => {
                     <Typography>Description</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Typography>- Description goes here -</Typography>
+                    <Typography sx={{ textAlign: 'left' }}>{plant.description}</Typography>
                   </AccordionDetails>
                 </Accordion>
 
@@ -497,6 +498,7 @@ const PlantShow = () => {
                 No comments!
               </Box>
             }
+            <Pagination count={Math.ceil(commentCount / 5)} variant="outlined" />
           </Container>
         </Container>
         :
