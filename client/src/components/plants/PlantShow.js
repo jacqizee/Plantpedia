@@ -63,25 +63,8 @@ const PlantShow = () => {
     const getPlant = async () => {
       try {
         const { data } = await axios.get(`/api/plants/${id}`)
-<<<<<<< HEAD
         setPlant({ ...data, comments: data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
         setCommentCount(data.comments.length)
-=======
-        console.log(data)
-        setPlant(data)
-        setComments(data.comments)
-
-        if (payload.username) {
-          const { data } = await axios.get(`/api/profile/user/${payload.username}`, {
-            headers: {
-              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-            },
-          })
-          const retrievedUser = data[0]
-
-          setUserCanEdit(retrievedUser.canEdit)
-        }
->>>>>>> development
       } catch (error) {
         console.log(error)
       }
