@@ -87,32 +87,33 @@ const Home = () => {
     if (value) {
       /\s/g.test(value[0]) ? value[0] = value[0].trim() : value
       setSearchTerm(/\s/g.test(value[0]) ? value[0].split(' ') : value)
-      console.log(searchTerm)
     }
   }
 
   // works for typing in a color and pressing enter
   useEffect(() => {
     if (!searchTerm.length) return
-    const filterArray = plants.filter(plant => searchTerm.some(color => plant.flowerColor.includes(color)))
+    const filterArray = plants.filter(plant => searchTerm.some(item => plant.flowerColor.includes(item) || plant.soilType.includes(item) || plant.mood.includes(item)))
     setFilteredPlants(filterArray)
   }, [searchTerm])
 
 
   //! WIP
-  const handleFocus = () => {
+  const handleFocus = (e) => {
     setShow(true)
   }
-  const handleBlur = () => {
-    // setShow(false)
 
+  const stopProp = (e) => {
+    e.stopPropagation()
+  }
+  const handleClose = () => {
+    setShow(false)
   }
 
-  const handleChipClick = (color) => {
-    // setShow(true)
-    console.log(color)
+  const handleChipClick = (e, chip) => {
+    e.stopPropagation()
     const searchArr = [...searchTerm]
-    searchArr.push(color)
+    searchArr.push(chip)
     setSearchTerm(searchArr)
   }
 
@@ -121,64 +122,66 @@ const Home = () => {
   return (
     <>
       {/* search bar */}
-      <Container maxWidth='lg' >
-        <Autocomplete
-          sx={{ mt: 3 }}
-          multiple
-          id="tags-filled"
-          options={[]}
-          freeSolo
-          value={searchTerm}
-          onChange={(event, value) => handleSearch(event, value)}
-          renderTags={(items, getTagProps) => {
-            items[0] = items[0].trim()
-            return (/\s/g.test(items[0]) ? items[0].split(' ') : items).map((item, i) => {
-              const newItem = item.charAt(0).toUpperCase() + item.slice(1)
-              if (colors.includes(newItem)) {
-                return (
-                  <Chip
-                    key={i}
-                    icon={<CircleIcon sx={{ '&&': { color: [item], width: '15px' } }} />}
-                    label={newItem}
-                    sx={{ width: '110px' }}
-                    {...getTagProps({ i })}
-                  />
-                )
-              } else {
-                return (
-                  <Chip
-                    key={i}
-                    label={item.charAt(0).toUpperCase() + item.slice(1)}
-                    sx={{ width: '110px' }}
-                    {...getTagProps({ i })}
-                  />
-                )
-              }
-            })
-          }
+      <Container maxWidth='lg' onClick={handleClose}>
+        <Box onClick={stopProp}>
+          <Autocomplete
+            sx={{ pt: 3 }}
+            multiple
+            id="tags-filled"
+            options={[]}
+            freeSolo
+            value={searchTerm}
+            onFocus={handleFocus}
+            onChange={(event, value) => handleSearch(event, value)}
+            renderTags={(items, getTagProps) => {
+              items[0] = items[0].trim()
 
-          }
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              placeholder="Search with flower colors, soil types etc..."
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          )}
-        />
+              return (/\s/g.test(items[0]) ? items[0].split(' ') : items).map((item, i) => {
+                const newItem = item.charAt(0).toUpperCase() + item.slice(1)
+                if (colors.includes(newItem)) {
+                  return (
+                    <Chip
+                      key={i}
+                      icon={<CircleIcon sx={{ '&&': { color: [item], width: '15px' } }} />}
+                      label={newItem}
+                      sx={{ width: '110px' }}
+                      {...getTagProps({ i })}
+                    />
+                  )
+                } else {
+                  return (
+                    <Chip
+                      key={i}
+                      label={item.charAt(0).toUpperCase() + item.slice(1)}
+                      sx={{ width: '110px' }}
+                      {...getTagProps({ i })}
+                    />
+                  )
+                }
+              })
+            }
+
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder={searchTerm.length ? 'Add tag' : 'Search by flower color, soil type or mood...'}
+              />
+            )}
+          />
+        </Box>
         {show ?
           <Grid container textAlign='center'>
             <Grid item md={4}>
               <h2>Flower Colors</h2>
               <Box>
-                {colors.map((item, i) => {
+                {colors.map((chip, i) => {
                   return (
                     <Chip
-                      onClick={() => handleChipClick(item)}
+                      onClick={(e) => handleChipClick(e, chip)}
                       key={i}
-                      label={item}
-                      icon={<CircleIcon sx={{ '&&': { color: [item], width: '15px' } }} />}
+                      label={chip}
+                      icon={<CircleIcon sx={{ '&&': { color: [chip], width: '15px' } }} />}
                       sx={{ width: '100px', mb: 1, mr: 1 }}
                     />
                   )
@@ -188,12 +191,12 @@ const Home = () => {
             <Grid item md={4}>
               <h2>Soil Type</h2>
               <Box>
-                {soilType.map((item, i) => {
+                {soilType.map((chip, i) => {
                   return (
                     <Chip
-                      onClick={() => handleChipClick(item)}
+                      onClick={(e) => handleChipClick(e, chip)}
                       key={i}
-                      label={item}
+                      label={chip}
                       sx={{ width: '100px', mb: 1, mr: 1 }}
                     />
                   )
@@ -203,12 +206,12 @@ const Home = () => {
             <Grid item md={4}>
               <h2>Mood</h2>
               <Box>
-                {mood.map((item, i) => {
+                {mood.map((chip, i) => {
                   return (
                     <Chip
-                      onClick={() => handleChipClick(item)}
+                      onClick={(e) => handleChipClick(e, chip)}
                       key={i}
-                      label={item}
+                      label={chip}
                       sx={{ width: '100px', mb: 1, mr: 1 }}
                     />
                   )
