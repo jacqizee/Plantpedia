@@ -5,7 +5,7 @@ export default [
     password: 'pass',
     passwordConfirmation: 'pass',
     bio: 'My name is Rob and I like plants',
-    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653092024/plantpedia/rob_de9tfw.png',
+    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653334810/plantpedia/seed-rob_co6jfg.png',
     canEdit: true,
     hasApplied: false
   },
@@ -15,7 +15,7 @@ export default [
     password: 'pass',
     passwordConfirmation: 'pass',
     bio: 'American plant enthusiast living in Holland',
-    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653092024/plantpedia/Screen_Shot_2022-05-19_at_4.15.45_PM_cbayiw.png',
+    image: 'https://res.cloudinary.com/drgegagha/image/upload/v1653334804/plantpedia/seed-jacqi_yfsiwi.png',
     canEdit: true,
     hasApplied: false
   },

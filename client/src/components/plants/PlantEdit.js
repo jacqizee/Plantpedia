@@ -42,6 +42,9 @@ const PlantEdit = () => {
   const [ formLoaded, setFormLoaded ] = useState(false)
   const [ formData, setFormData ] = useState(form)
 
+  // For image handling
+  const [ displayImage, setDisplayImage ] = useState('')
+
   // Setting units for height/width
   const [ matureSize, setMatureSize ] = useState({ height: formData.height, width: formData.width })
   const [ unit, setUnit ] = useState('in')
@@ -98,10 +101,41 @@ const PlantEdit = () => {
     }
   }, [formData, formLoaded, plantId])
 
+  const getBase64Image = (img) => {
+    img.onload = function() {
+      console.log('image width: ', img.width)
+      console.log('image height: ', img.height)
+      const w = img.width
+      const h = img.height
+      // const heightMoreThan350px = img.height > 350 ? true : false
+      // const widthMoreThan350px = img.width > 350 ? true : false
+      // setIsUndersized(!heightMoreThan350px || !widthMoreThan350px )
+    }
+    const canvas = document.createElement('canvas')
+    canvas.width = img.width
+    canvas.height = img.height
+    const ctx = canvas.getContext('2d')
+    ctx.drawImage(img, 0, 0)
+    return canvas.toDataURL('image/jpg', 1)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    let newForm = { ...formData }
+
+    if (displayImage) {
+      const data = new FormData()
+      data.append('file', formData.images)
+      data.append('upload_preset', preset)
+      const res = await axios.post(uploadURL, data)
+      console.log('cloudinary response: ', res.data)
+      setFormData({ ...formData, images: res.data.url })
+      newForm = { ...newForm, images: res.data.url }
+    }
+
     try {
-      const response = await axios.put(`/api/plants/${plantId}`, formData, {
+      const response = await axios.put(`/api/plants/${plantId}`, newForm, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
@@ -127,11 +161,59 @@ const PlantEdit = () => {
   }
 
   const handleImageUpload = async e => {
-    const data = new FormData()
-    data.append('file', e.target.files[0])
-    data.append('upload_preset', preset)
-    const res = await axios.post(uploadURL, data)
-    setFormData({ ...formData, images: res.data.url })
+
+    const urlString = URL.createObjectURL(e.target.files[0])
+    setDisplayImage(urlString)
+
+    const img = new Image()
+    img.src = urlString
+
+    img.onload = async function() {
+      const widthMoreThanHeight = img.width > img.height ? true : false
+      const widthOverHeight = img.width / img.height
+      let scale
+      let startX
+      let startY
+      let sideLength
+      if (widthMoreThanHeight) {
+        scale = img.height / 300
+        startX = -(img.width - img.height) / 2
+        startY = 0
+        sideLength = img.height
+      } else if (widthOverHeight === 1){
+        scale = img.height / 300
+        startX = 0
+        startY = 0
+        sideLength = img.height
+      } else {
+        scale = img.width / 300
+        startX = 0
+        startY = -(img.height - img.width) / 2
+        sideLength = img.width
+      }
+
+      const canvas = document.createElement('canvas')
+      canvas.width = sideLength
+      canvas.height = sideLength
+
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(
+        img, //image
+        startX,
+        startY
+      )
+
+      const squareImageURL = canvas.toDataURL('image/jpg', 1)
+      setFormData({ ...formData, images: squareImageURL })
+      
+      // const data = new FormData()
+      // data.append('file', formData.images)
+      // data.append('upload_preset', preset)
+      // const res = await axios.post(uploadURL, data)
+      // setFormData({ ...formData, images: res.data.url })
+
+
+    }
   }
 
   return (
@@ -192,10 +274,16 @@ const PlantEdit = () => {
             </Grid>
             {/* Images */}
             <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
-              {formData.images ? 
-                <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
+              {displayImage ? 
+                <Box component='img' id="uploadedImage" src={displayImage} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                 :
-                <></>
+                <>
+                  {formData.images ? 
+                    <Box component='img' id="uploadedImage" src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
+                    :
+                    <></>
+                  }
+                </>
               }
               <label htmlFor="contained-button-file">
                 <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageUpload} />
