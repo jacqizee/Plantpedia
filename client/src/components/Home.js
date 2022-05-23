@@ -143,14 +143,27 @@ const Home = () => {
               <Grid item xs={4}>
                 <Box>
                   <Typography pb={3}>Flower Color</Typography>
-                  <Grid container>
+                  <Grid container spacing={1}>
                     {colors.map((chip) => {
                       return (
-                        <Grid item xs={4} spacing key={chip}>
-                          <Box                            
+                        <Grid item xs={4} key={chip}>
+                          <Box
+                            as='span'
+                            className=''
                             onClick={(e) => handleChipClick(e, chip)}
-                            sx={{ display: 'inline', backgroundColor: '#98bac3', borderRadius: 10 }}>
-                            <CircleIcon sx={{ '&&': { color: [chip], width: '15px' } }} />
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#ebebeb',
+                              borderRadius: 10,
+                              p: 1,
+                              '&:hover': {
+                                cursor: 'pointer',
+                                backgroundColor: '#e0e0e0',
+                              },
+                            }}>
+                            <CircleIcon sx={{ color: [chip], width: '15px', mr: 1 }} />
                             {chip}
                           </Box>
                         </Grid>
