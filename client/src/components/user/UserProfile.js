@@ -73,10 +73,8 @@ const UserProfile = () => {
 
   //Params
   const { username } = useParams()
-  console.log('username params is: ', username)
 
   const payload = getPayload()
-  console.log('payload username is: ', payload.username)
 
   const [value, setValue] = useState(0)
 
@@ -92,9 +90,10 @@ const UserProfile = () => {
   const [user, setUser] = useState({
     username: username,
     numberOfPosts: 0,
-    bio: payload.bio,
-    image: payload.profilePicture,
+    bio: '',
+    image: '',
   })
+  
 
 
 
@@ -104,31 +103,31 @@ const UserProfile = () => {
         if (!payload) {
           navigate('/login')
         }
-        console.log('payload is: ', payload)
-        console.log('payload.sub is: ', payload.sub)
+        // console.log('payload is: ', payload)
+        // console.log('payload.sub is: ', payload.sub)
 
-        const { data } = await axios.get(`/api/profile/${payload.sub}`, {
+        // const { data } = await axios.get(`/api/profile/${payload.sub}`, {
+        //   headers: {
+        //     Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        //   },
+        // })
+
+        const { data } = await axios.get(`/api/profile/user/${username}`, {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
 
-
-
-        console.log('data is: ', data)
-        console.log(('createdPlants length is: ', data.createdPlants.length))
-        console.log(('favorite plants length is: ', data.favorites.length))
-        console.log(('favorite plants first index is: ', data.favorites[0]))
-        console.log(('my edits length is: ', data.myEdits.length))
+        const retrievedUser = data[0]
 
         // Set My Plants
-        setMyPlants(data.createdPlants)
+        setMyPlants(retrievedUser.createdPlants)
 
         // Search for favorite plants and set it
-        if (data.favorites.length > 0) {
+        if (retrievedUser.favorites.length > 0) {
           const favoritesArray = []
-          for (let i = 0; i < data.favorites.length; i++) {
-            const plant = await axios.get(`/api/plants/${data.favorites[i]}`)
+          for (let i = 0; i < retrievedUser.favorites.length; i++) {
+            const plant = await axios.get(`/api/plants/${retrievedUser.favorites[i]}`)
             console.log('plant value is: ', plant.data)
             favoritesArray.push(plant.data)
             console.log('favoritesArray is: ', favoritesArray)
@@ -138,10 +137,10 @@ const UserProfile = () => {
         }
 
         // Search for edited plants and set it
-        if (data.myEdits.length > 0) {
+        if (retrievedUser.myEdits.length > 0) {
           const editsArray = []
-          for (let i = 0; i < data.myEdits.length; i++) {
-            const plant = await axios.get(`/api/plants/${data.myEdits[i]}`)
+          for (let i = 0; i < retrievedUser.myEdits.length; i++) {
+            const plant = await axios.get(`/api/plants/${retrievedUser.myEdits[i]}`)
             console.log('plant value is: ', plant.data)
             editsArray.push(plant.data)
             console.log('editsArray is: ', editsArray)
@@ -152,16 +151,17 @@ const UserProfile = () => {
         
         //Update user image
         const newUser = {
-          numberOfPosts: data.createdPlants.length,
-          bio: data.bio,
-          image: data.image,
+          numberOfPosts: retrievedUser.createdPlants.length,
+          bio: retrievedUser.bio,
+          image: retrievedUser.image,
         }
+        // setUser({ ...user, newUser })
         setUser(
           { 
             ...user, 
-            numberOfPosts: data.createdPlants.length,
-            bio: data.bio,
-            image: data.image,
+            numberOfPosts: retrievedUser.createdPlants.length,
+            bio: retrievedUser.bio,
+            image: retrievedUser.image,
           }
         )
 
@@ -194,7 +194,7 @@ const UserProfile = () => {
         <Box sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', mt: 4 }}>
           {/* Profile Picture */}
           <Grid item xs={4} >
-            <Avatar alt={payload.username} src={user.image} sx={{ width: 96, height: 96 }} />
+            <Avatar alt={user.username} src={user.image} sx={{ width: 96, height: 96 }} />
           </Grid>
 
           {/* About Me */}

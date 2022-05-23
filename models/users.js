@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   image: { type: String, default: 'https://png.pngtree.com/element_our/20190531/ourlarge/pngtree-cartoon-square-green-vine-image_1316677.jpg'},
   favorites: [],
   myEdits: [],
-  bio: { type: String, maxlength: 300 }
+  bio: { type: String, maxlength: 300, default: 'Hi! My favorite plants are: ' }
 }, { id: false })
 
 userSchema.virtual('createdPlants', {

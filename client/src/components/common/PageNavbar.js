@@ -32,6 +32,7 @@ const PageNavbar  = () => {
 
   // Payload
   const payload = getPayload()
+  // console.log('payload in pageNavBar is: ', payload)
 
   const [anchorElNav, setAnchorElNav] = useState(null)
   const [anchorElUser, setAnchorElUser] = useState(null)
@@ -44,12 +45,18 @@ const PageNavbar  = () => {
   const handleNavClick = (event) => {
     const pageName = event.currentTarget.innerText.toLowerCase()
     if (pageName === 'login' || pageName === 'register') {
+      handleCloseUserMenu()
+
       navigate(`/${pageName}`)
     } else if (pageName === 'profile') {
       handleCloseUserMenu()
 
-      navigate(`/${pageName}/${payload.username}`)
+
+      navigate(`/${pageName}/${payload.username}`, { replace: true })
+      window.location.reload()
     } else if (pageName === 'logout') {
+      handleCloseUserMenu()
+
       window.localStorage.removeItem('plantpedia')
       navigate('/login')
     }

@@ -31,10 +31,10 @@ export const loginUser = async (req, res) => {
       throw new Error()
     }
 
-    const bio = userToLogin.bio ? userToLogin.bio : `Hi! I'm ${userToLogin.username}, and I like 🪴🌸🌵`
+    // const bio = userToLogin.bio ? userToLogin.bio : `Hi! I'm ${userToLogin.username}. My favorite plants are: `
 
     
-    const token = jwt.sign({ sub: userToLogin._id, username: userToLogin.username, profilePicture: userToLogin.image, bio:bio }, process.env.SECRET, { expiresIn: '2d' })
+    const token = jwt.sign({ sub: userToLogin._id, username: userToLogin.username, profilePicture: userToLogin.image }, process.env.SECRET, { expiresIn: '2d' })
    
 
 

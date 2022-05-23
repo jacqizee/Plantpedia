@@ -22,8 +22,18 @@ import Chip from '@mui/material/Chip'
 import ToggleButton from '@mui/material/ToggleButton'
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Paper from '@mui/material/Paper'
+import IconButton from '@mui/material/IconButton'
+import PhotoCamera from '@mui/icons-material/PhotoCamera'
+import { styled } from '@mui/material/styles'
 
 const PlantEdit = () => {
+
+  const Input = styled('input')({
+    display: 'none',
+  })
+
+  const uploadURL = process.env.REACT_APP_CLOUDINARY_URL
+  const preset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
 
   const { plantId } = useParams()
   const navigate = useNavigate()
@@ -118,7 +128,7 @@ const PlantEdit = () => {
 
   const handleDelete = async (e) => {
     try {
-      await axios.delete(`/api/plants/${plantId}/`, {
+      await axios.delete(`/api/plants/${plantId}`, {
         headers: {
           Authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
@@ -127,6 +137,24 @@ const PlantEdit = () => {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const handleImageUpload = async e => {
+    
+    const data = new FormData()
+
+
+    // console.log('e target file 0 is: ', e.target.files[0])
+    console.log('upload preset is: ', preset)
+    
+    data.append('file', e.target.files[0])
+    data.append('upload_preset', preset)
+
+    const res = await axios.post(uploadURL, data)
+
+    console.log(res.data)
+    // Set the profileImage url to state
+    setFormData({ ...formData, images: res.data.url })
   }
 
   const colors = [
@@ -199,15 +227,27 @@ const PlantEdit = () => {
                 fullWidth />
             </Grid>
             {/* Images */}
-            <Grid item xs={12}>
-              <TextField id='images'
-                label='Image URL'
-                variant='outlined'
-                name='images'
-                value={formData.images}
-                required
-                onChange={handleChange}
-                fullWidth />
+            <Grid item xs={12} sx={{ mt: 2, textAlign: 'center' }} >
+              {formData.images ? 
+                <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
+                :
+                <></>
+              }
+              <label htmlFor="contained-button-file">
+                <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageUpload} />
+                {formData.images ? 
+                  // <Button variant="contained" component="span">
+                  //   Change Image
+                  // </Button>
+                  <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                    <PhotoCamera />
+                  </IconButton>
+                  :
+                  <Button variant="contained" component="span">
+                    Upload Image
+                  </Button>
+                }
+              </label>
             </Grid>
             {/* Water Requirements */}
             <Grid item xs={12} md={4}>
