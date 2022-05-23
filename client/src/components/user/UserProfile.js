@@ -73,10 +73,8 @@ const UserProfile = () => {
 
   //Params
   const { username } = useParams()
-  console.log('username params is: ', username)
 
   const payload = getPayload()
-  console.log('payload username is: ', payload.username)
 
   const [value, setValue] = useState(0)
 
@@ -105,8 +103,8 @@ const UserProfile = () => {
         if (!payload) {
           navigate('/login')
         }
-        console.log('payload is: ', payload)
-        console.log('payload.sub is: ', payload.sub)
+        // console.log('payload is: ', payload)
+        // console.log('payload.sub is: ', payload.sub)
 
         // const { data } = await axios.get(`/api/profile/${payload.sub}`, {
         //   headers: {
@@ -121,12 +119,6 @@ const UserProfile = () => {
         })
 
         const retrievedUser = data[0]
-
-        console.log('retrieved user is: ', retrievedUser)
-        console.log(('createdPlants length is: ', retrievedUser.createdPlants.length))
-        console.log(('favorite plants length is: ', retrievedUser.favorites.length))
-        console.log(('favorite plants first index is: ', retrievedUser.favorites[0]))
-        console.log(('my edits length is: ', retrievedUser.myEdits.length))
 
         // Set My Plants
         setMyPlants(retrievedUser.createdPlants)

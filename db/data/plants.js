@@ -2,7 +2,7 @@ export default [
   {
     name: 'Cherry Plum',
     scientificName: 'Prunus cerasifera',
-    images: 'https://www.thespruce.com/thmb/2Y3lqOTlLt9Xp7ktbKQ_-vGFjpg=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/Purple-leaf-plum-growing-tips-3269344-02-d5ce69e0f28d41a2b5d05bfb9a6e119b.jpg',
+    images: 'https://www.thespruce.com/thmb/2Y3lqOTlLt9Xp7ktbKQ_-vGFjpg=/700x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/purple-leaf-plum-growing-tips-3269344-02-d5ce69e0f28d41a2b5d05bfb9a6e119b.jpg',
     watering: 'Weekly',
     sunExposure: 'Full sun',
     soilType: 'Loamy',
@@ -105,7 +105,7 @@ export default [
   {
     name: 'Red Spider Lily',
     scientificName: 'Lycoris radiata',
-    images: 'https://www.thespruce.com/thmb/KRcoI58xaU2QLsUIohNE_wgcBS0=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/growing-Red-spider-lily-5093664-hero-6e311153f91e4f32b043c76b4f510469.jpg',
+    images: 'https://www.thespruce.com/thmb/KRcoI58xaU2QLsUIohNE_wgcBS0=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/growing-red-spider-lily-5093664-hero-6e311153f91e4f32b043c76b4f510469.jpg',
     watering: 'Weekly',
     sunExposure: 'Full sun',
     soilType: 'Sandy',
