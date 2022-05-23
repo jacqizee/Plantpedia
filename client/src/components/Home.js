@@ -39,6 +39,8 @@ const Home = () => {
   const [searchPlant, setSearchPlant] = useState([])
   const [filteredPlants, setFilteredPlants] = useState([])
   const [searchTerm, setSearchTerm] = useState([])
+  const colorFilter = []
+
 
   const colors = [
     'Red',
@@ -92,30 +94,19 @@ const Home = () => {
   // works for typing in a color and pressing enter
   useEffect(() => {
     const regexp = new RegExp(searchTerm, 'i')
-    console.log(searchTerm)
     const filteredArray = plants.filter(plant => regexp.test(plant.name))
     setSearchPlant(filteredArray)
-    console.log(searchPlant)
   }, [searchTerm])
-
-  useEffect(() => {
-    console.log(searchPlant)
-  }, [searchPlant])
-
-
-  //! WIP
 
 
   const handleChipClick = (e, chip) => {
-    // e.target.className = 'styled'
+    e.target.classList.toggle('styled')
     if (colors.includes(chip)) {
-      const filteredArray = plants.filter(plant => chip === plant.flowerColor)
-      setFilteredPlants(filteredArray)
-    } else if (soilType.includes(chip)) {
-      const filteredArray = plants.filter(plant => chip === plant.soilType)
-      setFilteredPlants(filteredArray)
-    } else if (mood.includes(chip)) {
-      const filteredArray = plants.filter(plant => chip === plant.mood)
+      colorFilter.includes(chip) ? colorFilter.splice(colorFilter.indexOf(chip), 1) : colorFilter.push(chip)
+      console.log(colorFilter)
+      const filteredArray = plants.filter(plant => colorFilter.some(color => plant.flowerColor.includes(color)))
+      // console.log(filteredArray)
+      // console.log(colorFilter)
       setFilteredPlants(filteredArray)
     }
   }
@@ -127,7 +118,7 @@ const Home = () => {
     <>
       {/* search bar */}
       <Container maxWidth='lg' >
-        <TextField fullWidth placeholder='Search by name...' onChange={handleInput} value={searchTerm} sx={{ pt: 3 }} />
+        <TextField fullWidth autoComplete='off' placeholder='Search by name...' onChange={handleInput} value={searchTerm} sx={{ pt: 3 }} />
         <Accordion disableGutters>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -138,19 +129,31 @@ const Home = () => {
             <Typography>Search by tags</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {/* flower color */}
-            <Grid container textAlign='center'>
+            <Grid container spacing={1} textAlign='center'>
+              {/* flower color */}
               <Grid item xs={4}>
                 <Box>
                   <Typography pb={3}>Flower Color</Typography>
-                  <Grid container>
+                  <Grid container spacing={1}>
                     {colors.map((chip) => {
                       return (
-                        <Grid item xs={4} spacing key={chip}>
-                          <Box                            
+                        <Grid item xs={4} key={chip}>
+                          <Box
+                            as='span'
                             onClick={(e) => handleChipClick(e, chip)}
-                            sx={{ display: 'inline', backgroundColor: '#98bac3', borderRadius: 10 }}>
-                            <CircleIcon sx={{ '&&': { color: [chip], width: '15px' } }} />
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#ebebeb',
+                              borderRadius: 10,
+                              p: 1,
+                              color: [chip],
+                              '&:hover': {
+                                cursor: 'pointer',
+                                backgroundColor: '#e0e0e0',
+                              },
+                            }}>
                             {chip}
                           </Box>
                         </Grid>
@@ -164,32 +167,66 @@ const Home = () => {
               <Grid item xs={4}>
                 <Box>
                   <Typography pb={3}>Soil Type</Typography>
-                  {soilType.map((chip) => {
-                    return (
-                      <Chip
-                        onClick={(e) => handleChipClick(e, chip)}
-                        key={chip}
-                        label={chip}
-                        sx={{ width: '100px', mb: 1, mr: 1 }}
-                      />
-                    )
-                  })}
+                  <Grid container spacing={1}>
+                    {soilType.map((chip) => {
+                      return (
+                        <Grid item xs={4} key={chip}>
+                          <Box
+                            as='span'
+                            onClick={(e) => handleChipClick(e, chip)}
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#ebebeb',
+                              borderRadius: 10,
+                              p: 1,
+                              color: [chip],
+                              '&:hover': {
+                                cursor: 'pointer',
+                                backgroundColor: '#e0e0e0',
+                              },
+                            }}>
+                            {chip}
+                          </Box>
+                        </Grid>
+                      )
+                    })}
+                  </Grid>
+
                 </Box>
               </Grid>
               {/* Mood*/}
               <Grid item xs={4}>
                 <Box>
                   <Typography pb={3}>Mood</Typography>
-                  {mood.map((chip) => {
-                    return (
-                      <Chip
-                        onClick={(e) => handleChipClick(e, chip)}
-                        key={chip}
-                        label={chip}
-                        sx={{ width: '100px', mb: 1, mr: 1 }}
-                      />
-                    )
-                  })}
+                  <Grid container spacing={1}>
+                    {mood.map((chip) => {
+                      return (
+                        <Grid item xs={4} key={chip}>
+                          <Box
+                            as='span'
+                            onClick={(e) => handleChipClick(e, chip)}
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#ebebeb',
+                              borderRadius: 10,
+                              p: 1,
+                              color: [chip],
+                              '&:hover': {
+                                cursor: 'pointer',
+                                backgroundColor: '#e0e0e0',
+                              },
+                            }}>
+                            {chip}
+                          </Box>
+                        </Grid>
+                      )
+                    })}
+                  </Grid>
+
                 </Box>
               </Grid>
             </Grid>
@@ -213,7 +250,7 @@ const Home = () => {
             // images
             <Container maxWidth='lg' sx={{ my: 4 }}>
               <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1}>
-                {(searchTerm.length ? searchPlant : plants).map(plant => {
+                {(searchTerm.length ? searchPlant : filteredPlants.length ? filteredPlants : plants).map(plant => {
                   return (
                     <ImageListItem key={plant._id} >
                       <Box as={Link} to={`/plants/${plant._id}`} >
