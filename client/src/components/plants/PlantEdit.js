@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { getTokenFromLocalStorage, userIsAuthenticated, userIsOwner } from '../../helpers/auth.js'
 import { useNavigate, useParams } from 'react-router-dom'
+import { form, colors, regions, waterTypes, soilTypes, sunTypes, lifespanTypes, moodTypes } from '../../helpers/plantFormOptions'
 
 // MUI Imports
 import Container from '@mui/material/InputLabel'
@@ -39,21 +40,7 @@ const PlantEdit = () => {
   const navigate = useNavigate()
 
   const [ formLoaded, setFormLoaded ] = useState(false)
-  const [ formData, setFormData ] = useState({
-    name: '',
-    scientificName: '',
-    images: '',
-    watering: '',
-    sunExposure: '',
-    soilType: '',
-    flowerColor: [],
-    mood: '',
-    lifespan: '',
-    isIndoor: false,
-    height: 50,
-    width: 50,
-    nativeArea: [],
-  })
+  const [ formData, setFormData ] = useState(form)
 
   // Setting units for height/width
   const [ matureSize, setMatureSize ] = useState({ height: formData.height, width: formData.width })
@@ -140,50 +127,12 @@ const PlantEdit = () => {
   }
 
   const handleImageUpload = async e => {
-    
     const data = new FormData()
-
-
-    // console.log('e target file 0 is: ', e.target.files[0])
-    console.log('upload preset is: ', preset)
-    
     data.append('file', e.target.files[0])
     data.append('upload_preset', preset)
-
     const res = await axios.post(uploadURL, data)
-
-    console.log(res.data)
-    // Set the profileImage url to state
     setFormData({ ...formData, images: res.data.url })
   }
-
-  const colors = [
-    'Red',
-    'Orange',
-    'Yellow',
-    'Blue',
-    'Pink',
-    'Purple',
-    'Violet',
-    'Cream',
-    'White'
-  ]
-
-  const regions = [
-    'North America',
-    'South America',
-    'Europe',
-    'Middle East',
-    'Africa',
-    'Asia',
-    'Australia'
-  ]
-
-  const waterTypes = ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly']
-  const sunTypes = ['Full Sun', 'Partial Sun', 'Shade']
-  const soilTypes = ['Loamy', 'Chalky', 'Peaty', 'Silty', 'Sandy', 'Clay']
-  const lifespanTypes = ['Perennial', 'Biennial', 'Annual']
-  const moodTypes = ['Cheerful', 'Emo', 'Mysterious', 'Classy', 'Bright']
 
   return (
     <Container maxWidth='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -226,8 +175,23 @@ const PlantEdit = () => {
                 onChange={handleChange}
                 fullWidth />
             </Grid>
+            {/* Description */}
+            <Grid item xs={12}>
+              <TextField
+                id='description' 
+                label='Description'
+                variant='outlined'
+                name='description'
+                value={formData.description}
+                required
+                multiline
+                minRows={2}
+                maxRows={4}
+                onChange={handleChange}
+                fullWidth />
+            </Grid>
             {/* Images */}
-            <Grid item xs={12} sx={{ mt: 2, textAlign: 'center' }} >
+            <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
               {formData.images ? 
                 <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                 :

@@ -39,7 +39,7 @@ const Home = () => {
   const [searchPlant, setSearchPlant] = useState([])
   const [filteredPlants, setFilteredPlants] = useState([])
   const [searchTerm, setSearchTerm] = useState([])
-  const colorFilter = []
+  const [colorFilter, setColorFilter] = useState([])
 
 
   const colors = [
@@ -101,11 +101,28 @@ const Home = () => {
 
   const handleChipClick = (e, chip) => {
     e.target.classList.toggle('styled')
+    const tempColorFilter = [...colorFilter]
     if (colors.includes(chip)) {
-      colorFilter.includes(chip) ? colorFilter.splice(colorFilter.indexOf(chip), 1) : colorFilter.push(chip)
+      tempColorFilter.includes(chip) ? tempColorFilter.splice(tempColorFilter.indexOf(chip), 1) : tempColorFilter.push(chip)
+      setColorFilter(tempColorFilter)
+      console.log(tempColorFilter)
       console.log(colorFilter)
-      const filteredArray = plants.filter(plant => colorFilter.some(color => plant.flowerColor.includes(color)))
-      // console.log(filteredArray)
+
+      // const filteredArray = plants.filter(plant => colorFilter.some(color => plant.flowerColor.includes(color)))
+      const filteredArray = []
+      tempColorFilter.forEach(color => {
+        console.log('color is: ', color)
+        plants.forEach(plant => {
+          // console.log('plant is', plant)
+          if (plant.flowerColor.includes(color)) {
+            if (!filteredArray.includes(plant)) {
+              filteredArray.push(plant)
+            }
+          } 
+        })
+      })
+
+      console.log(filteredArray)
       // console.log(colorFilter)
       setFilteredPlants(filteredArray)
     }
@@ -250,7 +267,7 @@ const Home = () => {
             // images
             <Container maxWidth='lg' sx={{ my: 4 }}>
               <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1}>
-                {(searchTerm.length ? searchPlant : filteredPlants.length ? filteredPlants : plants).map(plant => {
+                {(filteredPlants.length ? filteredPlants : plants).map(plant => {
                   return (
                     <ImageListItem key={plant._id} >
                       <Box as={Link} to={`/plants/${plant._id}`} >
