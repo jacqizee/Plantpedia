@@ -39,6 +39,7 @@ const Home = () => {
   const [searchPlant, setSearchPlant] = useState([])
   const [filteredPlants, setFilteredPlants] = useState([])
   const [searchTerm, setSearchTerm] = useState([])
+  const colorFilter = []
 
   const colors = [
     'Red',
@@ -95,30 +96,20 @@ const Home = () => {
     console.log(searchTerm)
     const filteredArray = plants.filter(plant => regexp.test(plant.name))
     setSearchPlant(filteredArray)
-    console.log(searchPlant)
   }, [searchTerm])
-
-  useEffect(() => {
-    console.log(searchPlant)
-  }, [searchPlant])
-
 
   //! WIP
 
 
   const handleChipClick = (e, chip) => {
-    // e.target.className ?  e.target.className = 'styled' : e.target.className = '' 
-    console.log(e.target.variant)
+
     if (colors.includes(chip)) {
-      const filteredArray = plants.filter(plant => chip === plant.flowerColor)
+      colorFilter.includes(chip) ? colorFilter.splice(colorFilter.indexOf(chip), 1) : colorFilter.push(chip)
+      const filteredArray = (filteredPlants.length ? filteredPlants : plants).filter(plant => colorFilter.some(color => plant.flowerColor.includes(color)))
+      console.log(filteredArray)
+      console.log(colorFilter)
       setFilteredPlants(filteredArray)
-    } else if (soilType.includes(chip)) {
-      const filteredArray = plants.filter(plant => chip === plant.soilType)
-      setFilteredPlants(filteredArray)
-    } else if (mood.includes(chip)) {
-      const filteredArray = plants.filter(plant => chip === plant.mood)
-      setFilteredPlants(filteredArray)
-    }
+    } 
   }
 
 
@@ -182,7 +173,6 @@ const Home = () => {
                     return (
                       <Chip
                         onClick={(e) => handleChipClick(e, chip)}
-                        variant='outlined'
                         key={chip}
                         label={chip}
                         sx={{ width: '100px', mb: 1, mr: 1 }}
@@ -228,7 +218,7 @@ const Home = () => {
             // images
             <Container maxWidth='lg' sx={{ my: 4 }}>
               <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1}>
-                {(searchTerm.length ? searchPlant : plants).map(plant => {
+                {(searchTerm.length ? searchPlant : filteredPlants.length ? filteredPlants : plants).map(plant => {
                   return (
                     <ImageListItem key={plant._id} >
                       <Box as={Link} to={`/plants/${plant._id}`} >
