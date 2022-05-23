@@ -219,7 +219,7 @@ const PlantShow = () => {
               {/* Accordion Column */}
               <Grid item md={6} sx={{ textAlign: 'center', flexGrow: 1 }}>
                 {/* Description Accordion */}
-                <Accordion maxWidth disableGutters>
+                <Accordion disableGutters>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="description-content"
