@@ -65,6 +65,15 @@ const PlantShow = () => {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant({ ...data, comments: data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
         setCommentCount(data.comments.length)
+
+        if (payload.username) {
+          const { data: userData } = await axios.get(`/api/profile/${payload.sub}`, {
+            headers: {
+              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+            },
+          })
+          setUserCanEdit(userData.canEdit)
+        }  
       } catch (error) {
         console.log(error)
       }
@@ -172,6 +181,7 @@ const PlantShow = () => {
   }
 
   const handleEditPressed = () => {
+    console.log('userCanEdit is: ', userCanEdit)
     if (userCanEdit || plant.owner === payload.sub ) {
       navigate(`/plants/${plant._id}/edit`)
     } else {
