@@ -97,7 +97,7 @@ const Home = () => {
     setSearchPlant(filteredArray)
     console.log(searchPlant)
   }, [searchTerm])
-  
+
   useEffect(() => {
     console.log(searchPlant)
   }, [searchPlant])
@@ -107,7 +107,7 @@ const Home = () => {
 
 
   const handleChipClick = (e, chip) => {
-    console.log(e.target.className)
+    // e.target.className = 'styled'
     if (colors.includes(chip)) {
       const filteredArray = plants.filter(plant => chip === plant.flowerColor)
       setFilteredPlants(filteredArray)
@@ -143,29 +143,32 @@ const Home = () => {
               <Grid item xs={4}>
                 <Box>
                   <Typography pb={3}>Flower Color</Typography>
-                  {colors.map((chip, i) => {
-                    return (
-                      <Chip
-                        onClick={(e) => handleChipClick(e, chip)}
-                        className=''
-                        key={i}
-                        label={chip}
-                        icon={<CircleIcon sx={{ '&&': { color: [chip], width: '15px' } }} />}
-                        sx={{ width: '100px', mb: 1, mr: 1 }}
-                      />
-                    )
-                  })}
+                  <Grid container>
+                    {colors.map((chip) => {
+                      return (
+                        <Grid item xs={4} spacing key={chip}>
+                          <Box                            
+                            onClick={(e) => handleChipClick(e, chip)}
+                            sx={{ display: 'inline', backgroundColor: '#98bac3', borderRadius: 10 }}>
+                            <CircleIcon sx={{ '&&': { color: [chip], width: '15px' } }} />
+                            {chip}
+                          </Box>
+                        </Grid>
+                      )
+                    })}
+                  </Grid>
+
                 </Box>
               </Grid>
               {/* Soil type */}
               <Grid item xs={4}>
                 <Box>
                   <Typography pb={3}>Soil Type</Typography>
-                  {soilType.map((chip, i) => {
+                  {soilType.map((chip) => {
                     return (
                       <Chip
                         onClick={(e) => handleChipClick(e, chip)}
-                        key={i}
+                        key={chip}
                         label={chip}
                         sx={{ width: '100px', mb: 1, mr: 1 }}
                       />
@@ -177,11 +180,11 @@ const Home = () => {
               <Grid item xs={4}>
                 <Box>
                   <Typography pb={3}>Mood</Typography>
-                  {mood.map((chip, i) => {
+                  {mood.map((chip) => {
                     return (
                       <Chip
                         onClick={(e) => handleChipClick(e, chip)}
-                        key={i}
+                        key={chip}
                         label={chip}
                         sx={{ width: '100px', mb: 1, mr: 1 }}
                       />
@@ -194,61 +197,63 @@ const Home = () => {
         </Accordion>
 
       </Container >
-      {loading ?
-        <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }}>
-          <Spinner />
-        </Container>
-        : errors ?
-          <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
-            <Typography>
-              Error! Could not fetch data!
-            </Typography>
-          </Container>
-          :
-          // images
-          <Container maxWidth='lg' sx={{ my: 4 }}>
-            <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1}>
-              {(searchTerm.length ? searchPlant : plants).map(plant => {
-                return (
-                  <ImageListItem key={plant._id} >
-                    <Box as={Link} to={`/plants/${plant._id}`} >
-                      <img
-                        src={`${plant.images}`}
-                        alt={plant.name}
-                        loading='lazy'
+      {
+        loading ?
+          <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }
+          } >
+            <Spinner />
+          </Container >
+          : errors ?
+            <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
+              <Typography>
+                Error! Could not fetch data!
+              </Typography>
+            </Container>
+            :
+            // images
+            <Container maxWidth='lg' sx={{ my: 4 }}>
+              <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1}>
+                {(searchTerm.length ? searchPlant : plants).map(plant => {
+                  return (
+                    <ImageListItem key={plant._id} >
+                      <Box as={Link} to={`/plants/${plant._id}`} >
+                        <img
+                          src={`${plant.images}`}
+                          alt={plant.name}
+                          loading='lazy'
+                        />
+                      </Box>
+                      <ImageListItemBar
+                        title={plant.name}
+                        sx={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
+                        actionIcon={
+                          <>
+                            <IconButton
+                              sx={{ color: 'white' }}
+                              aria-label={`favorites for ${plant.name}`}
+                            >
+                              <FavoriteIcon />
+                            </IconButton>
+                            <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
+                              {plant.favorites.length}
+                            </Typography>
+                            <IconButton
+                              sx={{ color: 'white' }}
+                              aria-label={` comments for ${plant.name}`}
+                            >
+                              <ChatBubbleIcon />
+                            </IconButton>
+                            <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
+                              {plant.comments.length}
+                            </Typography>
+                          </>
+                        }
                       />
-                    </Box>
-                    <ImageListItemBar
-                      title={plant.name}
-                      sx={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
-                      actionIcon={
-                        <>
-                          <IconButton
-                            sx={{ color: 'white' }}
-                            aria-label={`favorites for ${plant.name}`}
-                          >
-                            <FavoriteIcon />
-                          </IconButton>
-                          <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
-                            {plant.favorites.length}
-                          </Typography>
-                          <IconButton
-                            sx={{ color: 'white' }}
-                            aria-label={` comments for ${plant.name}`}
-                          >
-                            <ChatBubbleIcon />
-                          </IconButton>
-                          <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
-                            {plant.comments.length}
-                          </Typography>
-                        </>
-                      }
-                    />
-                  </ImageListItem>
-                )
-              })}
-            </Masonry>
-          </Container>
+                    </ImageListItem>
+                  )
+                })}
+              </Masonry>
+            </Container>
       }
     </>
   )
