@@ -54,6 +54,8 @@ const PlantShow = () => {
   const [commentDropdown, setCommentDropdown] = useState('newest')
   const [showComments, setShowComments] = useState(false)
   
+  const [ userCanEdit, setUserCanEdit ] = useState(false)
+  
   const [formData, setFormData] = useState({
     text: '',
     owner: '',
@@ -67,6 +69,15 @@ const PlantShow = () => {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant(data)
         setComments(data.comments)
+
+        if (payload.username) {
+          const { data } = await axios.get(`/api/profile/user/${payload.username}`, {
+            headers: {
+              Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+            },
+          })
+          const retrievedUser = data[0]
+        }
       } catch (error) {
         console.log(error)
       }

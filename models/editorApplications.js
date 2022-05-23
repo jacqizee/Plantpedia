@@ -3,7 +3,7 @@ import mongooseUniqueValidator from 'mongoose-unique-validator'
 
 // Comment Schema
 export const editorApplicationSchema = new mongoose.Schema({
-  text: { type: String, required: true, maxlength: 350 },
+  text: { type: String, required: true, maxlength: 1000 },
   owner: { type: mongoose.Schema.ObjectId, ref: 'User', required: true },
   username: { type: String, ref: 'User', required: true },
   

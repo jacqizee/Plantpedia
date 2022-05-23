@@ -11,6 +11,7 @@ import PlantEdit from './components/plants/PlantEdit'
 import NotFound from './components/common/NotFound'
 import UserProfile from './components/user/UserProfile'
 import EditProfile from './components/user/EditProfile'
+import EditorApplication from './components/user/EditorApplication'
 
 // Auth components
 import Register from './components/auth/Register'
@@ -38,6 +39,7 @@ const App = () => {
           {/* User routes */}
           <Route path="/profile/:username" element={<UserProfile />} />
           <Route path="/profile/:username/edit" element={<EditProfile />} />
+          <Route path="/become-editor" element={<EditorApplication />} />
 
           
           {/* The following path matches any path specified, so it needs to come last */}
