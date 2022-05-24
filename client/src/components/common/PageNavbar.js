@@ -57,6 +57,7 @@ const PageNavbar  = ({ mode, setMode }) => {
       handleCloseUserMenu()
 
       navigate(`/${pageName}/${payload.username}`, { replace: true })
+      
       window.location.reload()
     } else if (pageName === 'logout') {
       handleCloseUserMenu()
