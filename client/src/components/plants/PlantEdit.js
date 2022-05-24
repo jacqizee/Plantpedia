@@ -408,7 +408,7 @@ const PlantEdit = () => {
                   <Grid item xs={12}>
                     <Container sx={{ display: 'flex', justifyContent: 'center' }}>
                       <Button variant="contained" type="submit" size='large' sx={{ width: .70, mx: 2 }}>Submit</Button>
-                      { !formLoaded ? '' : userIsOwner(formData) ? <Button variant="contained" onClick={(e) => handleDelete(e, setPutErrors, plantId)} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button> : ''}
+                      { !formLoaded ? '' : userIsOwner(formData) ? <Button variant="contained" onClick={(e) => handleDelete(e, navigate, setPutErrors, plantId)} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button> : ''}
                     </Container>
                   </Grid>
                       

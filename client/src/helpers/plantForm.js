@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { getTokenFromLocalStorage } from '../../helpers/auth.js'
-const navigate = useNavigate()
+import { getTokenFromLocalStorage } from './auth.js'
 
 // Handles basic form input changes
 export const handleChange = (e, setErrors, setFormData, formData) => {
@@ -11,7 +10,7 @@ export const handleChange = (e, setErrors, setFormData, formData) => {
 }
 
 // Handles deleting a plant
-export const handleDelete = async (e, setPutErrors, plantId) => {
+export const handleDelete = async (e, navigate, setPutErrors, plantId) => {
   try {
     await axios.delete(`/api/plants/${plantId}`, {
       headers: {
