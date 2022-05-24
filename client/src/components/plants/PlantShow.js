@@ -77,7 +77,6 @@ const PlantShow = () => {
             },
           })
           setUserCanEdit(userData.canEdit)
-          console.log(data)
         }  
       } catch (error) {
         console.log(error)
@@ -212,7 +211,6 @@ const PlantShow = () => {
   }
 
   const handleEditPressed = () => {
-    console.log('userCanEdit is: ', userCanEdit)
     if (userCanEdit || plant.owner === payload.sub ) {
       navigate(`/plants/${plant._id}/edit`)
     } else {
@@ -500,12 +498,12 @@ const PlantShow = () => {
 
             {/* comment section */}
             { pageResults ?
-              pageResults.map(comment => {
+              pageResults.map((comment, index) => {
                 const { username, _id, text, createdAt } = comment
                 const date = new Date(createdAt)
                 return (
                   <Stack key={_id} direction='row' spacing={2} my={1} sx={{ backgroundColor: 'white', p: 2 }}>
-                    <Avatar sx={{ width: 24, height: 24 }} />
+                    <Box component='img' src={plant.comments[index].image[0].image} sx={{ width: 24, height: 24, borderRadius: 5 }} />
                     <Box>
                       <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
                         <a href={`/profile/${username}`}>{username.charAt(0).toUpperCase() + username.slice(1)}</a>
