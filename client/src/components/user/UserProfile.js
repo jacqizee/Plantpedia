@@ -164,7 +164,7 @@ const UserProfile = () => {
         <Box sx={{ flexGrow: 1, justifyContent: 'center', display: 'flex', mt: 4 }}>
           {/* Profile Picture */}
           <Grid item xs={4} >
-            <Avatar alt={user.username} src={user.image} sx={{ width: 96, height: 96 }} />
+            <Avatar alt={user.username} src={user.image} sx={{ width: 96, height: 96, boxShadow: 4 }} />
           </Grid>
 
           {/* About Me */}
