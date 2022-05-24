@@ -186,7 +186,7 @@ const PlantAdd = () => {
 
               {/* The icon button and click handling */}
               <label htmlFor="contained-button-file">
-                <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageUpload} />
+                <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={(e) => handleImageUpload(e, setDisplayImage, setFormData, formData)} />
                 
                 {/* If there is an image, make an icon button, if not, make an 'upload image' button */}
                 {formData.images ? 
