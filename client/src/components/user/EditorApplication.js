@@ -144,7 +144,7 @@ const EditorApplication = () => {
                     defaultValue={formData.text}
                     required
                     onChange={handleChange}
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', fontFamily: 'Raleway, Arial, sans-serif', fontSize: '16px', padding: '10px' }}
                   />
                 </Grid>
                 {/* Submit Button */}
@@ -170,7 +170,7 @@ const EditorApplication = () => {
                 sx={{ width: .90, display: 'flex', justifyContent: 'center' }}
                 rowSpacing={1}
                 columnSpacing={1}>
-                <Grid item xs={12} >
+                <Grid item xs={4} >
                   <Typography align='center'>Your application is being processed</Typography>
                 </Grid>
                 <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }}>
