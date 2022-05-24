@@ -32,14 +32,14 @@ const Home = () => {
   const [errors, setErrors] = useState(false)
 
 
-
-
   //plant state 
   const [plants, setPlants] = useState([])
-  const [searchPlant, setSearchPlant] = useState([])
   const [filteredPlants, setFilteredPlants] = useState([])
-  const [searchTerm, setSearchTerm] = useState([])
-  const [colorFilter, setColorFilter] = useState([])
+
+  const [filters, setFilters] = useState({
+    flowerColorFilter: [],
+    searchTerm: '',
+  })
 
 
   const colors = [
@@ -88,46 +88,50 @@ const Home = () => {
   //! WIP
   //get search value
   const handleInput = (e) => {
-    setSearchTerm(e.target.value)
+    //changes box to blue border
+    colors.includes(e.target.textContent) ? e.target.classList.toggle('styled') : ''
+    let newObj
+    //set filters for search term
+    if (e.target.name === 'searchTerm') {
+      newObj = {
+        ...filters,
+        [e.target.name]: e.target.value,
+      }
+      //set filters for colors
+    } else {
+      newObj = {
+        ...filters,
+      }
+      newObj.flowerColorFilter.includes(e.target.textContent) ? newObj.flowerColorFilter.splice(newObj.flowerColorFilter.indexOf(e.target.textContent), 1) : newObj.flowerColorFilter.push(e.target.textContent)
+    }
+    setFilters(newObj)
   }
 
-  // works for typing in a color and pressing enter
+  // filter plants by colors and searchTerm
   useEffect(() => {
-    const regexp = new RegExp(searchTerm, 'i')
-    const filteredArray = plants.filter(plant => regexp.test(plant.name))
-    setSearchPlant(filteredArray)
-  }, [searchTerm])
+    //regexp search term for testing
+    const regExpSearch = new RegExp(filters.searchTerm, 'i')
+    const filteredArray = plants.filter(plant => regExpSearch.test(plant.name))
 
-
-  const handleChipClick = (e, chip) => {
-    e.target.classList.toggle('styled')
-    const tempColorFilter = [...colorFilter]
-    if (colors.includes(chip)) {
-      tempColorFilter.includes(chip) ? tempColorFilter.splice(tempColorFilter.indexOf(chip), 1) : tempColorFilter.push(chip)
-      setColorFilter(tempColorFilter)
-      console.log(tempColorFilter)
-      console.log(colorFilter)
-
-      // const filteredArray = plants.filter(plant => colorFilter.some(color => plant.flowerColor.includes(color)))
-      const filteredArray = []
-      tempColorFilter.forEach(color => {
-        console.log('color is: ', color)
-        plants.forEach(plant => {
-          // console.log('plant is', plant)
+    //if there are colors in the filters obj 
+    //basically the same code philip wrote
+    const colorFilterArray = []
+    if (filters.flowerColorFilter.length) {
+      filters.flowerColorFilter.forEach(color => {
+        filteredArray.forEach(plant => {
           if (plant.flowerColor.includes(color)) {
-            if (!filteredArray.includes(plant)) {
-              filteredArray.push(plant)
-            }
-          } 
+            !colorFilterArray.includes(plant) ? colorFilterArray.push(plant) : ''
+          }
         })
       })
-
-      console.log(filteredArray)
-      // console.log(colorFilter)
+      setFilteredPlants(colorFilterArray)
+      
+    } else {
+      //if just search term
       setFilteredPlants(filteredArray)
     }
-  }
 
+  }, [filters, plants])
 
 
 
@@ -135,7 +139,8 @@ const Home = () => {
     <>
       {/* search bar */}
       <Container maxWidth='lg' >
-        <TextField fullWidth autoComplete='off' placeholder='Search by name...' onChange={handleInput} value={searchTerm} sx={{ pt: 3 }} />
+        <TextField fullWidth name='searchTerm' autoComplete='off' placeholder='Search by name...'
+          onChange={handleInput} value={filters.searchTerm} sx={{ pt: 3 }} />
         <Accordion disableGutters>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -157,7 +162,9 @@ const Home = () => {
                         <Grid item xs={4} key={chip}>
                           <Box
                             as='span'
-                            onClick={(e) => handleChipClick(e, chip)}
+                            name='chip'
+                            value='red'
+                            onClick={handleInput}
                             sx={{
                               display: 'flex',
                               alignItems: 'center',
@@ -190,7 +197,7 @@ const Home = () => {
                         <Grid item xs={4} key={chip}>
                           <Box
                             as='span'
-                            onClick={(e) => handleChipClick(e, chip)}
+
                             sx={{
                               display: 'flex',
                               alignItems: 'center',
@@ -223,7 +230,7 @@ const Home = () => {
                         <Grid item xs={4} key={chip}>
                           <Box
                             as='span'
-                            onClick={(e) => handleChipClick(e, chip)}
+
                             sx={{
                               display: 'flex',
                               alignItems: 'center',
