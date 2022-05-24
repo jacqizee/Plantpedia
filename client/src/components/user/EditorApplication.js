@@ -153,8 +153,14 @@ const EditorApplication = () => {
                     <Button variant="contained" type="submit" size='large' sx={{ width: .70 }}>Submit</Button>
                   </Container>
                 </Grid>
-
-                {postErrors && <Typography>Error. Failed to submit application. All fields must be filled out.</Typography>}
+                
+                {postErrors && 
+                  <Grid item xs={12}>
+                    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                      <Typography>Error. Failed to submit application.</Typography>
+                    </Container>
+                  </Grid>
+                }
               </Grid>
             </>
             :
