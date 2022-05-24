@@ -267,7 +267,7 @@ const Home = () => {
             :
             // images
             <>
-              {getImageList((filteredPlants.length ? filteredPlants : plants), 3, 3, 3, 4)}
+              {getImageList((filteredPlants.length ? filteredPlants : plants), 1, 2, 3, 4)}
             </>
       }
     </>
