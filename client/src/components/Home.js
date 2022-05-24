@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 import Spinner from './utilities/Spinner.js'
+import { getImageList } from '../helpers/imageHandling'
 
 //mui
 import Container from '@mui/material/Container'
@@ -265,49 +266,9 @@ const Home = () => {
             </Container>
             :
             // images
-            <Container maxWidth='lg' sx={{ my: 4 }}>
-              <Masonry columns={{ xs: 1, sm: 2, md: 3 }} spacing={1}>
-                {(filteredPlants.length ? filteredPlants : plants).map(plant => {
-                  return (
-                    <ImageListItem key={plant._id} >
-                      <Box as={Link} to={`/plants/${plant._id}`} >
-                        <img
-                          src={`${plant.images}`}
-                          alt={plant.name}
-                          loading='lazy'
-                        />
-                      </Box>
-                      <ImageListItemBar
-                        title={plant.name}
-                        sx={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
-                        actionIcon={
-                          <>
-                            <IconButton
-                              sx={{ color: 'white' }}
-                              aria-label={`favorites for ${plant.name}`}
-                            >
-                              <FavoriteIcon />
-                            </IconButton>
-                            <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
-                              {plant.favorites.length}
-                            </Typography>
-                            <IconButton
-                              sx={{ color: 'white' }}
-                              aria-label={` comments for ${plant.name}`}
-                            >
-                              <ChatBubbleIcon />
-                            </IconButton>
-                            <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
-                              {plant.comments.length}
-                            </Typography>
-                          </>
-                        }
-                      />
-                    </ImageListItem>
-                  )
-                })}
-              </Masonry>
-            </Container>
+            <>
+              {getImageList((filteredPlants.length ? filteredPlants : plants), 3, 3, 3, 4)}
+            </>
       }
     </>
   )

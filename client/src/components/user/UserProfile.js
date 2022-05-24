@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import Spinner from '../utilities/Spinner.js'
 
 import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
+import { getImageList } from '../../helpers/imageHandling'
 
 //mui
 import Container from '@mui/material/Container'
@@ -55,30 +56,6 @@ function a11yProps(index) {
   }
 }
 
-function getImageList(imagesArray) {
-  return (
-    <Container maxWidth='lg' sx={{ my: 0 }}>
-      <Masonry columns={3} spacing={1}>
-        {imagesArray.map(plant => {
-          return (
-            <>
-              <ImageListItem key={plant._id} >
-                <Box as={Link} to={`/plants/${plant._id}`} >
-                  <img
-                    src={`${plant.images}`}
-                    alt={plant.name}
-                    loading='lazy'
-                  />
-                </Box>
-              </ImageListItem>
-            </>
-          )
-        })}
-      </Masonry>
-    </Container>
-  )
-}
-
 const UserProfile = () => {
 
   // Navigate
@@ -108,6 +85,7 @@ const UserProfile = () => {
     image: '',
   })
 
+  // Called in the Use Effect, populates the favorites and myEdits arrays
   const getFavoritesOrEdits = async (arrayOfIndexes) => { 
     const newArray = []
     for (let i = 0; i < arrayOfIndexes.length; i++) {
@@ -210,7 +188,11 @@ const UserProfile = () => {
                 <Typography sx={{ mt: 0, mb: 0 }}><strong>{user.numberOfPosts}</strong> posts </Typography>
               </Box>
               <Box sx={{ flexGrow: 1, display: 'flex', flexWrap: 'wrap', maxWidth: '350px' }} >
-                <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}>{user.bio}</Typography>
+                {errors ? 
+                  <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}> Error! Could not fetch bio </Typography>
+                  :
+                  <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}>{user.bio}</Typography>
+                }
               </Box>
             </Stack>
           </Grid>
@@ -245,28 +227,8 @@ const UserProfile = () => {
                 </Typography>
               </Container>
               : myPlants.length > 0 ?
-              // <Container maxWidth='lg' sx={{ my: 0 }}>
-              //   <Masonry columns={3} spacing={1}>
-              //     {myPlants.map(plant => {
-              //       return (
-              //         <>
-              //           <ImageListItem key={plant._id} >
-              //             <Box as={Link} to={`/plants/${plant._id}`} >
-              //               <img
-              //                 src={`${plant.images}`}
-              //                 alt={plant.name}
-              //                 loading='lazy'
-              //               />
-              //             </Box>
-              //           </ImageListItem>
-              //         </>
-              //       )
-              //     })}
-              //   </Masonry>
-
-              // </Container>
                 <>
-                  {getImageList(myPlants)}
+                  {getImageList(myPlants, 3, 3, 3, 0)}
                 </>
                 :
                 <Typography variant='p'>
@@ -289,7 +251,7 @@ const UserProfile = () => {
               </Container>
               : favoritePlants.length > 0 ?
                 <>
-                  {getImageList(favoritePlants)}
+                  {getImageList(favoritePlants, 3, 3, 3, 0)}
                 </>
                 :
                 <Typography variant='p'>
@@ -312,7 +274,7 @@ const UserProfile = () => {
               </Container>
               : editedPlants.length > 0 ?
                 <>
-                  {getImageList(editedPlants)}
+                  {getImageList(editedPlants, 3, 3, 3, 0)}
                 </>
                 :
                 <Typography variant='p'>
