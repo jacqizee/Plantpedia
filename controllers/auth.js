@@ -1,5 +1,5 @@
 import User from '../models/users.js'
-import jwt from 'jsonwebtoken' // jwt is going to provide methods to create a token
+import jwt from 'jsonwebtoken' // using jwt to generate tokens
 import 'dotenv/config'
 
 // METHOD: POST
@@ -7,10 +7,8 @@ import 'dotenv/config'
 // Description: req.body that contains username, email, password and passwordConfirmation and submit it to our model for validation
 export const registerUser = async (req, res) => {
   try {
-    
     // Submit our req.body to our model
     const newUser = await User.create(req.body)
-
     return res.status(202).json({ message: `Welcome ${newUser.username}` })
   } catch (err) {
     console.log(err)
@@ -23,21 +21,14 @@ export const registerUser = async (req, res) => {
 // Description: Log in user by checking password matches email
 export const loginUser = async (req, res) => {
   try {
-    
     const { email, password } = req.body
-   
     const userToLogin = await User.findOne({ email: email })
+    
     if (!userToLogin || !userToLogin.validatePassword(password)){
       throw new Error()
-    }
+    }    
 
-    // const bio = userToLogin.bio ? userToLogin.bio : `Hi! I'm ${userToLogin.username}. My favorite plants are: `
-
-    
     const token = jwt.sign({ sub: userToLogin._id, username: userToLogin.username, profilePicture: userToLogin.image }, process.env.SECRET, { expiresIn: '2d' })
-   
-
-
     return res.status(200).json({ message: `Welcome back ${userToLogin.username}`, token: token })
   } catch (err) {
     console.log(err)

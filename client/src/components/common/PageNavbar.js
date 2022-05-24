@@ -28,7 +28,6 @@ const PageNavbar  = () => {
 
   // Payload
   const payload = getPayload()
-  // console.log('payload in pageNavBar is: ', payload)
 
   const [anchorElNav, setAnchorElNav] = useState(null)
   const [anchorElUser, setAnchorElUser] = useState(null)
@@ -75,11 +74,17 @@ const PageNavbar  = () => {
         <Toolbar disableGutters>
           
           {/* Logo */}
-          <Container sx={{ display: 'flex', alignItems: 'center' }}>
+          <Container sx={{ display: 'flex', alignItems: 'flex-end' }}>
             <Box as={Link} to="/" sx={{ width: 35 }}>
               <Box component='img' src={logo} alt="Logo" />
             </Box>
-            <Typography as={Link} to='/' variant='h6' component='h1' sx={{ ml: 2, color: 'white', fontFamily: 'Josefin Sans', fontWeight: 600, letterSpacing: 1, textDecoration: 'none' }}>Plantpedia</Typography>
+            <Typography as={Link} to='/'
+              variant='h6'
+              component='h1'
+              sx={{ ml: 2, color: 'white', fontFamily: 'Josefin Sans',
+                fontWeight: 600, letterSpacing: 1, textDecoration: 'none' }}>
+                  Plantpedia
+            </Typography>
           </Container>
           
 
@@ -102,7 +107,7 @@ const PageNavbar  = () => {
               {/* Profile image */}
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 3 }}>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 3, boxShadow: 2 }}>
                     <Avatar alt={payload.username} src={payload.profilePicture} />
                   </IconButton>
                 </Tooltip>
