@@ -157,9 +157,17 @@ const EditorApplication = () => {
                 {postErrors && 
                   <Grid item xs={12}>
                     <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Typography>Error. Failed to submit application.</Typography>
+                      <Typography sx={{ color: 'red' }}>Error. Failed to submit application.</Typography>
                     </Container>
                   </Grid>
+                }
+
+                {errors && 
+                  <Grid item xs={12}>
+                    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                      <Typography sx={{ color: 'red' }}>Unauthorised.</Typography>
+                    </Container>
+                  </Grid>  
                 }
               </Grid>
             </>

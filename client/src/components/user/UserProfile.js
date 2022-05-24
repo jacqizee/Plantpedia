@@ -193,7 +193,7 @@ const UserProfile = () => {
               {/* Bio */}
               <Box sx={{ flexGrow: 1, display: 'flex', flexWrap: 'wrap', maxWidth: '350px' }} >
                 {errors ? 
-                  <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}> Error! Could not fetch bio </Typography>
+                  <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%', color: 'red' }}> Error! Could not fetch bio </Typography>
                   :
                   <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}>{user.bio}</Typography>
                 }
@@ -227,7 +227,7 @@ const UserProfile = () => {
             </Container>
             : errors ?
               <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
-                <Typography>
+                <Typography variant='p' sx={{ color: 'red' }}>
                   Error! Could not fetch data!
                 </Typography>
               </Container>
@@ -250,7 +250,7 @@ const UserProfile = () => {
             </Container>
             : errors ?
               <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
-                <Typography>
+                <Typography variant='p' sx={{ color: 'red' }}>
                   Error! Could not fetch data!
                 </Typography>
               </Container>
@@ -273,7 +273,7 @@ const UserProfile = () => {
             </Container>
             : errors ?
               <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
-                <Typography>
+                <Typography variant='p' sx={{ color: 'red' }}>
                   Error! Could not fetch data!
                 </Typography>
               </Container>

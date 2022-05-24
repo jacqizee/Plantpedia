@@ -92,7 +92,13 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              {errors.username && <Typography variant='p'>{errors.username}</Typography>}
+              {errors.username && 
+                <Grid item xs={12}>
+                  <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Typography variant='p' sx={{ color: 'red' }}>{errors.username}</Typography>
+                  </Container>
+                </Grid>  
+              }
 
               <Grid item xs={12}>
                 <TextField
@@ -106,7 +112,13 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              {errors.email && <Typography variant='p'>{errors.email}</Typography>}
+              {errors.email && 
+                <Grid item xs={12}>
+                  <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Typography variant='p' sx={{ color: 'red' }}>{errors.email}</Typography>
+                  </Container>
+                </Grid>  
+              }
 
               <Grid item xs={12}>
                 <TextField
@@ -121,7 +133,13 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              {errors.password && <Typography variant='p'>{errors.password}</Typography>}
+              {errors.password && 
+                <Grid item xs={12}>
+                  <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Typography variant='p' sx={{ color: 'red' }}>{errors.password}</Typography>
+                  </Container>
+                </Grid>  
+              }
 
               <Grid item xs={12}>
                 <TextField
@@ -136,7 +154,13 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              {errors.passwordConfirmation && <Typography variant='p'>{errors.passwordConfirmation}</Typography>}
+              {errors.passwordConfirmation && 
+                <Grid item xs={12}>
+                  <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Typography variant='p' sx={{ color: 'red' }}>{errors.passwordConfirmation}</Typography>
+                  </Container>
+                </Grid>  
+              }
 
             </Grid>
             <Button
