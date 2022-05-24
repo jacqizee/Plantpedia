@@ -175,13 +175,13 @@ const UserProfile = () => {
               {username === payload.username ?
                 <>
                   <Box sx={{ flexGrow: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex' }}>
-                    <Typography variant="h6">{user.username}</Typography>
+                    <Typography variant="h6">{user.username.charAt(0).toUpperCase() + user.username.slice(1)}</Typography>
                     <Button onClick={handleEdit}>Edit</Button>
                   </Box>
                 </>
                 :
                 <>
-                  <Typography variant="h6">{user.username}</Typography>
+                  <Typography variant="h6">{user.username.charAt(0).toUpperCase() + user.username.slice(1)}</Typography>
                 </>
               }
 

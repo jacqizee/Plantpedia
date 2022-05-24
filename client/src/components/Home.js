@@ -78,19 +78,18 @@ const Home = () => {
     regExpSearch.lastIndex = 0
     const filteredArray = plants.filter(plant => regExpSearch.test(plant.name))
 
-    //if there are colors in the filters obj 
-    //basically the same code philip wrote
+    //if there are colors in the filters obj
     const colorFilterArray = []
+
     if (filters.flowerColorFilter.length) {
       filters.flowerColorFilter.forEach(color => {
         (filteredArray.length ? filteredArray : plants).forEach(plant => {
-          if (plant.flowerColor.includes(color)) {
-            !colorFilterArray.includes(plant) ? colorFilterArray.push(plant) : ''
+          if (plant.flowerColor.includes(color) && !colorFilterArray.includes(plant)) {
+            colorFilterArray.push(plant)
           }
         })
       })
       setFilteredPlants(colorFilterArray)
-
     } else {
       //if just search term
       setFilteredPlants(filteredArray)
@@ -124,9 +123,9 @@ const Home = () => {
               <Box textAlign='center'>
                 <Typography>Flower Color</Typography>
                 <Grid container spacing={1}>
-                  {colors.map((color) => {
+                  {colors.map((color, i) => {
                     return (
-                      <Grid item xs={4} key={color}>
+                      <Grid item xs={4} key={i}>
                         <Box
                           onClick={handleInput}
                           sx={{

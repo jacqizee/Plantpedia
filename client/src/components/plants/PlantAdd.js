@@ -122,7 +122,7 @@ const PlantAdd = () => {
 
             {/* This must be first input So that the first form item doesn't become active when clicking outside of the form */}
             <>
-              <Input type="text" autoFocus="autofocus" />
+              <Input type="text"/>
             </>
             
             {/* Plant Name */}
