@@ -232,10 +232,18 @@ const UserProfile = () => {
                 <>
                   {getImageList(myPlants, 3, 3, 3, 0)}
                 </>
-                :
-                <Typography variant='p'>
-                  Click the + button to add your first plant
-                </Typography>
+                : username === payload.username ?
+                  <>
+                    <Typography variant='p'>
+                      Click the + button to add your first plant
+                    </Typography>
+                  </>
+                  :
+                  <>
+                    <Typography variant='p'>
+                      {username} has not posted any plants 
+                    </Typography>
+                  </>
           }
         </TabPanel>
 
@@ -255,10 +263,18 @@ const UserProfile = () => {
                 <>
                   {getImageList(favoritePlants, 3, 3, 3, 0)}
                 </>
-                :
-                <Typography variant='p'>
-                  Tap the 🤍 button to add your first favorite
-                </Typography>
+                : username === payload.username ?
+                  <>
+                    <Typography variant='p'>
+                      Tap the 🤍 button to add your first favorite
+                    </Typography>
+                  </>
+                  :
+                  <>
+                    <Typography variant='p'>
+                      {username} has not favorited any plants 
+                    </Typography>
+                  </>
           }
         </TabPanel>
 
@@ -278,13 +294,20 @@ const UserProfile = () => {
                 <>
                   {getImageList(editedPlants, 3, 3, 3, 0)}
                 </>
-                :
-                <Typography variant='p'>
-                  Plants that you edit will appear here
-                </Typography>
+                : username === payload.username ?
+                  <>
+                    <Typography variant='p'>
+                      Plants that you edit will appear here
+                    </Typography>
+                  </>
+                  :
+                  <>
+                    <Typography variant='p'>
+                      {username} has not edited any plants 
+                    </Typography>
+                  </>
           }
         </TabPanel>
-
       </Container>
     </>
   )
