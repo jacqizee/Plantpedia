@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
 import Spinner from '../utilities/Spinner.js'
 
 import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
@@ -12,9 +11,7 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
-import ImageListItem from '@mui/material/ImageListItem'
 import Typography from '@mui/material/Typography'
-import Masonry from '@mui/lab/Masonry'
 import Stack from '@mui/material/Stack'
 import PropTypes from 'prop-types'
 import Tabs from '@mui/material/Tabs'
@@ -78,6 +75,8 @@ const UserProfile = () => {
   const [myPlants, setMyPlants] = useState([])
   const [favoritePlants, setFavoritePlants] = useState([])
   const [editedPlants, setEditedPlants] = useState([])
+  
+  // User data
   const [user, setUser] = useState({
     username: username,
     numberOfPosts: 0,
@@ -102,16 +101,18 @@ const UserProfile = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+
+        // User must have an account to view profiles
         if (!payload) {
           navigate('/login')
         }
 
+        // Get data for specified user, by username
         const { data } = await axios.get(`/api/profile/user/${username}`, {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
-
         const retrievedUser = data[0]
 
         // Set My Plants
@@ -147,9 +148,6 @@ const UserProfile = () => {
   }, [])
 
   const handleChange = (event, newValue) => {
-    console.log('handle change runs')
-    console.log('event is: ', event)
-    console.log('new value is: ', newValue)
     setValue(newValue)
   }
 
@@ -172,6 +170,8 @@ const UserProfile = () => {
           {/* About Me */}
           <Grid item xs={6} sx={{ ml: 8 }} >
             <Stack spacing={0} >
+
+              {/* Username ;if it's a user's own profile, an edit button will show beside it */}
               {username === payload.username ?
                 <>
                   <Box sx={{ flexGrow: 1, justifyContent: 'space-between', alignItems: 'center', display: 'flex' }}>
@@ -184,9 +184,13 @@ const UserProfile = () => {
                   <Typography variant="h6">{user.username}</Typography>
                 </>
               }
+
+              {/* Number of Posts */}
               <Box>
                 <Typography sx={{ mt: 0, mb: 0 }}><strong>{user.numberOfPosts}</strong> posts </Typography>
               </Box>
+
+              {/* Bio */}
               <Box sx={{ flexGrow: 1, display: 'flex', flexWrap: 'wrap', maxWidth: '350px' }} >
                 {errors ? 
                   <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}> Error! Could not fetch bio </Typography>
@@ -194,6 +198,7 @@ const UserProfile = () => {
                   <Typography sx={{ mt: 0, mb: 0, pr: 2, width: '100%' }}>{user.bio}</Typography>
                 }
               </Box>
+              
             </Stack>
           </Grid>
         </Box>

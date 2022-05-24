@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { getPayload, getTokenFromLocalStorage, userIsOwner } from '../../helpers/auth'
+import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
 
 // MUI Imports
 import Container from '@mui/material/InputLabel'
@@ -10,50 +10,40 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Select from '@mui/material/Select'
-import InputLabel from '@mui/material/InputLabel'
-import Slider from '@mui/material/Slider'
-import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import PhotoCamera from '@mui/icons-material/PhotoCamera'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import Chip from '@mui/material/Chip'
-import ToggleButton from '@mui/material/ToggleButton'
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import Paper from '@mui/material/Paper'
-import AddIcon from '@mui/icons-material/Add'
 import { styled } from '@mui/material/styles'
 import ReactCrop from 'react-image-crop'
 import 'react-image-crop/src/ReactCrop.scss'
 
 const EditProfile = () => {
 
+  // Styling Input so it won't display
   const Input = styled('input')({
     display: 'none',
   })
 
+  // Params, Payload, and Navigate
   const { username } = useParams()
-
   const payload = getPayload()
-
   const navigate = useNavigate()
 
+  // Cloudinary URL and Preset
   const uploadURL = process.env.REACT_APP_CLOUDINARY_URL
   const preset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
 
   //loading and error state
   const [loading, setLoading] = useState(true)
-  const [errors, setErrors] = useState(false)
+  const [errors, setErrors] = useState(false) //Get Data Error
+  const [putErrors, setPutErrors] = useState(false) //Upload Data Error
 
-  //Cropping
+  //Cropping States
   const [isUndersized, setIsUndersized] = useState(false)
-  const [srcImg, setSrcImg] = useState(null)
-  const [image, setImage] = useState(null)
-  const [crop, setCrop] = useState({
+  const [srcImg, setSrcImg] = useState(null) //The image thats being displayed
+  const [image, setImage] = useState(null) // The image that gets cropped and saved
+  const [crop, setCrop] = useState({ // Crop parameters
     unit: 'px', // Can be 'px' or '%'
     x: 10,
     y: 25,
@@ -61,29 +51,32 @@ const EditProfile = () => {
     height: 300,
     aspect: 1,
     keepSelection: true,
-    // locked: true,
   })
-  const [result, setResult] = useState(null)
 
+  // User bio to update
   const [ formData, setFormData ] = useState({
     username: username,
     image: payload.profilePicture,
     bio: '',
   })
 
+  // Getting User Data
   useEffect(() => {
     const getData = async () => {
       try {
+        // If not logged in, can't edit anything
         if (!payload) {
           navigate('/login')
         }
 
+        // Get user data by ID
         const { data } = await axios.get(`/api/profile/${payload.sub}`, {
           headers: {
             Authorization: `Bearer ${getTokenFromLocalStorage()}`,
           },
         })
 
+        // Making sure the bio autopopulates with the user's most recently saved bio
         setFormData(
           { 
             ...formData,
@@ -101,20 +94,23 @@ const EditProfile = () => {
   }, [])
 
   const handleImageUpload = async e => {
-    setResult(null)
+    
+    // Setting the x and y start values of the crop slightly more than zero so user knows its a crop window
     setCrop({
       ...crop,
       x: 10,
       y: 25,
     })
+
+    // Creating an object URL for the uploaded image and saving it as a string to srcImg and image
     const urlString = URL.createObjectURL(e.target.files[0])
     setSrcImg(urlString)
     setImage(urlString)
 
+    // Creating a new image to determine if it's undersized
+    // The cropper will behave differently depending on whether the srcImg fills the 350x350 square
     const img = new Image()
     img.src = urlString
-
-
     img.onload = function() {
       const w = img.width
       const h = img.height
@@ -122,9 +118,10 @@ const EditProfile = () => {
       const widthMoreThan350px = img.width > 350 ? true : false
       setIsUndersized(!heightMoreThan350px || !widthMoreThan350px )
     }
-
   }
 
+  //Called in Handle Submit
+  //Getting a Data URL for images that are too small to be cropped
   const getBase64Image = (img) => {
     const canvas = document.createElement('canvas')
     canvas.width = img.width
@@ -134,13 +131,13 @@ const EditProfile = () => {
     return canvas.toDataURL('image/jpg', 1)
   }
 
+  //Called in Handle Submit
+  //Saves the image that's in the crop window as a data URL
   const getCroppedImg = async () => {
-
     const img = new Image()
     img.src = image
 
     const heightMoreThan350px = img.height > 350 ? true : false
-    const widthMoreThan350px = img.width > 350 ? true : false
 
     try {
       const canvas = document.createElement('canvas')
@@ -150,7 +147,6 @@ const EditProfile = () => {
       } else {
         scale = 1
       }
-      const scaleX = img.naturalWidth / img.width
       canvas.width = crop.width
       canvas.height = crop.height
       const ctx = canvas.getContext('2d')
@@ -165,8 +161,7 @@ const EditProfile = () => {
         crop.width,
         crop.height
       )
-      
-      
+
       return canvas.toDataURL('image/jpg', 1)
       
     } catch (e) {
@@ -175,23 +170,28 @@ const EditProfile = () => {
     }
   }
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // Create a new form so that you can pass up the Cloudinary URL
     let newForm = { ...formData }
-    let imageURL
+    let imageURL //Data URL to be passed into Cloudinary
 
+    //Only do this if the user has actually changed the profile picture
     if (srcImg) {
+      //Get the data URL of the full image if it's undersized
       if (isUndersized) {
         const img = new Image()
         img.src = image
         imageURL = await getBase64Image(img)
       } else {
+        //Get the data URL of the part inside the crop window if it is not undersized
         imageURL = await getCroppedImg()
       }
       
+      // If there is a data URL, create a new form and upload the new image to Cloudinary
+      // Then add the result to formData and newForm
+      // Doing this here and adding newForm so that only the submitted image is uploaded to Cloudinary
       if (imageURL) {
         const data = new FormData()
         data.append('file', imageURL)
@@ -203,7 +203,7 @@ const EditProfile = () => {
       }
     }
     
-
+    // Updating the data base with the new profile
     try {
       const response = await axios.put(`/api/profile/${payload.sub}`, newForm, {
         headers: {
@@ -211,24 +211,28 @@ const EditProfile = () => {
         },
       })
 
-
+      //Resetting the token with the new profile picture URL
       const token = response.data.token
 
-
+      //Updating the token that's in local storage
       window.localStorage.removeItem('plantpedia')
       localStorage.setItem('plantpedia', token)
 
+      //Navigate back to the user's profile
       navigate(`/profile/${username}`)
     } catch (error) {
       console.log(error)
+      setPutErrors(true)
     }
   }
 
+  // Update the formData when the user changes bio
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
   }
 
+  // Navigate back to user profile if the user clicks cancel
   const handleCancel = async (e) => {
     e.preventDefault()
     navigate(`/profile/${username}`)
@@ -276,7 +280,6 @@ const EditProfile = () => {
                     <Box >
                       <ReactCrop
                         style={{ maxHeight: '350px' }}
-                        // src={srcImg}
                         onImageLoaded={(image) => setImage(image)}
                         crop={crop}
                         onChange={c => setCrop(c)}
@@ -293,9 +296,6 @@ const EditProfile = () => {
                         <PhotoCamera />
                       </IconButton>
                     </label>
-                    {/* <Button className="cropButton" onClick={getCroppedImg}>
-                      Crop
-                    </Button> */}
                   </>
                   :
                   <>
@@ -330,6 +330,7 @@ const EditProfile = () => {
                 <Button variant="contained" onClick={handleCancel} size='small' sx={{ width: .48, mx: 0, backgroundColor: 'red' }}>Cancel</Button>
               </Container>
             </Grid>
+            {putErrors && <Typography>Error. Failed to upload new data.</Typography>}
           </Grid>
         </Box>
       </Paper>
