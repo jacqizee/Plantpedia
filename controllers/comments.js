@@ -19,7 +19,6 @@ export const addComment = async (req, res) => {
     if (checkUser.username !== req.verifiedUser.username) throw new Error('Username does not match!')
 
     await Comment.create(commentWithOwner)
-    console.log('commentWithOwner', commentWithOwner)
 
     // Add commentWithOwner into plantToUpdate.comments
     plantToUpdate.comments.push(commentWithOwner)

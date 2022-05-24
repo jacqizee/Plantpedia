@@ -9,6 +9,7 @@ import { addEditorApplication } from '../controllers/editorApplications.js'
 
 
 const router = express.Router()
+
 // Routes
 
 // Generic
@@ -47,8 +48,7 @@ router.route('/profile/:userId')
 router.route('/profile/user/:username')
   .get(secureRoute, getProfileByUsername)
 
-
-//Editor Application
+// Editor Application
 router.route('/editor-application')
   .post(secureRoute, addEditorApplication)
 

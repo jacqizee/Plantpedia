@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-
 import Spinner from './utilities/Spinner.js'
 import { getImageList } from '../helpers/imageHandling'
+import { handleOpen, handleClose } from '../helpers/home.js'
 
 //mui
 import Container from '@mui/material/Container'
@@ -12,21 +12,15 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 //filterarrays
 import { colors } from '../helpers/plantFormOptions.js'
-
 
 const Home = () => {
 
   //loading and error state
   const [loading, setLoading] = useState(true)
   const [errors, setErrors] = useState(false)
-
 
   const [show, setShow] = useState('none')
 
@@ -53,8 +47,6 @@ const Home = () => {
     getData()
   }, [])
 
-
-  //! WIP
   //get search value
   const handleInput = (e) => {
     e.stopPropagation()
@@ -85,8 +77,6 @@ const Home = () => {
     const regExpSearch = new RegExp(filters.searchTerm, 'i')
     regExpSearch.lastIndex = 0
     const filteredArray = plants.filter(plant => regExpSearch.test(plant.name))
-    // console.log('filters-->',filters)
-    // console.log('filteredArray-->',filteredArray)
 
     //if there are colors in the filters obj 
     //basically the same code philip wrote
@@ -99,7 +89,6 @@ const Home = () => {
           }
         })
       })
-      // console.log('colorFilter-->',colorFilterArray)
       setFilteredPlants(colorFilterArray)
 
     } else {
@@ -110,23 +99,12 @@ const Home = () => {
   }, [filters, plants])
 
 
-  const handleOpen = (e) => {
-    e.stopPropagation()
-    setShow('')
-  }
-
-  const handleClose = () => {
-    setShow('none')
-  }
-
-
-
   return (
     <>
       {/* search bar */}
-      <Box onClick={handleClose}>
+      <Box onClick={(e) => handleClose(e, setShow)}>
         <Container maxWidth='lg' >
-          <Box onClick={handleOpen}>
+          <Box onClick={(e) => handleOpen(e, setShow)}>
             <TextField fullWidth name='searchTerm' autoComplete='off' placeholder='Search by name...'
               onChange={handleInput} value={filters.searchTerm} sx={{ pt: 3 }} />
           </Box>

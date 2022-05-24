@@ -30,7 +30,6 @@ export const getSinglePlant = async (req, res) => {
           select: 'image'
         }
       })
-      // .populate('comments')
     if (!plant) {
       return res.status(404).json({ message: "Plant not found" })
     }
