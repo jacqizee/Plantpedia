@@ -289,7 +289,7 @@ const PlantShow = () => {
                       {/* Sun Exposure */}
                       <Grid item xs={4}>
                         <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 10, textAlign: 'center' }}>
-                          <Typography>Sun</Typography>
+                          <Typography>Sun</Typography> <br />
                           <Chip
                             label={plant.sunExposure}
                             icon={<Box as='img' src={sun} sx={{ width: '24px' }} />}
@@ -456,18 +456,58 @@ const PlantShow = () => {
               </Box>
             </Box>
 
+            {/* comment section */}
+            { pageResults ?
+              pageResults.map((comment, index) => {
+                const { username, _id, text, createdAt } = comment
+                const date = new Date(createdAt)
+                return (
+                  <Stack key={_id} direction='row' my={1} sx={{ backgroundColor: 'white', p: 2, display: 'flex', flexDirection: 'column' }}>
+                    <Container sx={{ display: 'flex', alignItems: 'center' }}>
+                      {/* User Avatar */}
+                      <Box component='img'
+                        src={plant.comments[index].image[0].image}
+                        sx={{ width: 35, height: 35, borderRadius: 5, mr: 1 }} />
+                      {/* Username */}
+                      <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
+                        <a href={`/profile/${username}`}>{username.charAt(0).toUpperCase() + username.slice(1)}</a>
+                      </Typography>
+                      {/* Date */}
+                      <Typography as='span' sx={{
+                        ml: 1,
+                        fontSize: 10,
+                        color: '#9c9c9c',
+                      }}>{date.getUTCMonth() + 1}/{date.getUTCDate()}/{date.getUTCFullYear()}
+                      </Typography>
+                    </Container>
+
+                    <Container sx={{ display: 'flex', flexDirection: 'column' }}>
+                      {/* Comment Text */}
+                      <Typography sx={{ p: 2, mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
+                        {text}
+                      </Typography>
+                    </Container>
+                  </Stack>
+                )
+              })
+              :
+              <Box mt={4}>
+                No comments!
+              </Box>
+            }
+
             {/* add commment */}
             {userIsAuthenticated() ?
-              <Stack direction='row' spacing={2}>
-                <Avatar sx={{ width: 24, height: 24 }} alt="" src="" />
-                <Box width='100%' as='form' onSubmit={handleSubmit}>
+              <Stack direction='row' spacing={2} sx={{ mt: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '25%' }}>
+                <Avatar sx={{ width: 50, height: 50 }} alt={payload.username} src={payload.profilePicture} />
+                <Box width='95%' as='form' onSubmit={handleSubmit} sx={{ backgroundColor: 'rgba(0,0,0,0.05)', p: 3 }}>
                   <TextField
                     name='text'
                     value={formData.text}
                     size='small'
                     variant='standard'
                     fullWidth
-                    placeholder='Add comment'
+                    placeholder='Add a comment...'
                     autoComplete='off'
                     onChange={handleInput}
                     onKeyUp={shouldBlur}
@@ -496,36 +536,6 @@ const PlantShow = () => {
                 </Box>
               </Stack> : null}
 
-            {/* comment section */}
-            { pageResults ?
-              pageResults.map((comment, index) => {
-                const { username, _id, text, createdAt } = comment
-                const date = new Date(createdAt)
-                return (
-                  <Stack key={_id} direction='row' spacing={2} my={1} sx={{ backgroundColor: 'white', p: 2 }}>
-                    <Box component='img' src={plant.comments[index].image[0].image} sx={{ width: 24, height: 24, borderRadius: 5 }} />
-                    <Box>
-                      <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
-                        <a href={`/profile/${username}`}>{username.charAt(0).toUpperCase() + username.slice(1)}</a>
-                        <Typography as='span' sx={{
-                          ml: 1,
-                          fontSize: 10,
-                          color: '#9c9c9c',
-                        }}>{date.getUTCMonth() + 1}/{date.getUTCDate()}/{date.getUTCFullYear()}
-                        </Typography>
-                      </Typography>
-                      <Typography>
-                        {text}
-                      </Typography>
-                    </Box>
-                  </Stack>
-                )
-              })
-              :
-              <Box mt={4}>
-                No comments!
-              </Box>
-            }
             {/* Pagination */}
             <Pagination page={page}
               count={Math.ceil(commentCount / 5)}
