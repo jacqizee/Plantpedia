@@ -39,10 +39,12 @@ const Register = () => {
     setErrors({ ...errors, [e.target.name]: '' })
   }
 
+  // Post request to server containing formData inputs
   const handleSubmit = async (event) => {
     event.preventDefault()
     console.log('submit pressed')
 
+    
     if (formData.username && formData.email && formData.password && formData.passwordConfirmation) {
       try {
         console.log('form data is: ', formData)
@@ -55,6 +57,7 @@ const Register = () => {
         setErrors({ ...errors, [Object.keys(errorObj)[0]]: errorObj[Object.keys(errorObj)[0]].message })
       }
     } else {
+      // If there's an error, pass this message
       setErrors({ ...errors, passwordConfirmation: 'All fields are required' })
     }
   }
@@ -71,14 +74,22 @@ const Register = () => {
             alignItems: 'center',
           }}
         >
+
+          {/* Lock Avatar */}
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
+
+          {/* Register Header */}
           <Typography component="h1" variant="h5">
             Register
           </Typography>
+
+          {/* User Inputs Form */}
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
+              
+              {/* Username */}
               <Grid item xs={12}>
                 <TextField
                   autoComplete="username"
@@ -92,6 +103,8 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
+
+              {/* Error message under username if it's a username error */}
               {errors.username && 
                 <Grid item xs={12}>
                   <Container sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -100,6 +113,7 @@ const Register = () => {
                 </Grid>  
               }
 
+              {/* Email */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -112,6 +126,8 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
+
+              {/* Error message under email if it's an email error */}
               {errors.email && 
                 <Grid item xs={12}>
                   <Container sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -120,6 +136,7 @@ const Register = () => {
                 </Grid>  
               }
 
+              {/* Password */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -133,6 +150,8 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
+
+              {/* Error message under password if it's a password error */}
               {errors.password && 
                 <Grid item xs={12}>
                   <Container sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -141,6 +160,7 @@ const Register = () => {
                 </Grid>  
               }
 
+              {/* Password Confirmation */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -154,6 +174,8 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
+
+              {/* Error message under password confirmation if it's a password confirmation error */}
               {errors.passwordConfirmation && 
                 <Grid item xs={12}>
                   <Container sx={{ display: 'flex', justifyContent: 'center' }}>
