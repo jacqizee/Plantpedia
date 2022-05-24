@@ -31,14 +31,19 @@ import { styled } from '@mui/material/styles'
 
 const PlantAdd = () => {
 
+  // Styling Input so it won't display
   const Input = styled('input')({
     display: 'none',
   })
 
+  // Cloudinary URL and Preset
   const uploadURL = process.env.REACT_APP_CLOUDINARY_URL
   const preset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
 
+  // UseNavigate
   const navigate = useNavigate()
+
+  // Form Data
   const [ formData, setFormData ] = useState(form)
 
   // For image handling
@@ -53,10 +58,17 @@ const PlantAdd = () => {
   const [ max, setMax ] = useState(150)
   const [ step, setStep ] = useState(10)  
 
+
+  // Handling the submit button
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // Create a new form so that you can pass up the Cloudinary URL
     let newForm = { ...formData }
 
+    // If there is a data URL, create a new form and upload the new image to Cloudinary
+    // Then add the result to formData and newForm
+    // Doing this here and adding newForm so that only the submitted image is uploaded to Cloudinary
     if (displayImage) {
       const data = new FormData()
       data.append('file', formData.images)
@@ -66,6 +78,7 @@ const PlantAdd = () => {
       newForm = { ...newForm, images: res.data.url }
     }
 
+    // posting the new plant to the database
     try {
       const response = await axios.post('/api/plants', newForm, {
         headers: {
@@ -73,9 +86,13 @@ const PlantAdd = () => {
         },
       })
       console.log(response)
+
+      // navigate to the newly created plant
       navigate(`/plants/${response.data._id}`)
     } catch (error) {
       console.log(error)
+
+      // error message posting new plant
       setPostErrors(true)
     }
   }
@@ -94,6 +111,8 @@ const PlantAdd = () => {
           onClick={(e) => console.log(e)}
           onSubmit={handleSubmit}
         >
+
+          {/* Header: Add a Plant */}
           <Typography variant='h3' sx={{ pb: 2 }}>Add a Plant</Typography>
           <Grid
             container
@@ -101,12 +120,12 @@ const PlantAdd = () => {
             rowSpacing={1}
             columnSpacing={1}>
 
-            {/* This must be first input So that the file upload only fires when you press the button */}
+            {/* This must be first input So that the first form item doesn't become active when clicking outside of the form */}
             <>
               <Input type="text" autoFocus="autofocus" />
             </>
             
-            {/* Name */}
+            {/* Plant Name */}
             <Grid item xs={12} md={6}>
               <TextField
                 id='name'
@@ -118,6 +137,7 @@ const PlantAdd = () => {
                 onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 fullWidth />
             </Grid>
+
             {/* Scientific Name */}
             <Grid item xs={12} md={6}>
               <TextField
@@ -130,6 +150,7 @@ const PlantAdd = () => {
                 onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 fullWidth />
             </Grid>
+
             {/* Description */}
             <Grid item xs={12}>
               <TextField
@@ -140,13 +161,17 @@ const PlantAdd = () => {
                 value={formData.description}
                 required
                 multiline
+                inputProps={{ maxLength: 1000 }}
                 minRows={2}
                 maxRows={4}
                 onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 fullWidth />
             </Grid>
+
             {/* Images */}
             <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
+
+              {/* If there is an image to display, then display it */}
               {displayImage ? 
                 <Box component='img' src={displayImage} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                 :
@@ -158,8 +183,12 @@ const PlantAdd = () => {
                   }
                 </>
               }
+
+              {/* The icon button and click handling */}
               <label htmlFor="contained-button-file">
                 <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageUpload} />
+                
+                {/* If there is an image, make an icon button, if not, make an 'upload image' button */}
                 {formData.images ? 
                   <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                     <PhotoCamera />
@@ -171,6 +200,7 @@ const PlantAdd = () => {
                 }
               </label>
             </Grid>
+
             {/* Water Requirements */}
             <Grid item xs={12} md={4}>
               <FormControl required fullWidth>
@@ -187,6 +217,7 @@ const PlantAdd = () => {
                 </Select>
               </FormControl>
             </Grid>
+
             {/* Sun Exposure */}
             <Grid item xs={12} md={4}>
               <FormControl required fullWidth>
@@ -203,6 +234,7 @@ const PlantAdd = () => {
                 </Select>
               </FormControl>
             </Grid>
+
             {/* Soil Type */}
             <Grid item xs={12} md={4}>
               <FormControl required fullWidth>
@@ -219,6 +251,7 @@ const PlantAdd = () => {
                 </Select>
               </FormControl>
             </Grid>
+
             {/* Lifespan */}
             <Grid item xs={12} md={6}>
               <FormControl required fullWidth>
@@ -235,6 +268,7 @@ const PlantAdd = () => {
                 </Select>
               </FormControl>
             </Grid>
+
             {/* Mood */}
             <Grid item xs={12} md={6}>
               <FormControl required fullWidth>
@@ -251,6 +285,7 @@ const PlantAdd = () => {
                 </Select>
               </FormControl>
             </Grid>
+
             {/* Flower Colors */}
             <Grid item xs={12}>
               <FormControl fullWidth>
@@ -282,6 +317,7 @@ const PlantAdd = () => {
                 </Select>
               </FormControl>
             </Grid>
+
             {/* Height */}
             <Grid item xs={12} md={5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               <Typography id="height-slider" gutterBottom>
@@ -300,6 +336,7 @@ const PlantAdd = () => {
                 sx={{ width: .9, align: 'center' }}
               />
             </Grid>
+
             {/* Width */}
             <Grid item xs={12} md={5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
               <Typography id="width-slider" gutterBottom>
@@ -318,6 +355,7 @@ const PlantAdd = () => {
                 sx={{ width: .9, align: 'center' }}
               />
             </Grid>
+
             {/* Unit Toggler */}
             <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Container>
@@ -331,6 +369,7 @@ const PlantAdd = () => {
                 </ToggleButtonGroup>
               </Container>
             </Grid>
+
             {/* Native Area */}
             <Grid item xs={12}>
               <FormControl fullWidth>
@@ -362,18 +401,22 @@ const PlantAdd = () => {
                 </Select>
               </FormControl>
             </Grid>
+
             {/* Is Indoor? */}
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
               <FormControlLabel control={
                 <Checkbox value={formData.isIndoor} onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)} />
               } label="Can Be Indoor Plant?" />
             </Grid>
+
             {/* Submit Button */}
             <Grid item xs={12}>
               <Container sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button variant="contained" type="submit" size='large' sx={{ width: .70 }}>Submit</Button>
               </Container>
             </Grid>  
+
+            {/* Error message if the post request fails */}
             {postErrors && 
               <Grid item xs={12}>
                 <Container sx={{ display: 'flex', justifyContent: 'center' }}>

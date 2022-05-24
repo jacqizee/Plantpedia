@@ -310,20 +310,6 @@ const EditProfile = () => {
               }
             </Grid>
 
-            {/* Username */}
-            <Grid item xs={12} sx={{ my: 1 }}>
-              <TextField
-                id='bio' 
-                placeholder='Username * (max 30 characters)'
-                variant='outlined'
-                name='username'
-                inputProps={{ maxLength: 30 }}
-                value={formData.username}
-                required
-                onChange={handleChange}
-                fullWidth />
-            </Grid>
-
             {/* Bio */}
             <Grid item xs={12} sx={{ my: 1 }}>
               <TextField

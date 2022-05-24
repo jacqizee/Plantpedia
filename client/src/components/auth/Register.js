@@ -185,6 +185,8 @@ const Register = () => {
               }
 
             </Grid>
+
+            {/* Register Button */}
             <Button
               type="submit"
               fullWidth
@@ -193,6 +195,8 @@ const Register = () => {
             >
               Register
             </Button>
+
+            {/* Prompt */}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" variant="body2">

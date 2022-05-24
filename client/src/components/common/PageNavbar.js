@@ -39,30 +39,40 @@ const PageNavbar  = ({ mode, setMode }) => {
   // Payload
   const payload = getPayload()
 
-  const [anchorElNav, setAnchorElNav] = useState(null)
+  // Keeps track of menu
   const [anchorElUser, setAnchorElUser] = useState(null)
 
+  // Navigate to the add plant page when + is pressed
   const handleAdd = (event) => {
-    setAnchorElNav(event.currentTarget)
     navigate('/plants/add')
   }
 
+  //Navigate to different pages depending on which menu item is clicked
   const handleNavClick = (event) => {
+
+    // converting page name to lower case
     const pageName = event.currentTarget.innerText.toLowerCase()
+
     if (pageName === 'login' || pageName === 'register') {
       handleCloseUserMenu()
 
+      //If login or register navigate to thos pages
       navigate(`/${pageName}`)
     } else if (pageName === 'profile') {
       handleCloseUserMenu()
 
+      //If profile, navigate to the user's profile
       navigate(`/${pageName}/${payload.username}`, { replace: true })
       
+      //Reload page if profile is pushed so if a user navigates from a different user's profile to the user's own profile, the data will update
       window.location.reload()
     } else if (pageName === 'logout') {
       handleCloseUserMenu()
 
+      //Remove token from local storage upon logout
       window.localStorage.removeItem('plantpedia')
+
+      //Navigate to the login screen upon logout
       navigate('/login')
     }
   }
@@ -71,10 +81,7 @@ const PageNavbar  = ({ mode, setMode }) => {
     setAnchorElUser(event.currentTarget)
   }
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null)
-  }
-
+  // Closes the user menu on the right hand side
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
@@ -86,9 +93,13 @@ const PageNavbar  = ({ mode, setMode }) => {
           
           {/* Logo */}
           <Container sx={{ display: 'flex', alignItems: 'flex-end' }}>
+
+            {/* Icon image */}
             <Box as={Link} to="/" sx={{ width: 35 }}>
               <Box component='img' src={logo} alt="Logo" />
             </Box>
+
+            {/* Plantpedia text */}
             <Typography as={Link} to='/'
               variant='h6'
               component='h1'
@@ -98,10 +109,13 @@ const PageNavbar  = ({ mode, setMode }) => {
             </Typography>
           </Container>
           
-
+          {/* If user is logged in, shows user menu, otherwise it shows login and register options on right side of navbar */}
           {userIsAuthenticated() ? 
             <>
-              {/* Menu Items */}
+
+              {/* If user is logged in... */}
+
+              {/* + Button */}
               <Box sx={{ flexGrow: 1, justifyContent: 'end', display: 'flex', mr: 1 }}>
                 <IconButton
                   size="large"
@@ -148,7 +162,9 @@ const PageNavbar  = ({ mode, setMode }) => {
             </>
             :
             <>
-              {/* Pages Shown */}
+              {/* If user is not logged in */}
+
+              {/* Login and Register Pages Shown */}
               <Box sx={{ flexGrow: 1, justifyContent: 'end', display: 'flex', mr: 3 }}>
                 {pagesNoLogin.map((page, index) => (
                   <Button
@@ -162,6 +178,8 @@ const PageNavbar  = ({ mode, setMode }) => {
               </Box>
             </>
           }
+
+          {/* Dark Mode or Light Mode Toggle */}
           <IconButton onClick={handleChangeMode}>
             {mode === 'light' ? <DarkModeIcon sx={{ color: 'white' }} /> : <LightModeIcon />}
             

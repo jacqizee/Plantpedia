@@ -30,17 +30,23 @@ import { styled } from '@mui/material/styles'
 
 const PlantEdit = () => {
 
+  // Styling Input so it won't display
   const Input = styled('input')({
     display: 'none',
   })
 
+  // Cloudinary URL and Preset
   const uploadURL = process.env.REACT_APP_CLOUDINARY_URL
   const preset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
 
+  // params and navigate
   const { plantId } = useParams()
   const navigate = useNavigate()
 
+  // Tells if the form is loaded
   const [ formLoaded, setFormLoaded ] = useState(false)
+
+  // The form data
   const [ formData, setFormData ] = useState(form)
   
   // Error Handling
@@ -72,16 +78,22 @@ const PlantEdit = () => {
     getFormData()
   }, [plantId])
 
+  // Navigate back to the plant if the user is not logged in
   useEffect(() => {
     if (formLoaded) {
       !userIsAuthenticated(formData) && navigate(`/plants/${plantId}`)
     }
   }, [formData, formLoaded, plantId])
 
+  // Submitting the form
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // Create a new form in case there is a new image to upload
     let newForm = { ...formData }
 
+    // If there is a new image, upload it to Cloudinary and save the results
+    // Doing this hear instead of in handleImageUpload so that only submitted images are uploaded to the database
     if (displayImage) {
       const data = new FormData()
       data.append('file', formData.images)
@@ -91,6 +103,7 @@ const PlantEdit = () => {
       newForm = { ...newForm, images: res.data.url }
     }
 
+    // Update plant data with info from newForm
     try {
       const response = await axios.put(`/api/plants/${plantId}`, newForm, {
         headers: {
@@ -98,15 +111,20 @@ const PlantEdit = () => {
         },
       })
       console.log(response)
+
+      // Navigate back to the edited plant when the update is complete
       navigate(`/plants/${plantId}`)
     } catch (error) {
       console.log(error)
+
+      // update the setPutErrors state if the update fails
       setPutErrors(true)
     }
   }
 
   return (
     <>
+      {/* If there are errors getting the data, give an error message */}
       {errors ?
         <>
           <Grid item xs={12} sx={{ my: '10%' }} >
@@ -116,6 +134,8 @@ const PlantEdit = () => {
           </Grid>
         </>
         :
+
+        // If no errors, load the plant edit form
         <>
           <Container maxWidth='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
             <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream' }} >
@@ -127,6 +147,8 @@ const PlantEdit = () => {
                   alignItems: 'center' }}
                 onSubmit={handleSubmit}
               >
+
+                {/* Header: Edit a Plant */}
                 <Typography variant='h3' sx={{ pb: 2 }}>Edit a Plant</Typography>
                 <Grid
                   container
@@ -139,7 +161,7 @@ const PlantEdit = () => {
                     <Input type="text" autofocus="autofocus" />
                   </>
                   
-                  {/* Name */}
+                  {/* Plant Name */}
                   <Grid item xs={12} md={6}>
                     <TextField
                       id='name'
@@ -151,6 +173,7 @@ const PlantEdit = () => {
                       onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       fullWidth />
                   </Grid>
+
                   {/* Scientific Name */}
                   <Grid item xs={12} md={6}>
                     <TextField
@@ -163,6 +186,7 @@ const PlantEdit = () => {
                       onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       fullWidth />
                   </Grid>
+
                   {/* Description */}
                   <Grid item xs={12}>
                     <TextField
@@ -173,16 +197,21 @@ const PlantEdit = () => {
                       value={formData.description}
                       required
                       multiline
+                      inputProps={{ maxLength: 1000 }}
                       minRows={2}
                       maxRows={4}
                       onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       fullWidth />
                   </Grid>
+
                   {/* Images */}
                   <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
+
+                    {/* If there is a new image to display, then display it */}
                     {displayImage ? 
                       <Box component='img' src={displayImage} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                       :
+                      // Else if there's an image on formData, display that one
                       <>
                         {formData.images ? 
                           <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
@@ -191,12 +220,13 @@ const PlantEdit = () => {
                         }
                       </>
                     }
+
+                    {/* The upload image button */}
                     <label htmlFor="contained-button-file">
                       <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={(e) => handleImageUpload(e, setDisplayImage, setFormData, formData)} />
+                      
+                      {/* If there's an image on formData, display upload button as an icon, else make it a button with "Upload Image" as the prompt */}
                       {formData.images ? 
-                        // <Button variant="contained" component="span">
-                        //   Change Image
-                        // </Button>
                         <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                           <PhotoCamera />
                         </IconButton>
@@ -207,6 +237,7 @@ const PlantEdit = () => {
                       }
                     </label>
                   </Grid>
+
                   {/* Water Requirements */}
                   <Grid item xs={12} md={4}>
                     <FormControl required fullWidth>
@@ -223,6 +254,7 @@ const PlantEdit = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+
                   {/* Sun Exposure */}
                   <Grid item xs={12} md={4}>
                     <FormControl required fullWidth>
@@ -239,6 +271,7 @@ const PlantEdit = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+
                   {/* Soil Type */}
                   <Grid item xs={12} md={4}>
                     <FormControl required fullWidth>
@@ -255,6 +288,7 @@ const PlantEdit = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+
                   {/* Lifespan */}
                   <Grid item xs={12} md={6}>
                     <FormControl required fullWidth>
@@ -271,6 +305,7 @@ const PlantEdit = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+
                   {/* Mood */}
                   <Grid item xs={12} md={6}>
                     <FormControl required fullWidth>
@@ -287,6 +322,7 @@ const PlantEdit = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+
                   {/* Flower Colors */}
                   <Grid item xs={12}>
                     <FormControl fullWidth>
@@ -318,6 +354,7 @@ const PlantEdit = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+
                   {/* Height */}
                   <Grid item xs={12} md={5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                     <Typography id="height-slider" gutterBottom>
@@ -336,6 +373,7 @@ const PlantEdit = () => {
                       sx={{ width: .9, align: 'center' }}
                     />
                   </Grid>
+
                   {/* Width */}
                   <Grid item xs={12} md={5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                     <Typography id="width-slider" gutterBottom>
@@ -354,6 +392,7 @@ const PlantEdit = () => {
                       sx={{ width: .9, align: 'center' }}
                     />
                   </Grid>
+
                   {/* Unit Toggler */}
                   <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Container>
@@ -367,6 +406,7 @@ const PlantEdit = () => {
                       </ToggleButtonGroup>
                     </Container>
                   </Grid>
+
                   {/* Native Area */}
                   <Grid item xs={12}>
                     <FormControl fullWidth>
@@ -398,12 +438,14 @@ const PlantEdit = () => {
                       </Select>
                     </FormControl>
                   </Grid>
+
                   {/* Is Indoor? */}
                   <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <FormControlLabel control={
                       <Checkbox value={formData.isIndoor} onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)} />
                     } label="Can Be Indoor Plant?" />
                   </Grid>
+
                   {/* Submit Button */}
                   <Grid item xs={12}>
                     <Container sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -412,6 +454,8 @@ const PlantEdit = () => {
                     </Container>
                   </Grid>
                       
+
+                  {/* Error message under submit if updating the plant fails */}
                   {putErrors && 
                     <Grid item xs={12}>
                       <Container sx={{ display: 'flex', justifyContent: 'center' }}>
