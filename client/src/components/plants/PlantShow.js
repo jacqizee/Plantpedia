@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import Spinner from '../utilities/Spinner'
@@ -120,7 +120,6 @@ const PlantShow = () => {
     if (!formData.text.length) return
     setFormData({ ...formData, owner: payload.sub, username: payload.username })
     try {
-
       await axios.post(`/api/plants/${plant._id}/comments`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
