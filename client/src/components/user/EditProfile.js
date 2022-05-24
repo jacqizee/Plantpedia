@@ -330,7 +330,14 @@ const EditProfile = () => {
                 <Button variant="contained" onClick={handleCancel} size='small' sx={{ width: .48, mx: 0, backgroundColor: 'red' }}>Cancel</Button>
               </Container>
             </Grid>
-            {putErrors && <Typography>Error. Failed to upload updated profile.</Typography>}
+                
+            {putErrors && 
+              <Grid item xs={12}>
+                <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Typography sx={{ color: 'red' }}>Error. Failed to upload updated profile.</Typography>
+                </Container>
+              </Grid>
+            }
           </Grid>
         </Box>
       </Paper>

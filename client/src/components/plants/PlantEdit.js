@@ -45,6 +45,10 @@ const PlantEdit = () => {
   // For image handling
   const [ displayImage, setDisplayImage ] = useState('')
 
+  // Error Handling
+  const [ errors, setErrors ] = useState(false) // GET request errors
+  const [ putErrors, setPutErrors ] = useState(false) // PUT or Delete request errors
+
   // Setting units for height/width
   const [ matureSize, setMatureSize ] = useState({ height: formData.height, width: formData.width })
   const [ unit, setUnit ] = useState('in')
@@ -77,6 +81,7 @@ const PlantEdit = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target
+    setPutErrors(false)
     setFormData({ ...formData, [name]: value })
   }
 
@@ -90,6 +95,7 @@ const PlantEdit = () => {
         setMatureSize({ height: data.height, width: data.width })
       } catch (error) {
         console.log(error)
+        setErrors(true)
       }
     }
     getFormData()
@@ -126,6 +132,8 @@ const PlantEdit = () => {
       navigate(`/plants/${plantId}`)
     } catch (error) {
       console.log(error)
+
+      setPutErrors(true)
     }
   }
 
@@ -139,6 +147,7 @@ const PlantEdit = () => {
       navigate('/')
     } catch (error) {
       console.log(error)
+      setPutErrors(true)
     }
   }
 
@@ -191,304 +200,326 @@ const PlantEdit = () => {
   }
 
   return (
-    <Container maxWidth='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream' }} >
-        <Box
-          component='form'
-          sx={{ width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center' }}
-          onSubmit={handleSubmit}
-        >
-          <Typography variant='h3' sx={{ pb: 2 }}>Edit a Plant</Typography>
-          <Grid
-            container
-            sx={{ width: .90 }}
-            rowSpacing={1}
-            columnSpacing={1}>
-
-            {/* This must be first input So that the file upload only fires when you press the button */}
-            <>
-              <Input type="text" autofocus="autofocus" />
-            </>
-            
-            {/* Name */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                id='name'
-                label='Common Name'
-                variant='outlined'
-                name='name'
-                value={formData.name}
-                required
-                onChange={handleChange}
-                fullWidth />
-            </Grid>
-            {/* Scientific Name */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                id='scientificName' 
-                label='Scientific Name'
-                variant='outlined'
-                name='scientificName'
-                value={formData.scientificName}
-                required
-                onChange={handleChange}
-                fullWidth />
-            </Grid>
-            {/* Description */}
-            <Grid item xs={12}>
-              <TextField
-                id='description' 
-                label='Description'
-                variant='outlined'
-                name='description'
-                value={formData.description}
-                required
-                multiline
-                minRows={2}
-                maxRows={4}
-                onChange={handleChange}
-                fullWidth />
-            </Grid>
-            {/* Images */}
-            <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
-              {displayImage ? 
-                <Box component='img' src={displayImage} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
-                :
-                <>
-                  {formData.images ? 
-                    <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
-                    :
-                    <></>
-                  }
-                </>
-              }
-              <label htmlFor="contained-button-file">
-                <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageUpload} />
-                {formData.images ? 
-                  // <Button variant="contained" component="span">
-                  //   Change Image
-                  // </Button>
-                  <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
-                    <PhotoCamera />
-                  </IconButton>
-                  :
-                  <Button variant="contained" component="span">
-                    Upload Image
-                  </Button>
-                }
-              </label>
-            </Grid>
-            {/* Water Requirements */}
-            <Grid item xs={12} md={4}>
-              <FormControl required fullWidth>
-                <InputLabel id="water-label">Water</InputLabel>
-                <Select
-                  labelId="water-label"
-                  id="water"
-                  name='watering'
-                  value={formData.watering}
-                  label='water'
-                  onChange={handleChange}
-                >
-                  {waterTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
-                </Select>
-              </FormControl>
-            </Grid>
-            {/* Sun Exposure */}
-            <Grid item xs={12} md={4}>
-              <FormControl required fullWidth>
-                <InputLabel id="sunExposure-label">Sun Exposure</InputLabel>
-                <Select
-                  labelId="sunExposure-label"
-                  id="sunExposure"
-                  name='sunExposure'
-                  value={formData.sunExposure}
-                  label='sunExposure'
-                  onChange={handleChange}
-                >
-                  {sunTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
-                </Select>
-              </FormControl>
-            </Grid>
-            {/* Soil Type */}
-            <Grid item xs={12} md={4}>
-              <FormControl required fullWidth>
-                <InputLabel id="soilType-label">Soil Type</InputLabel>
-                <Select
-                  labelId="soilType-label"
-                  id="soilType"
-                  name='soilType'
-                  value={formData.soilType}
-                  label='soilType'
-                  onChange={handleChange}
-                >
-                  {soilTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
-                </Select>
-              </FormControl>
-            </Grid>
-            {/* Lifespan */}
-            <Grid item xs={12} md={6}>
-              <FormControl required fullWidth>
-                <InputLabel id="lifespan-label">Lifespan</InputLabel>
-                <Select
-                  labelId="lifespan-label"
-                  id="lifespan"
-                  name='lifespan'
-                  value={formData.lifespan}
-                  label='lifespan'
-                  onChange={handleChange}
-                >
-                  {lifespanTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
-                </Select>
-              </FormControl>
-            </Grid>
-            {/* Mood */}
-            <Grid item xs={12} md={6}>
-              <FormControl required fullWidth>
-                <InputLabel id="mood-label">Mood</InputLabel>
-                <Select
-                  labelId="mood-label"
-                  id="mood"
-                  name='mood'
-                  value={formData.mood}
-                  label='soilType'
-                  onChange={handleChange}
-                >
-                  {moodTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
-                </Select>
-              </FormControl>
-            </Grid>
-            {/* Flower Colors */}
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="flowerColor">Flower Color</InputLabel>
-                <Select
-                  labelId="flowerColor"
-                  id="flowerColor"
-                  multiple
-                  name="flowerColor"
-                  value={formData.flowerColor}
-                  onChange={handleChange}
-                  input={<OutlinedInput id="color" label="Color" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                >
-                  {colors.map((color) => (
-                    <MenuItem
-                      key={color}
-                      value={color}
-                    >
-                      {color}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            {/* Height */}
-            <Grid item xs={12} md={5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <Typography id="height-slider" gutterBottom>
-                Height: {matureSize.height} {unit}
-              </Typography>
-              <Slider
-                value={matureSize.height}
-                onChange={handleSizeChange}
-                valueLabelDisplay="auto"
-                name='height'
-                size="small"
-                min={1}
-                max={max}
-                marks
-                step={step}
-                sx={{ width: .9, align: 'center' }}
-              />
-            </Grid>
-            {/* Width */}
-            <Grid item xs={12} md={5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              <Typography id="width-slider" gutterBottom>
-                Width: {matureSize.width} {unit}
-              </Typography>
-              <Slider
-                value={matureSize.width}
-                onChange={handleSizeChange}
-                valueLabelDisplay="auto"
-                name='width'
-                size="small"
-                min={1}
-                max={max}
-                marks
-                step={step}
-                sx={{ width: .9, align: 'center' }}
-              />
-            </Grid>
-            {/* Unit Toggler */}
-            <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Container>
-                <ToggleButtonGroup value={unit} exclusive onChange={handleUnitChange} aria-label="measurement unit">
-                  <ToggleButton value="in" aria-label="inches" size="small">
-                    in
-                  </ToggleButton>
-                  <ToggleButton value="cm" aria-label="centimeter" size="small">
-                    cm
-                  </ToggleButton>
-                </ToggleButtonGroup>
-              </Container>
-            </Grid>
-            {/* Native Area */}
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="nativeArea">Native Area</InputLabel>
-                <Select
-                  labelId="nativeArea"
-                  id="nativeArea"
-                  multiple
-                  name="nativeArea"
-                  value={formData.nativeArea}
-                  onChange={handleChange}
-                  input={<OutlinedInput id="regions" label="Regions" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                >
-                  {regions.map((region) => (
-                    <MenuItem
-                      key={region}
-                      value={region}
-                    >
-                      {region}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            {/* Is Indoor? */}
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-              <FormControlLabel control={
-                <Checkbox value={formData.isIndoor} onChange={handleChange} />
-              } label="Can Be Indoor Plant?" />
-            </Grid>
-            {/* Submit Button */}
-            <Grid item xs={12}>
-              <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="contained" type="submit" size='large' sx={{ width: .70, mx: 2 }}>Submit</Button>
-                { !formLoaded ? '' : userIsOwner(formData) ? <Button variant="contained" onClick={handleDelete} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button> : ''}
-              </Container>
-            </Grid>
+    <>
+      {errors ?
+        <>
+          <Grid item xs={12} sx={{ my: '10%' }} >
+            <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography sx={{ color: 'red' }}>Error. Failed fetch plant data.</Typography>
+            </Container>
           </Grid>
-        </Box>
-      </Paper>
-    </Container>
+        </>
+        :
+        <>
+          <Container maxWidth='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream' }} >
+              <Box
+                component='form'
+                sx={{ width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center' }}
+                onSubmit={handleSubmit}
+              >
+                <Typography variant='h3' sx={{ pb: 2 }}>Edit a Plant</Typography>
+                <Grid
+                  container
+                  sx={{ width: .90 }}
+                  rowSpacing={1}
+                  columnSpacing={1}>
+
+                  {/* This must be first input So that the file upload only fires when you press the button */}
+                  <>
+                    <Input type="text" autofocus="autofocus" />
+                  </>
+                  
+                  {/* Name */}
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      id='name'
+                      label='Common Name'
+                      variant='outlined'
+                      name='name'
+                      value={formData.name}
+                      required
+                      onChange={handleChange}
+                      fullWidth />
+                  </Grid>
+                  {/* Scientific Name */}
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      id='scientificName' 
+                      label='Scientific Name'
+                      variant='outlined'
+                      name='scientificName'
+                      value={formData.scientificName}
+                      required
+                      onChange={handleChange}
+                      fullWidth />
+                  </Grid>
+                  {/* Description */}
+                  <Grid item xs={12}>
+                    <TextField
+                      id='description' 
+                      label='Description'
+                      variant='outlined'
+                      name='description'
+                      value={formData.description}
+                      required
+                      multiline
+                      minRows={2}
+                      maxRows={4}
+                      onChange={handleChange}
+                      fullWidth />
+                  </Grid>
+                  {/* Images */}
+                  <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
+                    {displayImage ? 
+                      <Box component='img' src={displayImage} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
+                      :
+                      <>
+                        {formData.images ? 
+                          <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
+                          :
+                          <></>
+                        }
+                      </>
+                    }
+                    <label htmlFor="contained-button-file">
+                      <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageUpload} />
+                      {formData.images ? 
+                        // <Button variant="contained" component="span">
+                        //   Change Image
+                        // </Button>
+                        <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                          <PhotoCamera />
+                        </IconButton>
+                        :
+                        <Button variant="contained" component="span">
+                          Upload Image
+                        </Button>
+                      }
+                    </label>
+                  </Grid>
+                  {/* Water Requirements */}
+                  <Grid item xs={12} md={4}>
+                    <FormControl required fullWidth>
+                      <InputLabel id="water-label">Water</InputLabel>
+                      <Select
+                        labelId="water-label"
+                        id="water"
+                        name='watering'
+                        value={formData.watering}
+                        label='water'
+                        onChange={handleChange}
+                      >
+                        {waterTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {/* Sun Exposure */}
+                  <Grid item xs={12} md={4}>
+                    <FormControl required fullWidth>
+                      <InputLabel id="sunExposure-label">Sun Exposure</InputLabel>
+                      <Select
+                        labelId="sunExposure-label"
+                        id="sunExposure"
+                        name='sunExposure'
+                        value={formData.sunExposure}
+                        label='sunExposure'
+                        onChange={handleChange}
+                      >
+                        {sunTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {/* Soil Type */}
+                  <Grid item xs={12} md={4}>
+                    <FormControl required fullWidth>
+                      <InputLabel id="soilType-label">Soil Type</InputLabel>
+                      <Select
+                        labelId="soilType-label"
+                        id="soilType"
+                        name='soilType'
+                        value={formData.soilType}
+                        label='soilType'
+                        onChange={handleChange}
+                      >
+                        {soilTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {/* Lifespan */}
+                  <Grid item xs={12} md={6}>
+                    <FormControl required fullWidth>
+                      <InputLabel id="lifespan-label">Lifespan</InputLabel>
+                      <Select
+                        labelId="lifespan-label"
+                        id="lifespan"
+                        name='lifespan'
+                        value={formData.lifespan}
+                        label='lifespan'
+                        onChange={handleChange}
+                      >
+                        {lifespanTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {/* Mood */}
+                  <Grid item xs={12} md={6}>
+                    <FormControl required fullWidth>
+                      <InputLabel id="mood-label">Mood</InputLabel>
+                      <Select
+                        labelId="mood-label"
+                        id="mood"
+                        name='mood'
+                        value={formData.mood}
+                        label='soilType'
+                        onChange={handleChange}
+                      >
+                        {moodTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {/* Flower Colors */}
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel id="flowerColor">Flower Color</InputLabel>
+                      <Select
+                        labelId="flowerColor"
+                        id="flowerColor"
+                        multiple
+                        name="flowerColor"
+                        value={formData.flowerColor}
+                        onChange={handleChange}
+                        input={<OutlinedInput id="color" label="Color" />}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((value) => (
+                              <Chip key={value} label={value} />
+                            ))}
+                          </Box>
+                        )}
+                      >
+                        {colors.map((color) => (
+                          <MenuItem
+                            key={color}
+                            value={color}
+                          >
+                            {color}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {/* Height */}
+                  <Grid item xs={12} md={5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography id="height-slider" gutterBottom>
+                      Height: {matureSize.height} {unit}
+                    </Typography>
+                    <Slider
+                      value={matureSize.height}
+                      onChange={handleSizeChange}
+                      valueLabelDisplay="auto"
+                      name='height'
+                      size="small"
+                      min={1}
+                      max={max}
+                      marks
+                      step={step}
+                      sx={{ width: .9, align: 'center' }}
+                    />
+                  </Grid>
+                  {/* Width */}
+                  <Grid item xs={12} md={5} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography id="width-slider" gutterBottom>
+                      Width: {matureSize.width} {unit}
+                    </Typography>
+                    <Slider
+                      value={matureSize.width}
+                      onChange={handleSizeChange}
+                      valueLabelDisplay="auto"
+                      name='width'
+                      size="small"
+                      min={1}
+                      max={max}
+                      marks
+                      step={step}
+                      sx={{ width: .9, align: 'center' }}
+                    />
+                  </Grid>
+                  {/* Unit Toggler */}
+                  <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Container>
+                      <ToggleButtonGroup value={unit} exclusive onChange={handleUnitChange} aria-label="measurement unit">
+                        <ToggleButton value="in" aria-label="inches" size="small">
+                          in
+                        </ToggleButton>
+                        <ToggleButton value="cm" aria-label="centimeter" size="small">
+                          cm
+                        </ToggleButton>
+                      </ToggleButtonGroup>
+                    </Container>
+                  </Grid>
+                  {/* Native Area */}
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel id="nativeArea">Native Area</InputLabel>
+                      <Select
+                        labelId="nativeArea"
+                        id="nativeArea"
+                        multiple
+                        name="nativeArea"
+                        value={formData.nativeArea}
+                        onChange={handleChange}
+                        input={<OutlinedInput id="regions" label="Regions" />}
+                        renderValue={(selected) => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((value) => (
+                              <Chip key={value} label={value} />
+                            ))}
+                          </Box>
+                        )}
+                      >
+                        {regions.map((region) => (
+                          <MenuItem
+                            key={region}
+                            value={region}
+                          >
+                            {region}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {/* Is Indoor? */}
+                  <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <FormControlLabel control={
+                      <Checkbox value={formData.isIndoor} onChange={handleChange} />
+                    } label="Can Be Indoor Plant?" />
+                  </Grid>
+                  {/* Submit Button */}
+                  <Grid item xs={12}>
+                    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                      <Button variant="contained" type="submit" size='large' sx={{ width: .70, mx: 2 }}>Submit</Button>
+                      { !formLoaded ? '' : userIsOwner(formData) ? <Button variant="contained" onClick={handleDelete} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button> : ''}
+                    </Container>
+                  </Grid>
+                      
+                  {putErrors && 
+                    <Grid item xs={12}>
+                      <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Typography sx={{ color: 'red' }}>Error. Failed to upload updated plant.</Typography>
+                      </Container>
+                    </Grid>
+                  }
+                </Grid>
+              </Box>
+            </Paper>
+          </Container>
+        </>
+      }
+    </>
   )
 }
 

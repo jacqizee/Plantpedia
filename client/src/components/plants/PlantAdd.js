@@ -42,6 +42,9 @@ const PlantAdd = () => {
   // For image handling
   const [ displayImage, setDisplayImage ] = useState('')
 
+  // Error Handling
+  const [ postErrors, setPostErrors ] = useState(false)
+
   // Setting units for height/width
   const [ matureSize, setMatureSize ] = useState({ height: 50, width: 50 })
   const [ unit, setUnit ] = useState('in')
@@ -76,6 +79,7 @@ const PlantAdd = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target
+    setPostErrors(false)
     setFormData({ ...formData, [name]: value })
   }
 
@@ -104,6 +108,7 @@ const PlantAdd = () => {
       navigate(`/plants/${response.data._id}`)
     } catch (error) {
       console.log(error)
+      setPostErrors(true)
     }
   }
 
@@ -446,7 +451,14 @@ const PlantAdd = () => {
               <Container sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Button variant="contained" type="submit" size='large' sx={{ width: .70 }}>Submit</Button>
               </Container>
-            </Grid>
+            </Grid>  
+            {postErrors && 
+              <Grid item xs={12}>
+                <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Typography sx={{ color: 'red' }}>Error. Failed to upload plant.</Typography>
+                </Container>
+              </Grid>
+            }
           </Grid>
         </Box>
       </Paper>

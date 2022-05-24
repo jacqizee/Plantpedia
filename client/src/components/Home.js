@@ -165,11 +165,13 @@ const Home = () => {
             <Spinner />
           </Container >
           : errors ?
-            <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
-              <Typography>
-                Error! Could not fetch data!
-              </Typography>
-            </Container>
+            <Grid item xs={12}>
+              <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
+                <Typography sx={{ color: 'red' }}>
+                  Error! Could not fetch data!
+                </Typography>
+              </Container>
+            </Grid>
             :
             // images
             <>

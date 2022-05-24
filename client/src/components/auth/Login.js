@@ -103,7 +103,13 @@ const Login = () => {
               value={formData.password} 
               onChange={handleChange}
             />
-            {errors && <Typography variant='p'>Unauthorised</Typography>}
+            {errors && 
+              <Grid item xs={12}>
+                <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Typography sx={{ color: 'red' }}>Unauthorised.</Typography>
+                </Container>
+              </Grid>  
+            }
             <Button
               type="submit"
               fullWidth
