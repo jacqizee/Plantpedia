@@ -58,7 +58,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Box bgcolor='background.default' color='text.primary'>
+      <Box id='wrapper-box' bgcolor='background.default' color='text.primary'>
         <BrowserRouter>
           <PageNavbar setMode={setMode} mode={mode} />
           <Routes>
