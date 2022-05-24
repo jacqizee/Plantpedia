@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
 import { getTokenFromLocalStorage } from './auth.js'
 
 // Handles basic form input changes
