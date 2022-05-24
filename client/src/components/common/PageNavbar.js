@@ -108,6 +108,12 @@ const PageNavbar  = ({ mode, setMode }) => {
                   Plantpedia
             </Typography>
           </Container>
+
+          {/* Dark Mode or Light Mode Toggle */}
+          <IconButton onClick={handleChangeMode}>
+            {mode === 'light' ? <DarkModeIcon sx={{ color: 'white' }} /> : <LightModeIcon />}
+            
+          </IconButton>
           
           {/* If user is logged in, shows user menu, otherwise it shows login and register options on right side of navbar */}
           {userIsAuthenticated() ? 
@@ -178,12 +184,6 @@ const PageNavbar  = ({ mode, setMode }) => {
               </Box>
             </>
           }
-
-          {/* Dark Mode or Light Mode Toggle */}
-          <IconButton onClick={handleChangeMode}>
-            {mode === 'light' ? <DarkModeIcon sx={{ color: 'white' }} /> : <LightModeIcon />}
-            
-          </IconButton>
         </Toolbar>
       </Container>
     </AppBar>
