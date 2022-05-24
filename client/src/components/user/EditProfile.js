@@ -219,14 +219,14 @@ const EditProfile = () => {
       localStorage.setItem('plantpedia', token)
 
       //Navigate back to the user's profile
-      navigate(`/profile/${username}`)
+      navigate(`/profile/${formData.username}`)
     } catch (error) {
       console.log(error)
       setPutErrors(true)
     }
   }
 
-  // Update the formData when the user changes bio
+  // Update the formData when the user changes username or bio
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
@@ -310,6 +310,20 @@ const EditProfile = () => {
               }
             </Grid>
 
+            {/* Username */}
+            <Grid item xs={12} sx={{ my: 1 }}>
+              <TextField
+                id='bio' 
+                placeholder='Username * (max 30 characters)'
+                variant='outlined'
+                name='username'
+                inputProps={{ maxLength: 30 }}
+                value={formData.username}
+                required
+                onChange={handleChange}
+                fullWidth />
+            </Grid>
+
             {/* Bio */}
             <Grid item xs={12} sx={{ my: 1 }}>
               <TextField
@@ -317,6 +331,7 @@ const EditProfile = () => {
                 placeholder='Bio * (max 150 characters)'
                 variant='outlined'
                 name='bio'
+                inputProps={{ maxLength: 150 }}
                 value={formData.bio}
                 required
                 onChange={handleChange}
