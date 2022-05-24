@@ -88,11 +88,8 @@ const UserProfile = () => {
   const getFavoritesOrEdits = async (arrayOfIndexes) => { 
     const newArray = []
     for (let i = 0; i < arrayOfIndexes.length; i++) {
-      console.log('This runs 🏃🏻‍♂️')
       const plant = await axios.get(`/api/plants/${arrayOfIndexes[i]}`)
-      console.log('plant value is: ', plant.data)
       newArray.push(plant.data)
-      console.log('newArray is: ', newArray)
     }
     return newArray
   }
