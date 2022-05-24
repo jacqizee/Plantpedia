@@ -88,8 +88,8 @@ const Home = () => {
   //! WIP
   //get search value
   const handleInput = (e) => {
-    //changes box to blue border
-    colors.includes(e.target.textContent) ? e.target.classList.toggle('styled') : ''
+    
+    
     let newObj
     //set filters for search term
     if (e.target.name === 'searchTerm') {
@@ -97,8 +97,11 @@ const Home = () => {
         ...filters,
         [e.target.name]: e.target.value,
       }
+      
       //set filters for colors
-    } else {
+    } else if (colors.includes(e.target.textContent)) {
+      //changes box to blue border
+      e.target.classList.toggle('styled')
       newObj = {
         ...filters,
       }
@@ -112,6 +115,7 @@ const Home = () => {
     //regexp search term for testing
     const regExpSearch = new RegExp(filters.searchTerm, 'i')
     const filteredArray = plants.filter(plant => regExpSearch.test(plant.name))
+    console.log(filters)
 
     //if there are colors in the filters obj 
     //basically the same code philip wrote
