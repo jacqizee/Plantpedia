@@ -22,4 +22,9 @@ export const theme = createTheme({
       },
     },
   },
+  palette: {
+    background: {
+      default: '#1a202c',
+    },
+  },
 })

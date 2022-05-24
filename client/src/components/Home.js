@@ -11,6 +11,7 @@ import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
+import Card from '@mui/material/Card'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -25,6 +26,9 @@ const Home = () => {
   //loading and error state
   const [loading, setLoading] = useState(true)
   const [errors, setErrors] = useState(false)
+
+
+  const [show, setShow] = useState(false)
 
 
   //plant state 
@@ -54,7 +58,7 @@ const Home = () => {
   //! WIP
   //get search value
   const handleInput = (e) => {
-
+    e.stopPropagation()
 
     let newObj
     //set filters for search term
@@ -107,23 +111,29 @@ const Home = () => {
   }, [filters, plants])
 
 
+  const handleOpen = (e) => {
+    e.stopPropagation()
+    setShow(true)
+  }
+
+  const handleClose = () => {
+    setShow(false)
+  }
+
+
 
   return (
     <>
       {/* search bar */}
-      <Container maxWidth='lg' >
-        <TextField fullWidth name='searchTerm' autoComplete='off' placeholder='Search by name...'
-          onChange={handleInput} value={filters.searchTerm} sx={{ pt: 3 }} />
-        <Accordion disableGutters>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="Search-tags"
-            id="search-tags-header"
-            square='false'
-          >
-            <Typography sx={{ color: 'rgba(0,0,0,0.35)' }}>Search by color...</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
+      <Box onClick={handleClose}>
+        <Container maxWidth='lg' >
+          <Box onClick={handleOpen}>
+            <TextField fullWidth name='searchTerm' autoComplete='off' placeholder='Search by name...'
+              onChange={handleInput} value={filters.searchTerm} sx={{ pt: 3 }} />
+          </Box>
+
+          {show ? <Card sx={{ p: 2 }}>
+            <Typography >Search by color...</Typography>
             <Container>
               {/* flower color */}
               <Box textAlign='center'>
@@ -155,27 +165,28 @@ const Home = () => {
                 </Grid>
               </Box>
             </Container>
-          </AccordionDetails>
-        </Accordion>
-      </Container >
-      {
-        loading ?
-          <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }
-          } >
-            <Spinner />
-          </Container >
-          : errors ?
-            <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
-              <Typography>
-                Error! Could not fetch data!
-              </Typography>
-            </Container>
-            :
-            // images
-            <>
-              {getImageList((filteredPlants.length ? filteredPlants : plants), 1, 2, 3, 4, true)}
-            </>
-      }
+          </Card> : null}
+        </Container >
+        {
+          loading ?
+            <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }
+            } >
+              <Spinner />
+            </Container >
+            : errors ?
+              <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }} >
+                <Typography>
+                  Error! Could not fetch data!
+                </Typography>
+              </Container>
+              :
+              // images
+              <>
+                {getImageList((filteredPlants.length ? filteredPlants : plants), 1, 2, 3, 4, true)}
+              </>
+        }
+      </Box>
+
     </>
   )
 }
