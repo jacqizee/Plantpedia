@@ -52,6 +52,8 @@ const PlantShow = () => {
   const [ commentCount, setCommentCount ] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
   const [showComments, setShowComments] = useState(false)
+  const [ page, setPage ] = useState(1)
+  const [ pageResults, setPageResults ] = useState(false)
   
   const [ userCanEdit, setUserCanEdit ] = useState(false)
   
@@ -66,6 +68,7 @@ const PlantShow = () => {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant({ ...data, comments: data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
         setCommentCount(data.comments.length)
+        setPageResults(data.comments.slice(0, 5))
 
         if (payload.username) {
           const { data: userData } = await axios.get(`/api/profile/${payload.sub}`, {
@@ -155,6 +158,27 @@ const PlantShow = () => {
 
   //disable comment button until user has typed message
   const isAddDisabled = formData.text.length === 0
+
+  // handle page change
+  const handlePageChange = (e) => {
+    console.log(e)
+    const { dataset, innerText } = e.target
+    let pageNumber
+    if (!innerText) {
+      dataset.testid === 'NavigateBeforeIcon' ? pageNumber = page - 1 : pageNumber = page + 1
+    } else {
+      pageNumber = parseInt(innerText)
+    }
+    setPage(pageNumber)
+    
+    if (pageNumber === 1) {
+      setPageResults(plant.comments.slice(0, 5))
+    } else {
+      const start = 5 * (pageNumber - 1)
+      setPageResults(plant.comments.slice(start, start + 5))
+    }
+  }
+
 
   // ? Favorite Functions
 
@@ -469,8 +493,8 @@ const PlantShow = () => {
               </Stack> : null}
 
             {/* comment section */}
-            { plant ?
-              plant.comments.map(comment => {
+            { pageResults ?
+              pageResults.map(comment => {
                 const { username, _id, text, createdAt } = comment
                 const date = new Date(createdAt)
                 return (
@@ -498,7 +522,7 @@ const PlantShow = () => {
                 No comments!
               </Box>
             }
-            <Pagination count={Math.ceil(commentCount / 5)} variant="outlined" />
+            <Pagination page={page} count={Math.ceil(commentCount / 5)} variant="outlined" onChange={handlePageChange} />
           </Container>
         </Container>
         :
