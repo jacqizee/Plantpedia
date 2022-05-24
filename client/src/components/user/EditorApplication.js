@@ -161,14 +161,6 @@ const EditorApplication = () => {
                     </Container>
                   </Grid>
                 }
-
-                {errors && 
-                  <Grid item xs={12}>
-                    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Typography sx={{ color: 'red' }}>Unauthorised.</Typography>
-                    </Container>
-                  </Grid>  
-                }
               </Grid>
             </>
             :
