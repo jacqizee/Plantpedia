@@ -2,9 +2,14 @@
   box-sizing: border-box;
 }
 
+#root {
+  height: 100vh;
+}
+
 body {
   margin: 0;
   font-family: 'Raleway', Arial;
+  padding: 0;
 }
 
 html {
