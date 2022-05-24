@@ -1,4 +1,4 @@
-import React from 'react'
+import { React, useState, useEffect } from 'react'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
@@ -17,36 +17,75 @@ import EditorApplication from './components/user/EditorApplication'
 import Register from './components/auth/Register'
 import Login from './components/auth/Login'
 
+//MUI
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import { amber, deepOrange, grey, teal } from '@mui/material/colors'
+
+const getDesignTokens = (mode) => ({
+  palette: {
+    mode,
+    primary: {
+      ...amber,
+      ...(mode === 'dark' && {
+        main: amber[300],
+      }),
+    },
+    ...(mode === 'dark' && {
+      background: {
+        default: teal[900],
+        paper: deepOrange[900],
+      },
+    }),
+    text: {
+      ...(mode === 'light'
+        ? {
+          primary: grey[900],
+          secondary: grey[800],
+        }
+        : {
+          primary: '#fff',
+          secondary: grey[500],
+        }),
+    },
+  },
+})
+
 const App = () => {
+  const [mode, setMode] = useState('light')
+
+  const darkTheme = createTheme(getDesignTokens(mode))
 
   return (
-    <main className='site-wrapper'>
-      <BrowserRouter>
-        <PageNavbar />
-        <Routes>
-          {/* Homepage */}
-          <Route path="/" element={<Home />} />
+    <ThemeProvider theme={darkTheme}>
+      <Box bgcolor='background.default' color='text.primary'>
+        <BrowserRouter>
+          <PageNavbar setMode={setMode} mode={mode} />
+          <Routes>
+            {/* Homepage */}
+            <Route path="/" element={<Home />} />
 
-          {/* Auth routes - starting with register */}
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+            {/* Auth routes - starting with register */}
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
 
-          {/* Plant routes */}
-          <Route path="/plants/:id" element={<PlantShow />} />
-          <Route path="/plants/add" element={<PlantAdd />} />
-          <Route path="/plants/:plantId/edit" element={<PlantEdit />} />
+            {/* Plant routes */}
+            <Route path="/plants/:id" element={<PlantShow />} />
+            <Route path="/plants/add" element={<PlantAdd />} />
+            <Route path="/plants/:plantId/edit" element={<PlantEdit />} />
 
-          {/* User routes */}
-          <Route path="/profile/:username" element={<UserProfile />} />
-          <Route path="/profile/:username/edit" element={<EditProfile />} />
-          <Route path="/become-editor" element={<EditorApplication />} />
+            {/* User routes */}
+            <Route path="/profile/:username" element={<UserProfile />} />
+            <Route path="/profile/:username/edit" element={<EditProfile />} />
+            <Route path="/become-editor" element={<EditorApplication />} />
 
-          
-          {/* The following path matches any path specified, so it needs to come last */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </main>
+
+            {/* The following path matches any path specified, so it needs to come last */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </Box>
+    </ThemeProvider>
   )
 }
 

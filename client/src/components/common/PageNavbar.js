@@ -13,15 +13,25 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AddIcon from '@mui/icons-material/Add'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import LightModeIcon from '@mui/icons-material/LightMode'
 
 // Import logo image
 import logo from '../../images/logo.png'
 import { getPayload, userIsAuthenticated } from '../../helpers/auth'
 
+
+
+
 const pagesNoLogin = ['Login', 'Register']
 const settings = ['Profile', 'Logout']
 
-const PageNavbar  = () => {
+const PageNavbar  = ({ mode, setMode }) => {
+  
+  //light/dark
+  const handleChangeMode = () => {
+    mode === 'light' ? setMode('dark') : setMode('light')
+  }
 
   // Navigate
   const navigate = useNavigate()
@@ -151,6 +161,10 @@ const PageNavbar  = () => {
               </Box>
             </>
           }
+          <IconButton onClick={handleChangeMode}>
+            {mode === 'light' ? <DarkModeIcon sx={{ color: 'white' }} /> : <LightModeIcon />}
+            
+          </IconButton>
         </Toolbar>
       </Container>
     </AppBar>
