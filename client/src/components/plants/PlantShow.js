@@ -96,6 +96,7 @@ const PlantShow = () => {
     } else if (e.target.value === 'newest') {
       setPlant({ ...plant, comments: plant.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
     }
+    updatePageResults(page, plant)
   }
 
   //input for comment data
@@ -123,6 +124,9 @@ const PlantShow = () => {
       commentDropdown === 'newest' ? setPlant({ ...data, comments: data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
         : setPlant(data)
       setCommentCount(data.comments.length)
+
+      // update pagination
+      updatePageResults(page, data)
       
       //reset form
       setFormData({
@@ -161,7 +165,6 @@ const PlantShow = () => {
 
   // handle page change
   const handlePageChange = (e) => {
-    console.log(e)
     const { dataset, innerText } = e.target
     let pageNumber
     if (!innerText) {
@@ -170,15 +173,17 @@ const PlantShow = () => {
       pageNumber = parseInt(innerText)
     }
     setPage(pageNumber)
-    
-    if (pageNumber === 1) {
-      setPageResults(plant.comments.slice(0, 5))
-    } else {
-      const start = 5 * (pageNumber - 1)
-      setPageResults(plant.comments.slice(start, start + 5))
-    }
+    updatePageResults(pageNumber, plant)
   }
 
+  const updatePageResults = (pageNumber, data) => {
+    if (pageNumber === 1) {
+      setPageResults(data.comments.slice(0, 5))
+    } else {
+      const start = 5 * (pageNumber - 1)
+      setPageResults(data.comments.slice(start, start + 5))
+    }
+  }
 
   // ? Favorite Functions
 
@@ -522,7 +527,12 @@ const PlantShow = () => {
                 No comments!
               </Box>
             }
-            <Pagination page={page} count={Math.ceil(commentCount / 5)} variant="outlined" onChange={handlePageChange} />
+            {/* Pagination */}
+            <Pagination page={page}
+              count={Math.ceil(commentCount / 5)}
+              variant="outlined"
+              onChange={handlePageChange}
+              sx={{ mt: 5, mb: -2 }} />
           </Container>
         </Container>
         :
