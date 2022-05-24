@@ -9,7 +9,6 @@ import ImageListItemBar from '@mui/material/ImageListItemBar'
 import Typography from '@mui/material/Typography'
 import Masonry from '@mui/lab/Masonry'
 
-import IconButton from '@mui/material/IconButton'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
 
@@ -34,24 +33,22 @@ export const getImageList = (imagesArray, xsColumns = 3, smColumns = 3, mdColumn
                     sx={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
                     actionIcon={
                       <>
-                        <IconButton
-                          sx={{ color: 'white' }}
-                          aria-label={`favorites for ${plant.name}`}
-                        >
-                          <FavoriteIcon />
-                        </IconButton>
-                        <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
-                          {plant.favorites.length}
-                        </Typography>
-                        <IconButton
-                          sx={{ color: 'white' }}
-                          aria-label={` comments for ${plant.name}`}
-                        >
-                          <ChatBubbleIcon />
-                        </IconButton>
-                        <Typography sx={{ display: 'inline', mr: 2, color: 'white' }}>
-                          {plant.comments.length}
-                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }} >
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <FavoriteIcon sx={{ color: 'white' }}
+                              aria-label={`favorites for ${plant.name}`} />
+                            <Typography sx={{ display: 'inline', mr: 2, ml: 1, color: 'white' }}>
+                              {plant.favorites.length}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <ChatBubbleIcon sx={{ color: 'white' }}
+                              aria-label={` comments for ${plant.name}`} />
+                            <Typography sx={{ display: 'inline', mr: 2, ml: 1, color: 'white' }}>
+                              {plant.comments.length}
+                            </Typography>
+                          </Box>
+                        </Box>
                       </>
                     }
                   />
