@@ -121,7 +121,7 @@ const Home = () => {
             id="search-tags-header"
             square='false'
           >
-            <Typography>Search by tags</Typography>
+            <Typography sx={{ color: 'rgba(0,0,0,0.35)' }}>Search by color...</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Container>
