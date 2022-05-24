@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
@@ -7,7 +7,6 @@ import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Menu from '@mui/material/Menu'
-import MenuIcon from '@mui/icons-material/Menu'
 import Container from '@mui/material/Container'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
@@ -17,11 +16,8 @@ import AddIcon from '@mui/icons-material/Add'
 
 // Import logo image
 import logo from '../../images/logo.png'
-import philip from '../../images/philip.png'
+import { getPayload, userIsAuthenticated } from '../../helpers/auth'
 
-import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
-
-const pages = ['Add']
 const pagesNoLogin = ['Login', 'Register']
 const settings = ['Profile', 'Logout']
 
@@ -51,7 +47,6 @@ const PageNavbar  = () => {
     } else if (pageName === 'profile') {
       handleCloseUserMenu()
 
-
       navigate(`/${pageName}/${payload.username}`, { replace: true })
       window.location.reload()
     } else if (pageName === 'logout') {
@@ -76,18 +71,22 @@ const PageNavbar  = () => {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ fontFamily: 'Domine' }}>
         <Toolbar disableGutters>
           
           {/* Logo */}
-          <Box as={Link} to="/" sx={{ width: 25, mr: 2 }}>
-            <img src={logo} alt="Logo" />
-          </Box>
+          <Container sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box as={Link} to="/" sx={{ width: 35 }}>
+              <Box component='img' src={logo} alt="Logo" />
+            </Box>
+            <Typography as={Link} to='/' variant='h6' component='h1' sx={{ ml: 2, color: 'white', fontFamily: 'Josefin Sans', fontWeight: 600, letterSpacing: 1, textDecoration: 'none' }}>Plantpedia</Typography>
+          </Container>
+          
 
           {userIsAuthenticated() ? 
             <>
               {/* Menu Items */}
-              <Box sx={{ flexGrow: 1, justifyContent: 'end', display: 'flex' }}>
+              <Box sx={{ flexGrow: 1, justifyContent: 'end', display: 'flex', mr: 1 }}>
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -103,12 +102,11 @@ const PageNavbar  = () => {
               {/* Profile image */}
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 3 }}>
                     <Avatar alt={payload.username} src={payload.profilePicture} />
                   </IconButton>
                 </Tooltip>
                 <Menu
-                  sx={{ mt: '45px' }}
                   id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
@@ -135,12 +133,12 @@ const PageNavbar  = () => {
             :
             <>
               {/* Pages Shown */}
-              <Box sx={{ flexGrow: 1, justifyContent: 'end', display: 'flex' }}>
+              <Box sx={{ flexGrow: 1, justifyContent: 'end', display: 'flex', mr: 3 }}>
                 {pagesNoLogin.map((page, index) => (
                   <Button
                     key={index}
                     onClick={handleNavClick}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
+                    sx={{ my: 2, color: 'white', display: 'block', fontFamily: 'Raleway' }}
                   >
                     {page}
                   </Button>
