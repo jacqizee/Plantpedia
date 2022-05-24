@@ -169,7 +169,7 @@ const PlantAdd = () => {
             </Grid>
 
             {/* Images */}
-            <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
+            <Grid item xs={12} sx={{ my: 2, ml: 4, textAlign: 'center' }} >
 
               {/* If there is an image to display, then display it */}
               {displayImage ? 

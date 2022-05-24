@@ -137,8 +137,8 @@ const PlantEdit = () => {
 
         // If no errors, load the plant edit form
         <>
-          <Container maxWidth='sm' sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream' }} >
+          <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', maxWidth: 'sm' }} >
               <Box
                 component='form'
                 sx={{ width: '100%',
@@ -158,7 +158,7 @@ const PlantEdit = () => {
 
                   {/* This must be first input So that the file upload only fires when you press the button */}
                   <>
-                    <Input type="text" autofocus="autofocus" />
+                    <Input type="text" autoFocus="autoFocus" />
                   </>
                   
                   {/* Plant Name */}
@@ -205,7 +205,7 @@ const PlantEdit = () => {
                   </Grid>
 
                   {/* Images */}
-                  <Grid item xs={12} sx={{ my: 2, textAlign: 'center' }} >
+                  <Grid item xs={12} sx={{ my: 2, ml: 4, textAlign: 'center' }} >
 
                     {/* If there is a new image to display, then display it */}
                     {displayImage ? 

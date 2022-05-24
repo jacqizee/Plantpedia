@@ -259,11 +259,11 @@ const EditProfile = () => {
             
             {/* This must be first input So that the file upload only fires when you press the button */}
             <>
-              <Input type="text" autofocus="autofocus" />
+              <Input type="text" autoFocus="autoFocus" />
             </>
               
             {/* Images */}
-            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+            <Grid item xs={12} sx={{ textAlign: 'center', ml: 4 }}>
               {!srcImg ? 
                 <>
                   <Box component='img' src={formData.image} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
