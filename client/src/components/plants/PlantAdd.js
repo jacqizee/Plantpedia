@@ -176,7 +176,7 @@ const PlantAdd = () => {
 
             {/* This must be first input So that the file upload only fires when you press the button */}
             <>
-              <Input type="text" autofocus="autofocus" />
+              <Input type="text" autoFocus="autofocus" />
             </>
             
             {/* Name */}
