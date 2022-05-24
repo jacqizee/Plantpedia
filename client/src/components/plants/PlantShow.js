@@ -75,7 +75,7 @@ const PlantShow = () => {
         setCommentCount(data.comments.length)
         setPageResults(data.comments.slice(0, commentsPerPage))
 
-        if (payload.username) {
+        if (payload) {
           const { data: userData } = await axios.get(`/api/profile/${payload.sub}`, {
             headers: {
               Authorization: `Bearer ${getTokenFromLocalStorage()}`,
@@ -438,9 +438,9 @@ const PlantShow = () => {
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                           {/* Plant Owner */}
-                          <Typography variant='caption' sx={{ mt: 1, mb: -.75 }} >Original Creator: <a href={`/profile/${plant.ownerUsername[0].username}`}>{plant.ownerUsername[0].username}</a></Typography>
+                          <Typography variant='caption' sx={{ mt: 1, mb: -.75 }} >Original Creator: <a href={payload ? `/profile/${plant.ownerUsername[0].username}` : '/login'}>{plant.ownerUsername[0].username.charAt(0).toUpperCase() + plant.ownerUsername[0].username.slice(1)}</a></Typography>
                           {/* Last Editor */}
-                          <Typography variant='caption'>Last Edit: <a href={`/profile/${plant.lastEditUsername[0].username}`}>{plant.lastEditUsername[0].username}</a></Typography>
+                          <Typography variant='caption'>Last Edit: <a href={payload ? `/profile/${plant.lastEditUsername[0].username}` : '/login'}>{plant.lastEditUsername[0].username.charAt(0).toUpperCase() + plant.lastEditUsername[0].username.slice(1)}</a></Typography>
                         </Box>
                         {/* Edit Chip */}
                         {userIsAuthenticated() ? <Chip  

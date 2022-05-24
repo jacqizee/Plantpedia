@@ -124,9 +124,9 @@ const Home = () => {
               <Box textAlign='center'>
                 <Typography>Flower Color</Typography>
                 <Grid container spacing={1}>
-                  {colors.map((color) => {
+                  {colors.map((color, i) => {
                     return (
-                      <Grid item xs={4} key={color}>
+                      <Grid item xs={4} key={i}>
                         <Box
                           onClick={handleInput}
                           sx={{
