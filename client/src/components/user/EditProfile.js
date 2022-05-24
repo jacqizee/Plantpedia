@@ -305,7 +305,7 @@ const EditProfile = () => {
                     <Box component='img' src={srcImg} alt='Uploaded' sx={{ height: '300px', objectFit: 'contain' }} />
                     <label htmlFor="icon-button-file">
                       <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
-                      <IconButton textAlign="center" aria-label="upload picture" component="span" sx={{ bottom: 25, right: '55%', border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                      <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: '55%', border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                         <PhotoCamera />
                       </IconButton>
                     </label>
