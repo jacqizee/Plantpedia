@@ -77,6 +77,7 @@ const PlantShow = () => {
             },
           })
           setUserCanEdit(userData.canEdit)
+          console.log(data)
         }  
       } catch (error) {
         console.log(error)
@@ -503,7 +504,7 @@ const PlantShow = () => {
                 const { username, _id, text, createdAt } = comment
                 const date = new Date(createdAt)
                 return (
-                  <Stack key={_id} direction='row' spacing={2} my={3}>
+                  <Stack key={_id} direction='row' spacing={2} my={1} sx={{ backgroundColor: 'white', p: 2 }}>
                     <Avatar sx={{ width: 24, height: 24 }} />
                     <Box>
                       <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
