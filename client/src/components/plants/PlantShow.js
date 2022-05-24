@@ -54,6 +54,7 @@ const PlantShow = () => {
   const [showComments, setShowComments] = useState(false)
   const [ page, setPage ] = useState(1)
   const [ pageResults, setPageResults ] = useState(false)
+  const commentsPerPage = 3
   
   const [ userCanEdit, setUserCanEdit ] = useState(false)
   
@@ -68,7 +69,7 @@ const PlantShow = () => {
         const { data } = await axios.get(`/api/plants/${id}`)
         setPlant({ ...data, comments: data.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
         setCommentCount(data.comments.length)
-        setPageResults(data.comments.slice(0, 5))
+        setPageResults(data.comments.slice(0, commentsPerPage))
 
         if (payload.username) {
           const { data: userData } = await axios.get(`/api/profile/${payload.sub}`, {
@@ -178,10 +179,10 @@ const PlantShow = () => {
 
   const updatePageResults = (pageNumber, data) => {
     if (pageNumber === 1) {
-      setPageResults(data.comments.slice(0, 5))
+      setPageResults(data.comments.slice(0, commentsPerPage))
     } else {
-      const start = 5 * (pageNumber - 1)
-      setPageResults(data.comments.slice(start, start + 5))
+      const start = commentsPerPage * (pageNumber - 1)
+      setPageResults(data.comments.slice(start, start + commentsPerPage))
     }
   }
 
@@ -413,22 +414,22 @@ const PlantShow = () => {
                   </AccordionDetails>
                 </Accordion>
 
-                <Container sx={{ display: 'flex', justifyContent: 'space-between', px: 0 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1 }}>
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                     {/* Plant Owner */}
-                    <Typography variant='caption' sx={{ mt: 1 }} >Original Creator: <a href={`/profile/${plant.ownerUsername[0].username}`}>{plant.ownerUsername[0].username}</a></Typography>
+                    <Typography variant='caption' sx={{ mt: 1, mb: -.75 }} >Original Creator: <a href={`/profile/${plant.ownerUsername[0].username}`}>{plant.ownerUsername[0].username}</a></Typography>
                     {/* Last Editor */}
                     <Typography variant='caption'>Last Edit: <a href={`/profile/${plant.lastEditUsername[0].username}`}>{plant.lastEditUsername[0].username}</a></Typography>
                   </Box>
                   {/* Edit Chip */}
-                  {userIsAuthenticated() ? <Chip
+                  {userIsAuthenticated() ? <Chip  
                     label="Edit"
                     onClick={handleEditPressed}
                     icon={<EditRoundedIcon sx={{ width: 15 }} />}
                     variant="outlined"
                     sx={{ float: 'right', mt: 1 }}
                   /> : null}
-                </Container>
+                </Box>
                 
                 
               </Grid>
@@ -437,12 +438,12 @@ const PlantShow = () => {
           
           {/* Comment Section */}
           <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', height: '100%', p: 5, pt: 5, mb: 5 }}>
-            {/* comment info */}
+            {/* Total Comment Count */}
             <Box display='flex' mb={3} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography sx={{ borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.25)', p: 1, px: 2 }}>{commentCount} comments</Typography>
+              <Typography sx={{ borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.25)', py: 1, px: 3, ml: 3 }}>{commentCount} comments</Typography>
 
-              {/* comment sort select */}
-              <Box sx={{ minWidth: 120, mx: 3 }} >
+              {/* Comment Sort Select */}
+              <Box sx={{ minWidth: 120, mr: 4 }} >
                 <FormControl variant='standard' fullWidth size='small'>
                   <InputLabel id="sort-comments">Sort by</InputLabel>
                   <Select
@@ -460,13 +461,13 @@ const PlantShow = () => {
               </Box>
             </Box>
 
-            {/* comment section */}
+            {/* Comment Display Section */}
             { pageResults ?
               pageResults.map((comment, index) => {
                 const { username, _id, text, createdAt } = comment
                 const date = new Date(createdAt)
                 return (
-                  <Stack key={_id} direction='row' my={1} sx={{ backgroundColor: 'white', p: 2, display: 'flex', flexDirection: 'column' }}>
+                  <Stack key={_id} direction='row' my={2} sx={{ backgroundColor: 'white', p: 2, display: 'flex', flexDirection: 'column' }}>
                     <Container sx={{ display: 'flex', alignItems: 'center' }}>
                       {/* User Avatar */}
                       <Box component='img'
@@ -485,7 +486,7 @@ const PlantShow = () => {
                       </Typography>
                     </Container>
 
-                    <Container sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Container sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
                       {/* Comment Text */}
                       <Typography sx={{ p: 2, mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
                         {text}
@@ -542,7 +543,7 @@ const PlantShow = () => {
 
             {/* Pagination */}
             <Pagination page={page}
-              count={Math.ceil(commentCount / 5)}
+              count={Math.ceil(commentCount / commentsPerPage)}
               variant="outlined"
               onChange={handlePageChange}
               sx={{ mt: 5, mb: -2 }} />
