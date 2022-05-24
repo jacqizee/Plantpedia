@@ -28,8 +28,7 @@ const Home = () => {
   const [errors, setErrors] = useState(false)
 
 
-  const [show, setShow] = useState(false)
-
+  const [show, setShow] = useState('none')
 
   //plant state 
   const [plants, setPlants] = useState([])
@@ -113,11 +112,11 @@ const Home = () => {
 
   const handleOpen = (e) => {
     e.stopPropagation()
-    setShow(true)
+    setShow('')
   }
 
   const handleClose = () => {
-    setShow(false)
+    setShow('none')
   }
 
 
@@ -132,7 +131,7 @@ const Home = () => {
               onChange={handleInput} value={filters.searchTerm} sx={{ pt: 3 }} />
           </Box>
 
-          {show ? <Card sx={{ p: 2 }}>
+          <Card sx={{ display: [show], p: 2 }}>
             <Typography >Search by color...</Typography>
             <Container>
               {/* flower color */}
@@ -165,7 +164,7 @@ const Home = () => {
                 </Grid>
               </Box>
             </Container>
-          </Card> : null}
+          </Card>
         </Container >
         {
           loading ?
