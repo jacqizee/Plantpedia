@@ -98,13 +98,21 @@ const Home = () => {
 
   }, [filters, plants])
 
+  const handleOpen = (e) => {
+    e.stopPropagation()
+    setShow('')
+  }
+  
+  const handleClose = (e) => {
+    setShow('none')
+  }
 
   return (
     <>
       {/* search bar */}
-      <Box onClick={(e) => handleClose(e, setShow)}>
+      <Box onClick={handleClose}>
         <Container maxWidth='lg' >
-          <Box onClick={(e) => handleOpen(e, setShow)}>
+          <Box onClick={handleOpen}>
             <TextField fullWidth name='searchTerm' autoComplete='off' placeholder='Search by name...'
               onChange={handleInput} value={filters.searchTerm} sx={{ pt: 3 }} />
           </Box>
