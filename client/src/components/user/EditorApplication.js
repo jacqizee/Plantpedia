@@ -10,7 +10,9 @@ import TextField from '@mui/material/TextField'
 import Paper from '@mui/material/Paper'
 import TextareaAutosize from '@mui/material/TextareaAutosize'
 
-import { getPayload, getTokenFromLocalStorage, userIsOwner } from '../../helpers/auth'
+import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
+import { maxWidth } from '@mui/system'
+import Spinner from '../utilities/Spinner.js'
 
 const EditorApplication = () => {
 
@@ -24,10 +26,12 @@ const EditorApplication = () => {
 
   //loading and error state
   const [loading, setLoading] = useState(true)
-  const [errors, setErrors] = useState(false)
+  const [errors, setErrors] = useState(false) // Get data errors
+  const [postErrors, setPostErrors] = useState(false) // Post data errors
 
   const payload = getPayload()
 
+  //Download user data to see if the user has already applied
   useEffect(() => {
     const getData = async () => {
       try {
@@ -51,14 +55,22 @@ const EditorApplication = () => {
     getData()
   }, [])
 
+  //Update the state each time any of the fields are changed
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
   }
 
+  //Submit application form to the /editor-application root
   const handleSubmit = async (e) => {
     e.preventDefault()
     console.log('form data is: ', formData)
+
+    //Throw an error if fields aren't populated
+    if (!formData.first || !formData.lastName || !formData.text) {
+      console.log('this runs 🏃🏻‍♂️')
+    } 
+
     try {
       const response = await axios.post('/api/editor-application', formData, {
         headers: {
@@ -69,11 +81,13 @@ const EditorApplication = () => {
       navigate(-1)
     } catch (error) {
       console.log(error)
+      console.log('this runs 🏃🏻‍♂️')
+      setPostErrors(true)
     }
   }
 
   return (
-    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Container maxWidth='lg' sx={{ display: 'flex', justifyContent: 'center' }}>
       <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', maxWidth: 'sm' }} >
         <Box
           component='form'
@@ -85,13 +99,13 @@ const EditorApplication = () => {
         >
           <Typography variant='h4' sx={{ pb: 2 }}>Get Editor Permissions</Typography>
           
-          <Grid
-            container
-            sx={{ width: .90 }}
-            rowSpacing={1}
-            columnSpacing={1}>
-            {!hasApplied ? 
-              <>
+          {!hasApplied ? 
+            <>
+              <Grid
+                container
+                sx={{ width: .90 }}
+                rowSpacing={1}
+                columnSpacing={1}>
                 {/* First Name */}
                 <Grid item xs={12} md={6}>
                   <TextField
@@ -139,13 +153,32 @@ const EditorApplication = () => {
                     <Button variant="contained" type="submit" size='large' sx={{ width: .70 }}>Submit</Button>
                   </Container>
                 </Grid>
-              </>
-              :
-              <>
-                <Typography align="center">Your application is being processed</Typography>
-              </>
-            }
-          </Grid>
+                
+                {postErrors && 
+                  <Grid item xs={12}>
+                    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                      <Typography>Error. Failed to submit application.</Typography>
+                    </Container>
+                  </Grid>
+                }
+              </Grid>
+            </>
+            :
+            <>
+              <Grid
+                container
+                sx={{ width: .90, display: 'flex', justifyContent: 'center' }}
+                rowSpacing={1}
+                columnSpacing={1}>
+                <Grid item xs={12} >
+                  <Typography align='center'>Your application is being processed</Typography>
+                </Grid>
+                <Container maxWidth='md' sx={{ display: 'flex', justifyContent: 'center', my: '10%' }}>
+                  <Spinner />
+                </Container>
+              </Grid>
+            </>
+          }
         </Box>
       </Paper>
     </Container>
