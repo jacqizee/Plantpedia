@@ -4,32 +4,21 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import Spinner from '../utilities/Spinner.js'
 
-import { getPayload, getTokenFromLocalStorage, userIsOwner } from '../../helpers/auth'
+import { getPayload, getTokenFromLocalStorage } from '../../helpers/auth'
 
 //mui
 import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
 import ImageListItem from '@mui/material/ImageListItem'
-import ImageListItemBar from '@mui/material/ImageListItemBar'
 import Typography from '@mui/material/Typography'
 import Masonry from '@mui/lab/Masonry'
-import IconButton from '@mui/material/IconButton'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
-import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { styled } from '@mui/material/styles'
 import PropTypes from 'prop-types'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Grid from '@mui/material/Grid'
-
-import philip from '../../images/philip.png'
-import logo from '../../images/logo.png'
-
 
 
 function TabPanel(props) {
@@ -46,7 +35,7 @@ function TabPanel(props) {
     >
       {numberValue === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Box>{children}</Box>
         </Box>
       )}
     </div>
@@ -66,6 +55,30 @@ function a11yProps(index) {
   }
 }
 
+function getImageList(imagesArray) {
+  return (
+    <Container maxWidth='lg' sx={{ my: 0 }}>
+      <Masonry columns={3} spacing={1}>
+        {imagesArray.map(plant => {
+          return (
+            <>
+              <ImageListItem key={plant._id} >
+                <Box as={Link} to={`/plants/${plant._id}`} >
+                  <img
+                    src={`${plant.images}`}
+                    alt={plant.name}
+                    loading='lazy'
+                  />
+                </Box>
+              </ImageListItem>
+            </>
+          )
+        })}
+      </Masonry>
+    </Container>
+  )
+}
+
 const UserProfile = () => {
 
   // Navigate
@@ -74,14 +87,15 @@ const UserProfile = () => {
   //Params
   const { username } = useParams()
 
+  //Payload
   const payload = getPayload()
 
+  //Keeps track of which tab we are in, default is My Plants at index 0
   const [value, setValue] = useState(0)
 
   //loading and error state
   const [loading, setLoading] = useState(true)
   const [errors, setErrors] = useState(false)
-
 
   //plant arrays  
   const [myPlants, setMyPlants] = useState([])
@@ -93,10 +107,20 @@ const UserProfile = () => {
     bio: '',
     image: '',
   })
+
+  const getFavoritesOrEdits = async (arrayOfIndexes) => { 
+    const newArray = []
+    for (let i = 0; i < arrayOfIndexes.length; i++) {
+      console.log('This runs 🏃🏻‍♂️')
+      const plant = await axios.get(`/api/plants/${arrayOfIndexes[i]}`)
+      console.log('plant value is: ', plant.data)
+      newArray.push(plant.data)
+      console.log('newArray is: ', newArray)
+    }
+    return newArray
+  }
   
-
-
-
+  // Get User Data
   useEffect(() => {
     const getData = async () => {
       try {
@@ -117,37 +141,15 @@ const UserProfile = () => {
 
         // Search for favorite plants and set it
         if (retrievedUser.favorites.length > 0) {
-          const favoritesArray = []
-          for (let i = 0; i < retrievedUser.favorites.length; i++) {
-            const plant = await axios.get(`/api/plants/${retrievedUser.favorites[i]}`)
-            console.log('plant value is: ', plant.data)
-            favoritesArray.push(plant.data)
-            console.log('favoritesArray is: ', favoritesArray)
-          }
-          console.log('favorites array: ', favoritesArray)
-          setFavoritePlants(favoritesArray)
+          setFavoritePlants(await getFavoritesOrEdits(retrievedUser.favorites))
         }
 
         // Search for edited plants and set it
         if (retrievedUser.myEdits.length > 0) {
-          const editsArray = []
-          for (let i = 0; i < retrievedUser.myEdits.length; i++) {
-            const plant = await axios.get(`/api/plants/${retrievedUser.myEdits[i]}`)
-            console.log('plant value is: ', plant.data)
-            editsArray.push(plant.data)
-            console.log('editsArray is: ', editsArray)
-          }
-          console.log('edits array: ', editsArray)
-          setEditedPlants(editsArray)
+          setEditedPlants(await getFavoritesOrEdits(retrievedUser.myEdits))
         }
         
-        //Update user image
-        const newUser = {
-          numberOfPosts: retrievedUser.createdPlants.length,
-          bio: retrievedUser.bio,
-          image: retrievedUser.image,
-        }
-        // setUser({ ...user, newUser })
+        //Update user
         setUser(
           { 
             ...user, 
@@ -243,26 +245,29 @@ const UserProfile = () => {
                 </Typography>
               </Container>
               : myPlants.length > 0 ?
-                <Container maxWidth='lg' sx={{ my: 0 }}>
-                  <Masonry columns={3} spacing={1}>
-                    {myPlants.map(plant => {
-                      return (
-                        <>
-                          <ImageListItem key={plant._id} >
-                            <Box as={Link} to={`/plants/${plant._id}`} >
-                              <img
-                                src={`${plant.images}`}
-                                alt={plant.name}
-                                loading='lazy'
-                              />
-                            </Box>
-                          </ImageListItem>
-                        </>
-                      )
-                    })}
-                  </Masonry>
+              // <Container maxWidth='lg' sx={{ my: 0 }}>
+              //   <Masonry columns={3} spacing={1}>
+              //     {myPlants.map(plant => {
+              //       return (
+              //         <>
+              //           <ImageListItem key={plant._id} >
+              //             <Box as={Link} to={`/plants/${plant._id}`} >
+              //               <img
+              //                 src={`${plant.images}`}
+              //                 alt={plant.name}
+              //                 loading='lazy'
+              //               />
+              //             </Box>
+              //           </ImageListItem>
+              //         </>
+              //       )
+              //     })}
+              //   </Masonry>
 
-                </Container>
+              // </Container>
+                <>
+                  {getImageList(myPlants)}
+                </>
                 :
                 <Typography variant='p'>
                   Click the + button to add your first plant
@@ -283,26 +288,9 @@ const UserProfile = () => {
                 </Typography>
               </Container>
               : favoritePlants.length > 0 ?
-                <Container maxWidth='lg' sx={{ my: 0 }}>
-                  <Masonry columns={3} spacing={1}>
-                    {favoritePlants.map(plant => {
-                      return (
-                        <>
-                          <ImageListItem key={plant._id} >
-                            <Box as={Link} to={`/plants/${plant._id}`} >
-                              <img
-                                src={`${plant.images}`}
-                                alt={plant.name}
-                                loading='lazy'
-                              />
-                            </Box>
-                          </ImageListItem>
-                        </>
-                      )
-                    })}
-                  </Masonry>
-
-                </Container>
+                <>
+                  {getImageList(favoritePlants)}
+                </>
                 :
                 <Typography variant='p'>
                   Tap the 🤍 button to add your first favorite
@@ -323,26 +311,9 @@ const UserProfile = () => {
                 </Typography>
               </Container>
               : editedPlants.length > 0 ?
-                <Container maxWidth='lg' sx={{ my: 0 }}>
-                  <Masonry columns={3} spacing={1}>
-                    {editedPlants.map(plant => {
-                      return (
-                        <>
-                          <ImageListItem key={plant._id} >
-                            <Box as={Link} to={`/plants/${plant._id}`} >
-                              <img
-                                src={`${plant.images}`}
-                                alt={plant.name}
-                                loading='lazy'
-                              />
-                            </Box>
-                          </ImageListItem>
-                        </>
-                      )
-                    })}
-                  </Masonry>
-
-                </Container>
+                <>
+                  {getImageList(editedPlants)}
+                </>
                 :
                 <Typography variant='p'>
                   Plants that you edit will appear here
