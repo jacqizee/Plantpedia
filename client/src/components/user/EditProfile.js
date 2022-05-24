@@ -53,6 +53,9 @@ const EditProfile = () => {
     keepSelection: true,
   })
 
+  const windowInnerWidth = window.innerWidth
+  const allowCroppingMinWidth = 700
+
   // User bio to update
   const [ formData, setFormData ] = useState({
     username: username,
@@ -180,7 +183,7 @@ const EditProfile = () => {
     //Only do this if the user has actually changed the profile picture
     if (srcImg) {
       //Get the data URL of the full image if it's undersized
-      if (isUndersized) {
+      if (isUndersized || windowInnerWidth < allowCroppingMinWidth) {
         const img = new Image()
         img.src = image
         imageURL = await getBase64Image(img)
@@ -275,7 +278,7 @@ const EditProfile = () => {
                   </label>
                 </>
                 :
-                !isUndersized ? 
+                !isUndersized && windowInnerWidth > allowCroppingMinWidth ? 
                   <>
                     <Box >
                       <ReactCrop
@@ -292,7 +295,7 @@ const EditProfile = () => {
                     </Box>
                     <label htmlFor="icon-button-file">
                       <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
-                      <IconButton textAlign="center" aria-label="upload picture" component="span" sx={{ bottom: 0, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                      <IconButton aria-label="upload picture" component="span" sx={{ bottom: 0, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                         <PhotoCamera />
                       </IconButton>
                     </label>
