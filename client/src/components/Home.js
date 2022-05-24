@@ -115,20 +115,23 @@ const Home = () => {
   useEffect(() => {
     //regexp search term for testing
     const regExpSearch = new RegExp(filters.searchTerm, 'i')
+    regExpSearch.lastIndex = 0
     const filteredArray = plants.filter(plant => regExpSearch.test(plant.name))
-    console.log(filters)
+    console.log('filters-->',filters)
+    console.log('filteredArray-->',filteredArray)
 
     //if there are colors in the filters obj 
     //basically the same code philip wrote
     const colorFilterArray = []
     if (filters.flowerColorFilter.length) {
       filters.flowerColorFilter.forEach(color => {
-        filteredArray.forEach(plant => {
+        (filteredArray.length ? filteredArray : plants).forEach(plant => {
           if (plant.flowerColor.includes(color)) {
             !colorFilterArray.includes(plant) ? colorFilterArray.push(plant) : ''
           }
         })
       })
+      console.log('colorFilter-->',colorFilterArray)
       setFilteredPlants(colorFilterArray)
       
     } else {
@@ -189,7 +192,6 @@ const Home = () => {
                       )
                     })}
                   </Grid>
-
                 </Box>
               </Grid>
               {/* Soil type */}
@@ -222,7 +224,6 @@ const Home = () => {
                       )
                     })}
                   </Grid>
-
                 </Box>
               </Grid>
               {/* Mood*/}
@@ -255,7 +256,6 @@ const Home = () => {
                       )
                     })}
                   </Grid>
-
                 </Box>
               </Grid>
             </Grid>
@@ -278,7 +278,7 @@ const Home = () => {
             :
             // images
             <>
-              {getImageList((filteredPlants.length ? filteredPlants : plants), 1, 2, 3, 4)}
+              {getImageList((filteredPlants.length ? filteredPlants : plants), 1, 2, 3, 4, true)}
             </>
       }
     </>
