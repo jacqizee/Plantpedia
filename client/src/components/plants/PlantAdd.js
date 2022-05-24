@@ -3,6 +3,8 @@ import axios from 'axios'
 import { getTokenFromLocalStorage } from '../../helpers/auth.js'
 import { useNavigate } from 'react-router-dom'
 import { form, colors, regions, waterTypes, soilTypes, sunTypes, lifespanTypes, moodTypes } from '../../helpers/plantFormOptions'
+import { handleUnitChange, handleSizeChange, handleChange, handleImageUpload } from '../../helpers/plantForm.js'
+
 
 // MUI Imports
 import Container from '@mui/material/InputLabel'
@@ -49,43 +51,10 @@ const PlantAdd = () => {
   const [ matureSize, setMatureSize ] = useState({ height: 50, width: 50 })
   const [ unit, setUnit ] = useState('in')
   const [ max, setMax ] = useState(150)
-  const [ step, setStep ] = useState(10)
-  
-  // Handle change to units
-  const handleUnitChange = (e) => {
-    const { height, width } = matureSize
-    setUnit(e.target.value)
-    if (e.target.value === 'in') {
-      setMatureSize({ height: Math.ceil(height / 2.54), width: Math.ceil(width / 2.54) })
-      setMax(150)
-      setStep(10)
-    } else if (e.target.value === 'cm') {
-      setMatureSize({ height: Math.ceil(height * 2.54), width: Math.ceil(width * 2.54) })
-      setMax(380)
-      setStep(20)
-    }
-  }
-
-  // Handle size change in form data
-  const handleSizeChange = (e) => {
-    const { name, value } = e.target
-    setMatureSize({ ...matureSize, [name]: value })
-    if (unit === 'cm') {
-      setFormData({ ...formData, [name]: Math.ceil(value / 2.54) })
-    } else {
-      setFormData({ ...formData, [name]: value })
-    }
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setPostErrors(false)
-    setFormData({ ...formData, [name]: value })
-  }
+  const [ step, setStep ] = useState(10)  
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     let newForm = { ...formData }
 
     if (displayImage) {
@@ -93,7 +62,6 @@ const PlantAdd = () => {
       data.append('file', formData.images)
       data.append('upload_preset', preset)
       const res = await axios.post(uploadURL, data)
-      console.log('cloudinary response: ', res.data)
       setFormData({ ...formData, images: res.data.url })
       newForm = { ...newForm, images: res.data.url }
     }
@@ -112,53 +80,7 @@ const PlantAdd = () => {
     }
   }
 
-  const handleImageUpload = async e => {
-
-    const urlString = URL.createObjectURL(e.target.files[0])
-    setDisplayImage(urlString)
-
-    const img = new Image()
-    img.src = urlString
-
-    img.onload = async function() {
-      const widthMoreThanHeight = img.width > img.height ? true : false
-      const widthOverHeight = img.width / img.height
-      let scale
-      let startX
-      let startY
-      let sideLength
-      if (widthMoreThanHeight) {
-        scale = img.height / 300
-        startX = -(img.width - img.height) / 2
-        startY = 0
-        sideLength = img.height
-      } else if (widthOverHeight === 1){
-        scale = img.height / 300
-        startX = 0
-        startY = 0
-        sideLength = img.height
-      } else {
-        scale = img.width / 300
-        startX = 0
-        startY = -(img.height - img.width) / 2
-        sideLength = img.width
-      }
-
-      const canvas = document.createElement('canvas')
-      canvas.width = sideLength
-      canvas.height = sideLength
-
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(
-        img, //image
-        startX,
-        startY
-      )
-
-      const squareImageURL = canvas.toDataURL('image/jpg', 1)
-      setFormData({ ...formData, images: squareImageURL })
-    }
-  }
+  
 
   return (
     <Container sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -193,7 +115,7 @@ const PlantAdd = () => {
                 name='name'
                 value={formData.name}
                 required
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 fullWidth />
             </Grid>
             {/* Scientific Name */}
@@ -205,7 +127,7 @@ const PlantAdd = () => {
                 name='scientificName'
                 value={formData.scientificName}
                 required
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 fullWidth />
             </Grid>
             {/* Description */}
@@ -220,7 +142,7 @@ const PlantAdd = () => {
                 multiline
                 minRows={2}
                 maxRows={4}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 fullWidth />
             </Grid>
             {/* Images */}
@@ -259,7 +181,7 @@ const PlantAdd = () => {
                   name='watering'
                   value={formData.watering}
                   label='water'
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 >
                   {waterTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                 </Select>
@@ -275,7 +197,7 @@ const PlantAdd = () => {
                   name='sunExposure'
                   value={formData.sunExposure}
                   label='sunExposure'
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 >
                   {sunTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                 </Select>
@@ -291,7 +213,7 @@ const PlantAdd = () => {
                   name='soilType'
                   value={formData.soilType}
                   label='soilType'
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 >
                   {soilTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                 </Select>
@@ -307,7 +229,7 @@ const PlantAdd = () => {
                   name='lifespan'
                   value={formData.lifespan}
                   label='lifespan'
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 >
                   {lifespanTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                 </Select>
@@ -323,7 +245,7 @@ const PlantAdd = () => {
                   name='mood'
                   value={formData.mood}
                   label='soilType'
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                 >
                   {moodTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                 </Select>
@@ -339,7 +261,7 @@ const PlantAdd = () => {
                   multiple
                   name="flowerColor"
                   value={formData.flowerColor}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                   input={<OutlinedInput id="color" label="Color" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -367,7 +289,7 @@ const PlantAdd = () => {
               </Typography>
               <Slider
                 value={matureSize.height}
-                onChange={handleSizeChange}
+                onChange={(e) => handleSizeChange(e, setMatureSize, matureSize, setFormData, formData, unit)}
                 valueLabelDisplay="auto"
                 name='height'
                 size="small"
@@ -385,7 +307,7 @@ const PlantAdd = () => {
               </Typography>
               <Slider
                 value={matureSize.width}
-                onChange={handleSizeChange}
+                onChange={(e) => handleSizeChange(e, setMatureSize, matureSize, setFormData, formData, unit)}
                 valueLabelDisplay="auto"
                 name='width'
                 size="small"
@@ -399,7 +321,7 @@ const PlantAdd = () => {
             {/* Unit Toggler */}
             <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Container>
-                <ToggleButtonGroup value={unit} exclusive onChange={handleUnitChange} aria-label="measurement unit">
+                <ToggleButtonGroup value={unit} exclusive onChange={(e) => handleUnitChange(e, matureSize, setMatureSize, setMax, setStep, setUnit)} aria-label="measurement unit">
                   <ToggleButton value="in" aria-label="inches" size="small">
                     in
                   </ToggleButton>
@@ -419,7 +341,7 @@ const PlantAdd = () => {
                   multiple
                   name="nativeArea"
                   value={formData.nativeArea}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)}
                   input={<OutlinedInput id="regions" label="Regions" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -443,7 +365,7 @@ const PlantAdd = () => {
             {/* Is Indoor? */}
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
               <FormControlLabel control={
-                <Checkbox value={formData.isIndoor} onChange={handleChange} />
+                <Checkbox value={formData.isIndoor} onChange={(e) => handleChange(e, setPostErrors, setFormData, formData)} />
               } label="Can Be Indoor Plant?" />
             </Grid>
             {/* Submit Button */}

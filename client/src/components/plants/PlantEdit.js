@@ -3,6 +3,7 @@ import axios from 'axios'
 import { getTokenFromLocalStorage, userIsAuthenticated, userIsOwner } from '../../helpers/auth.js'
 import { useNavigate, useParams } from 'react-router-dom'
 import { form, colors, regions, waterTypes, soilTypes, sunTypes, lifespanTypes, moodTypes } from '../../helpers/plantFormOptions'
+import { handleUnitChange, handleSizeChange, handleChange, handleImageUpload, handleDelete } from '../../helpers/plantForm.js'
 
 // MUI Imports
 import Container from '@mui/material/InputLabel'
@@ -41,49 +42,19 @@ const PlantEdit = () => {
 
   const [ formLoaded, setFormLoaded ] = useState(false)
   const [ formData, setFormData ] = useState(form)
-
-  // For image handling
-  const [ displayImage, setDisplayImage ] = useState('')
-
+  
   // Error Handling
   const [ errors, setErrors ] = useState(false) // GET request errors
   const [ putErrors, setPutErrors ] = useState(false) // PUT or Delete request errors
+
+  // For image handling
+  const [ displayImage, setDisplayImage ] = useState('')
 
   // Setting units for height/width
   const [ matureSize, setMatureSize ] = useState({ height: formData.height, width: formData.width })
   const [ unit, setUnit ] = useState('in')
   const [ max, setMax ] = useState(150)
   const [ step, setStep ] = useState(10)
-  
-  const handleUnitChange = (e) => {
-    const { height, width } = matureSize
-    setUnit(e.target.value)
-    if (e.target.value === 'in') {
-      setMatureSize({ height: Math.ceil(height / 2.54), width: Math.ceil(width / 2.54) })
-      setMax(150)
-      setStep(10)
-    } else if (e.target.value === 'cm') {
-      setMatureSize({ height: Math.ceil(height * 2.54), width: Math.ceil(width * 2.54) })
-      setMax(380)
-      setStep(20)
-    }
-  }
-
-  const handleSizeChange = (e) => {
-    const { name, value } = e.target
-    setMatureSize({ ...matureSize, [name]: value })
-    if (unit === 'cm') {
-      setFormData({ ...formData, [name]: Math.ceil(value / 2.54) })
-    } else {
-      setFormData({ ...formData, [name]: value })
-    }
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setPutErrors(false)
-    setFormData({ ...formData, [name]: value })
-  }
 
   // Get existing form data from API and populate in form
   useEffect(() => {
@@ -109,7 +80,6 @@ const PlantEdit = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     let newForm = { ...formData }
 
     if (displayImage) {
@@ -117,7 +87,6 @@ const PlantEdit = () => {
       data.append('file', formData.images)
       data.append('upload_preset', preset)
       const res = await axios.post(uploadURL, data)
-      console.log('cloudinary response: ', res.data)
       setFormData({ ...formData, images: res.data.url })
       newForm = { ...newForm, images: res.data.url }
     }
@@ -132,70 +101,7 @@ const PlantEdit = () => {
       navigate(`/plants/${plantId}`)
     } catch (error) {
       console.log(error)
-
       setPutErrors(true)
-    }
-  }
-
-  const handleDelete = async (e) => {
-    try {
-      await axios.delete(`/api/plants/${plantId}`, {
-        headers: {
-          Authorization: `Bearer ${getTokenFromLocalStorage()}`,
-        },
-      })
-      navigate('/')
-    } catch (error) {
-      console.log(error)
-      setPutErrors(true)
-    }
-  }
-
-  const handleImageUpload = async e => {
-
-    const urlString = URL.createObjectURL(e.target.files[0])
-    setDisplayImage(urlString)
-
-    const img = new Image()
-    img.src = urlString
-
-    img.onload = async function() {
-      const widthMoreThanHeight = img.width > img.height ? true : false
-      const widthOverHeight = img.width / img.height
-      let scale
-      let startX
-      let startY
-      let sideLength
-      if (widthMoreThanHeight) {
-        scale = img.height / 300
-        startX = -(img.width - img.height) / 2
-        startY = 0
-        sideLength = img.height
-      } else if (widthOverHeight === 1){
-        scale = img.height / 300
-        startX = 0
-        startY = 0
-        sideLength = img.height
-      } else {
-        scale = img.width / 300
-        startX = 0
-        startY = -(img.height - img.width) / 2
-        sideLength = img.width
-      }
-
-      const canvas = document.createElement('canvas')
-      canvas.width = sideLength
-      canvas.height = sideLength
-
-      const ctx = canvas.getContext('2d')
-      ctx.drawImage(
-        img, //image
-        startX,
-        startY
-      )
-
-      const squareImageURL = canvas.toDataURL('image/jpg', 1)
-      setFormData({ ...formData, images: squareImageURL })
     }
   }
 
@@ -242,7 +148,7 @@ const PlantEdit = () => {
                       name='name'
                       value={formData.name}
                       required
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       fullWidth />
                   </Grid>
                   {/* Scientific Name */}
@@ -254,7 +160,7 @@ const PlantEdit = () => {
                       name='scientificName'
                       value={formData.scientificName}
                       required
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       fullWidth />
                   </Grid>
                   {/* Description */}
@@ -269,7 +175,7 @@ const PlantEdit = () => {
                       multiline
                       minRows={2}
                       maxRows={4}
-                      onChange={handleChange}
+                      onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       fullWidth />
                   </Grid>
                   {/* Images */}
@@ -286,7 +192,7 @@ const PlantEdit = () => {
                       </>
                     }
                     <label htmlFor="contained-button-file">
-                      <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={handleImageUpload} />
+                      <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={(e) => handleImageUpload(e, setDisplayImage, setFormData, formData)} />
                       {formData.images ? 
                         // <Button variant="contained" component="span">
                         //   Change Image
@@ -311,7 +217,7 @@ const PlantEdit = () => {
                         name='watering'
                         value={formData.watering}
                         label='water'
-                        onChange={handleChange}
+                        onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       >
                         {waterTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                       </Select>
@@ -327,7 +233,7 @@ const PlantEdit = () => {
                         name='sunExposure'
                         value={formData.sunExposure}
                         label='sunExposure'
-                        onChange={handleChange}
+                        onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       >
                         {sunTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                       </Select>
@@ -343,7 +249,7 @@ const PlantEdit = () => {
                         name='soilType'
                         value={formData.soilType}
                         label='soilType'
-                        onChange={handleChange}
+                        onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       >
                         {soilTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                       </Select>
@@ -359,7 +265,7 @@ const PlantEdit = () => {
                         name='lifespan'
                         value={formData.lifespan}
                         label='lifespan'
-                        onChange={handleChange}
+                        onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       >
                         {lifespanTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                       </Select>
@@ -375,7 +281,7 @@ const PlantEdit = () => {
                         name='mood'
                         value={formData.mood}
                         label='soilType'
-                        onChange={handleChange}
+                        onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                       >
                         {moodTypes.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                       </Select>
@@ -391,7 +297,7 @@ const PlantEdit = () => {
                         multiple
                         name="flowerColor"
                         value={formData.flowerColor}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                         input={<OutlinedInput id="color" label="Color" />}
                         renderValue={(selected) => (
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -419,7 +325,7 @@ const PlantEdit = () => {
                     </Typography>
                     <Slider
                       value={matureSize.height}
-                      onChange={handleSizeChange}
+                      onChange={(e) => handleSizeChange(e, setMatureSize, matureSize, setFormData, formData, unit)}
                       valueLabelDisplay="auto"
                       name='height'
                       size="small"
@@ -437,7 +343,7 @@ const PlantEdit = () => {
                     </Typography>
                     <Slider
                       value={matureSize.width}
-                      onChange={handleSizeChange}
+                      onChange={(e) => handleSizeChange(e, setMatureSize, matureSize, setFormData, formData, unit)}
                       valueLabelDisplay="auto"
                       name='width'
                       size="small"
@@ -451,7 +357,7 @@ const PlantEdit = () => {
                   {/* Unit Toggler */}
                   <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Container>
-                      <ToggleButtonGroup value={unit} exclusive onChange={handleUnitChange} aria-label="measurement unit">
+                      <ToggleButtonGroup value={unit} exclusive onChange={(e) => handleUnitChange(e, matureSize, setMatureSize, setMax, setStep, setUnit)} aria-label="measurement unit">
                         <ToggleButton value="in" aria-label="inches" size="small">
                           in
                         </ToggleButton>
@@ -471,7 +377,7 @@ const PlantEdit = () => {
                         multiple
                         name="nativeArea"
                         value={formData.nativeArea}
-                        onChange={handleChange}
+                        onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)}
                         input={<OutlinedInput id="regions" label="Regions" />}
                         renderValue={(selected) => (
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -495,14 +401,14 @@ const PlantEdit = () => {
                   {/* Is Indoor? */}
                   <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <FormControlLabel control={
-                      <Checkbox value={formData.isIndoor} onChange={handleChange} />
+                      <Checkbox value={formData.isIndoor} onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)} />
                     } label="Can Be Indoor Plant?" />
                   </Grid>
                   {/* Submit Button */}
                   <Grid item xs={12}>
                     <Container sx={{ display: 'flex', justifyContent: 'center' }}>
                       <Button variant="contained" type="submit" size='large' sx={{ width: .70, mx: 2 }}>Submit</Button>
-                      { !formLoaded ? '' : userIsOwner(formData) ? <Button variant="contained" onClick={handleDelete} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button> : ''}
+                      { !formLoaded ? '' : userIsOwner(formData) ? <Button variant="contained" onClick={(e) => handleDelete(e, navigate, setPutErrors, plantId)} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button> : ''}
                     </Container>
                   </Grid>
                       
