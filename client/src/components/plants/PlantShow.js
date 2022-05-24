@@ -413,20 +413,24 @@ const PlantShow = () => {
                   </AccordionDetails>
                 </Accordion>
 
-                {/* Plant Owner */}
-                <Typography sx={{ mt: 1 }} >Original Creator: <a href={`/profile/${plant.ownerUsername[0].username}`}>{plant.ownerUsername[0].username}</a></Typography>
+                <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
+                    {/* Plant Owner */}
+                    <Typography sx={{ mt: 1 }} >Original Creator: <a href={`/profile/${plant.ownerUsername[0].username}`}>{plant.ownerUsername[0].username}</a></Typography>
+                    {/* Last Editor */}
+                    <Typography sx={{ mt: 1 }} >Last Edit: <a href={`/profile/${plant.lastEditUsername[0].username}`}>{plant.lastEditUsername[0].username}</a></Typography>
+                  </Box>
+                  {/* Edit Chip */}
+                  {userIsAuthenticated() ? <Chip
+                    label="Edit"
+                    onClick={handleEditPressed}
+                    icon={<EditRoundedIcon sx={{ width: 15 }} />}
+                    variant="outlined"
+                    sx={{ float: 'right', mt: 1 }}
+                  /> : null}
+                </Container>
                 
-                {/* Last Editor */}
-                <Typography sx={{ mt: 1 }} >Last Edit: <a href={`/profile/${plant.lastEditUsername[0].username}`}>{plant.lastEditUsername[0].username}</a></Typography>
-
-                {/* Edit Chip */}
-                {userIsAuthenticated() ? <Chip
-                  label="Edit"
-                  onClick={handleEditPressed}
-                  icon={<EditRoundedIcon sx={{ width: 15 }} />}
-                  variant="outlined"
-                  sx={{ float: 'right', mt: 1, bottom: 65 }}
-                /> : null}
+                
               </Grid>
             </Grid>
           </Container>
