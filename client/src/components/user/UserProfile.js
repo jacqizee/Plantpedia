@@ -142,7 +142,7 @@ const UserProfile = () => {
       setLoading(false)
     }
     getData()
-  }, [])
+  }, [user])
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
