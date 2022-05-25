@@ -59,7 +59,7 @@ userSchema
   // Making sure the email address provided is a real email address
   userSchema
   .pre('validate', function (next) { 
-    if (this.isModified('email') && (this.email.indexOf('@') === -1 || this.email.indexOf('.') === -1)) { 
+    if (this.isModified('email') && this.email.indexOf('@') === -1 && this.email.indexOf('.') === -1) { 
       this.invalidate('email', 'does not contain an email')
     }
     next()

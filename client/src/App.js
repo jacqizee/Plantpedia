@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react'
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import getDesignTokens from './helpers/theme.js'
 
 // Import Components
 import PageNavbar from './components/common/PageNavbar'
@@ -20,46 +20,9 @@ import Login from './components/auth/Login'
 //MUI
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import { amber, deepOrange, grey, teal, green } from '@mui/material/colors'
-
-const getDesignTokens = (mode) => ({
-  palette: {
-    mode,
-    primary: {
-      main: green[800],
-      ...(mode === 'dark' && {
-        main: amber[300],
-      }),
-    },
-    secondary: {
-      main: deepOrange[400],
-      ...(mode === 'dark' && {
-        main: amber[300],
-      }),
-    },
-    ...(mode === 'dark' && {
-      background: {
-        default: teal[900],
-        paper: deepOrange[900],
-      },
-    }),
-    text: {
-      ...(mode === 'light'
-        ? {
-          primary: grey[900],
-          secondary: grey[800],
-        }
-        : {
-          primary: '#fff',
-          secondary: grey[500],
-        }),
-    },
-  },
-})
 
 const App = () => {
   const [mode, setMode] = useState('light')
-
   const darkTheme = createTheme(getDesignTokens(mode))
 
   return (

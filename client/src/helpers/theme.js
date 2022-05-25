@@ -1,6 +1,6 @@
-import { createTheme } from '@mui/material/styles'
+import { amber, deepOrange, grey, teal, green } from '@mui/material/colors'
 
-export const theme = createTheme({
+const getDesignTokens = (mode) => ({
   typography: {
     fontFamily: 'Raleway, Arial',
   },
@@ -22,4 +22,38 @@ export const theme = createTheme({
       },
     },
   },
+  palette: {
+    mode,
+    primary: {
+      main: green[800],
+      ...(mode === 'dark' && {
+        main: amber[300],
+      }),
+    },
+    secondary: {
+      main: deepOrange[400],
+      ...(mode === 'dark' && {
+        main: amber[300],
+      }),
+    },
+    ...(mode === 'dark' && {
+      background: {
+        default: teal[900],
+        paper: deepOrange[900],
+      },
+    }),
+    text: {
+      ...(mode === 'light'
+        ? {
+          primary: grey[900],
+          secondary: grey[800],
+        }
+        : {
+          primary: '#fff',
+          secondary: grey[500],
+        }),
+    },
+  },
 })
+
+export default getDesignTokens
