@@ -43,6 +43,10 @@ const PlantEdit = () => {
   const { plantId } = useParams()
   const navigate = useNavigate()
 
+  // for image display centering
+  const windowInnerWidth = window.innerWidth
+  const marginImageLeft = windowInnerWidth > 700 ? 4 : 0
+
   // Tells if the form is loaded
   const [ formLoaded, setFormLoaded ] = useState(false)
 
@@ -205,7 +209,7 @@ const PlantEdit = () => {
                   </Grid>
 
                   {/* Images */}
-                  <Grid item xs={12} sx={{ my: 2, ml: 4, textAlign: 'center' }} >
+                  <Grid item xs={12} sx={{ my: 2, ml: marginImageLeft, textAlign: 'center' }} >
 
                     {/* If there is a new image to display, then display it */}
                     {displayImage ? 

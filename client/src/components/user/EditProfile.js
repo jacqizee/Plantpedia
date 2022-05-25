@@ -55,6 +55,7 @@ const EditProfile = () => {
 
   const windowInnerWidth = window.innerWidth
   const allowCroppingMinWidth = 700
+  const marginImageLeft = windowInnerWidth > allowCroppingMinWidth ? 0 : 0
 
   // User bio to update
   const [ formData, setFormData ] = useState({
@@ -266,7 +267,7 @@ const EditProfile = () => {
             </>
               
             {/* Images */}
-            <Grid item xs={12} sx={{ textAlign: 'center', ml: 4 }}>
+            <Grid item xs={12} sx={{ textAlign: 'center', ml: 0 }}>
               {!srcImg ? 
                 <>
                   <Box component='img' src={formData.image} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
@@ -295,7 +296,7 @@ const EditProfile = () => {
                     </Box>
                     <label htmlFor="icon-button-file">
                       <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
-                      <IconButton aria-label="upload picture" component="span" sx={{ bottom: 0, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
+                      <IconButton aria-label="upload picture" component="span" sx={{ ml: marginImageLeft, bottom: 0, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                         <PhotoCamera />
                       </IconButton>
                     </label>
