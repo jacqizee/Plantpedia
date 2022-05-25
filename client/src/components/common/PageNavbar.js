@@ -108,10 +108,10 @@ const PageNavbar  = ({ mode, setMode }) => {
             </Typography>
           </Container>
 
+    
           {/* Dark Mode or Light Mode Toggle */}
           <IconButton onClick={handleChangeMode}>
-            {mode === 'light' ? <DarkModeIcon sx={{ color: 'white' }} /> : <LightModeIcon />}
-            
+            {mode === 'light' ? <DarkModeIcon sx={{ color: 'white' }} /> : <LightModeIcon />}    
           </IconButton>
           
           {/* If user is logged in, shows user menu, otherwise it shows login and register options on right side of navbar */}
@@ -121,7 +121,7 @@ const PageNavbar  = ({ mode, setMode }) => {
               {/* If user is logged in... */}
 
               {/* + Button */}
-              <Box sx={{ flexGrow: 1, justifyContent: 'end', display: 'flex', mr: 1 }}>
+              <Box sx={{ justifyContent: 'end', display: 'flex', mr: 1 }}>
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -170,7 +170,7 @@ const PageNavbar  = ({ mode, setMode }) => {
               {/* If user is not logged in */}
 
               {/* Login and Register Pages Shown */}
-              <Box sx={{ flexGrow: 1, justifyContent: 'end', display: 'flex', mr: 3 }}>
+              <Box sx={{ justifyContent: 'end', display: 'flex', mr: 3 }}>
                 {pagesNoLogin.map((page, index) => (
                   <Button
                     key={index}
