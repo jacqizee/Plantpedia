@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import Spinner from '../utilities/Spinner'
@@ -48,15 +48,15 @@ const PlantShow = () => {
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
 
-  const [ commentCount, setCommentCount ] = useState()
+  const [commentCount, setCommentCount] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
   const [showComments, setShowComments] = useState(false)
-  const [ page, setPage ] = useState(1)
-  const [ pageResults, setPageResults ] = useState(false)
+  const [page, setPage] = useState(1)
+  const [pageResults, setPageResults] = useState(false)
   const commentsPerPage = 3
-  
-  const [ userCanEdit, setUserCanEdit ] = useState(false)
-  
+
+  const [userCanEdit, setUserCanEdit] = useState(false)
+
   const [formData, setFormData] = useState({
     text: '',
   })
@@ -64,8 +64,8 @@ const PlantShow = () => {
   const windowInnerWidth = window.innerWidth
 
   // Error Handling
-  const [ errors, setErrors ] = useState(false) // GET request errors
-  const [ postErrors, setPostErrors ] = useState(false) // POST request errors (for comments)
+  const [errors, setErrors] = useState(false) // GET request errors
+  const [postErrors, setPostErrors] = useState(false) // POST request errors (for comments)
 
   //get plant data & set initial comments
   useEffect(() => {
@@ -83,7 +83,7 @@ const PlantShow = () => {
             },
           })
           setUserCanEdit(userData.canEdit)
-        }  
+        }
       } catch (error) {
         console.log(error)
         setErrors(true)
@@ -136,7 +136,7 @@ const PlantShow = () => {
 
       // update pagination
       updatePageResults(page, data)
-      
+
       //reset form
       setFormData({
         text: '',
@@ -220,8 +220,16 @@ const PlantShow = () => {
     }
   }
 
+  const handleCreatedClicked = () => {
+    payload ? navigate(`/profile/${plant.ownerUsername[0].username}`) : navigate('/login')
+  }
+
+  const handleLastEditClicked = () => {
+    payload ? navigate(`/profile/${plant.lastEditUsername[0].username}`) : navigate('/login')
+  }
+
   const handleEditPressed = () => {
-    if (userCanEdit || plant.owner === payload.sub ) {
+    if (userCanEdit || plant.owner === payload.sub) {
       navigate(`/plants/${plant._id}/edit`)
     } else {
       navigate('/become-editor')
@@ -256,17 +264,17 @@ const PlantShow = () => {
                         {plant.scientificName}
                       </Typography>
                     </Grid>
-      
+
                     {/* Image and Favorite Button */}
                     <Grid item md={6} sx={{ textAlign: 'right' }}>
                       <Box component='img' src={plant.images} alt={plant.name} sx={{ height: '70vw', maxHeight: 500, objectFit: 'cover' }} />
                       <IconButton
                         sx={{ bottom: 55, right: 5, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }}
                         onClick={() => toggleFavorite(plant)} >
-                        {favorite ? <FavoriteIcon sx={{ color: 'red' }}/> : <FavoriteBorderIcon sx={{ color: 'white' }} />}
+                        {favorite ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon sx={{ color: 'white' }} />}
                       </IconButton>
                     </Grid>
-      
+
                     {/* Accordion Column */}
                     <Grid item md={6} sx={{ textAlign: 'center', flexGrow: 1 }}>
                       {/* Description Accordion */}
@@ -282,7 +290,7 @@ const PlantShow = () => {
                           <Typography variant='body1' sx={{ textAlign: 'left' }}>{plant.description}</Typography>
                         </AccordionDetails>
                       </Accordion>
-      
+
                       {/* Upkeep Accordion */}
                       <Accordion defaultExpanded>
                         <AccordionSummary
@@ -337,7 +345,7 @@ const PlantShow = () => {
                           </Grid>
                         </AccordionDetails>
                       </Accordion>
-      
+
                       {/* Characteristics Accordion */}
                       <Accordion>
                         <AccordionSummary
@@ -433,19 +441,41 @@ const PlantShow = () => {
                                 })}
                               </Box>
                             </Grid> : null}
-                          </Grid>    
+                          </Grid>
                         </AccordionDetails>
                       </Accordion>
-      
+
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 1 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                           {/* Plant Owner */}
-                          <Typography variant='caption' sx={{ mt: 1, mb: -.75 }} >Original Creator: <a href={payload ? `/profile/${plant.ownerUsername[0].username}` : '/login'}>{plant.ownerUsername[0].username.charAt(0).toUpperCase() + plant.ownerUsername[0].username.slice(1)}</a></Typography>
+                          <Typography variant='caption' sx={{ mt: 1, mb: -.75 }} >Original Creator:
+                            <Box as='span' onClick={handleCreatedClicked} sx={{
+                              fontWeight: 'bold',
+                              ml: '5px',
+                              '&:hover': {
+                                cursor: 'pointer',
+                                textDecoration: 'underline',
+                              },
+                            }} >
+                              {plant.ownerUsername[0].username.charAt(0).toUpperCase() + plant.ownerUsername[0].username.slice(1)}
+                            </Box>
+                          </Typography>
                           {/* Last Editor */}
-                          <Typography variant='caption'>Last Edit: <a href={payload ? `/profile/${plant.lastEditUsername[0].username}` : '/login'}>{plant.lastEditUsername[0].username.charAt(0).toUpperCase() + plant.lastEditUsername[0].username.slice(1)}</a></Typography>
+                          <Typography variant='caption'>Last Edit:
+                            <Box as='span' onClick={handleLastEditClicked} sx={{
+                              fontWeight: 'bold',
+                              ml: '5px',
+                              '&:hover': {
+                                cursor: 'pointer',
+                                textDecoration: 'underline',
+                              },
+                            }}>
+                              {plant.lastEditUsername[0].username.charAt(0).toUpperCase() + plant.lastEditUsername[0].username.slice(1)}
+                            </Box>
+                          </Typography>
                         </Box>
                         {/* Edit Chip */}
-                        {userIsAuthenticated() ? <Chip  
+                        {userIsAuthenticated() ? <Chip
                           label="Edit"
                           onClick={handleEditPressed}
                           icon={<EditRoundedIcon sx={{ width: 15 }} />}
@@ -453,18 +483,18 @@ const PlantShow = () => {
                           sx={{ float: 'right', mt: 1 }}
                         /> : null}
                       </Box>
-                      
-                      
+
+
                     </Grid>
                   </Grid>
                 </Container>
-                
+
                 {/* Comment Section */}
                 <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', height: '100%', p: 5, pt: 5, mb: 5 }}>
                   {/* Total Comment Count */}
                   <Box display='flex' mb={3} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography sx={{ borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.25)', py: 1, px: 3, ml: 3 }}>{commentCount} comments</Typography>
-      
+
                     {/* Comment Sort Select */}
                     <Box sx={{ minWidth: 120, mr: 4 }} >
                       <FormControl variant='standard' fullWidth size='small'>
@@ -483,9 +513,9 @@ const PlantShow = () => {
                       </FormControl>
                     </Box>
                   </Box>
-      
+
                   {/* Comment Display Section */}
-                  { pageResults ?
+                  {pageResults ?
                     pageResults.map((comment, index) => {
                       const { username, _id, text, createdAt } = comment
                       const date = new Date(createdAt)
@@ -498,7 +528,15 @@ const PlantShow = () => {
                               sx={{ width: 35, height: 35, borderRadius: 5, mr: 1 }} />
                             {/* Username */}
                             <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
-                              <a href={`/profile/${username}`}>{username.charAt(0).toUpperCase() + username.slice(1)}</a>
+                              <Box as='span' onClick={handleCreatedClicked} sx={{
+                                fontWeight: 'bold',                            
+                                '&:hover': {
+                                  cursor: 'pointer',
+                                  textDecoration: 'underline',
+                                },
+                              }}>
+                                {username.charAt(0).toUpperCase() + username.slice(1)}
+                              </Box>
                             </Typography>
                             {/* Date */}
                             <Typography as='span' sx={{
@@ -508,7 +546,7 @@ const PlantShow = () => {
                             }}>{date.getUTCMonth() + 1}/{date.getUTCDate()}/{date.getUTCFullYear()}
                             </Typography>
                           </Container>
-      
+
                           <Container sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
                             {/* Comment Text */}
                             <Typography sx={{ p: 2, mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
@@ -523,7 +561,7 @@ const PlantShow = () => {
                       No comments!
                     </Box>
                   }
-      
+
                   {/* add commment */}
                   {userIsAuthenticated() ?
                     <Stack direction='row' spacing={2} sx={{ mt: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '25%' }}>
@@ -558,20 +596,20 @@ const PlantShow = () => {
                             >
                               Cancel
                             </Button>
-                            {postErrors && 
+                            {postErrors &&
                               <Grid item xs={12}>
                                 <Container sx={{ display: 'flex', justifyContent: 'center' }}>
                                   <Typography sx={{ color: 'red' }}>Error. Failed to post comment.</Typography>
                                 </Container>
                               </Grid>
                             }
-      
+
                           </>
                           : null}
-      
+
                       </Box>
                     </Stack> : null}
-      
+
                   {/* Pagination */}
                   <Pagination page={page}
                     count={Math.ceil(commentCount / commentsPerPage)}
