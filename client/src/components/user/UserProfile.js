@@ -205,6 +205,7 @@ const UserProfile = () => {
           <Tabs
             value={value}
             onChange={handleChange}
+            sx={{ borderTop: 1, borderColor: 'divider' }}
             textColor="secondary"
             indicatorColor="secondary"
             aria-label="secondary tabs example"
