@@ -64,8 +64,7 @@ const PageNavbar  = ({ mode, setMode }) => {
       //If profile, navigate to the user's profile
       navigate(`/${pageName}/${payload.username}`, { replace: true })
       
-      //Reload page if profile is pushed so if a user navigates from a different user's profile to the user's own profile, the data will update
-      window.location.reload()
+      
     } else if (pageName === 'logout') {
       handleCloseUserMenu()
 
