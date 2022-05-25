@@ -308,7 +308,8 @@ const PlantShow = () => {
                             sx={{ mt: 1 }}>
                             {/* Watering */}
                             <Grid item xs md={4}>
-                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center' }}>
+                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 <Typography>Watering</Typography>
                                 <Box>{plant.ownerUsername.username}</Box>
                                 <Chip
@@ -320,7 +321,8 @@ const PlantShow = () => {
                             </Grid>
                             {/* Sun Exposure */}
                             <Grid item xs md={4}>
-                              <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 10, textAlign: 'center' }}>
+                              <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 10, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 <Typography>Sun</Typography>
                                 <Chip
                                   label={plant.sunExposure}
@@ -332,7 +334,8 @@ const PlantShow = () => {
                             </Grid>
                             {/* Soil Type */}
                             <Grid item xs md={4}>
-                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center' }}>
+                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 <Typography>Soil Type</Typography>
                                 <Chip
                                   label={plant.soilType}
@@ -359,7 +362,8 @@ const PlantShow = () => {
                           <Grid container rowSpacing={1} columnSpacing={1} sx={{ mt: 1 }}>
                             {/* Lifecycle */}
                             <Grid item xs={12} md={6}>
-                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center' }}>
+                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 <Typography>
                                   Lifecycle
                                 </Typography>
@@ -373,7 +377,8 @@ const PlantShow = () => {
                             </Grid>
                             {/* Mood */}
                             <Grid item xs={12} md={6}>
-                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center' }}>
+                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 <Typography>
                                   Mood
                                 </Typography>
@@ -387,58 +392,67 @@ const PlantShow = () => {
                             </Grid>
                             {/* Mature Size (Height/Width) */}
                             <Grid item xs={12} md={12}>
-                              <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 2, textAlign: 'center' }}>
+                              <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 <Typography>Mature Size</Typography>
-                                <Chip
-                                  label={`Length: ${plant.height}"`}
-                                  icon={<Box as='img' src={ruler} sx={{ width: '24px' }} />}
-                                  variant="filled"
-                                  sx={{ mb: 1, mr: '2px' }}
-                                />
-                                <Chip
-                                  label={`Width: ${plant.width}"`}
-                                  icon={<Box as='img' src={width} sx={{ width: '24px' }} />}
-                                  variant="filled"
-                                  sx={{ mb: 1, ml: '2px' }}
-                                />
+                                <Box>
+                                  <Chip
+                                    label={`Length: ${plant.height}"`}
+                                    icon={<Box as='img' src={ruler} sx={{ width: '24px' }} />}
+                                    variant="filled"
+                                    sx={{ mb: 1, mr: '2px' }}
+                                  />
+                                  <Chip
+                                    label={`Width: ${plant.width}"`}
+                                    icon={<Box as='img' src={width} sx={{ width: '24px' }} />}
+                                    variant="filled"
+                                    sx={{ mb: 1, ml: '2px' }}
+                                  />
+                                </Box>
                               </Box>
                             </Grid>
                             {/* Native Area */}
                             {plant.nativeArea.length ? <Grid item xs={12} md={12}>
-                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center' }}>
+                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 <Typography>
                                   Native to
                                 </Typography>
-                                {plant.nativeArea.map((area, i) => {
-                                  return (
-                                    <Chip
-                                      key={i}
-                                      label={area}
-                                      icon={<Box as='img' src={globe} sx={{ width: '24px' }} />}
-                                      variant="filled"
-                                      sx={{ mb: 1, mr: 1 }}
-                                    />
-                                  )
-                                })}
+                                <Box>
+                                  {plant.nativeArea.map((area, i) => {
+                                    return (
+                                      <Chip
+                                        key={i}
+                                        label={area}
+                                        icon={<Box as='img' src={globe} sx={{ width: '24px' }} />}
+                                        variant="filled"
+                                        sx={{ mb: 1, mr: 1 }}
+                                      />
+                                    )
+                                  })}
+                                </Box>
                               </Box>
                             </Grid> : null}
                             {/* Flower Color */}
                             {plant.flowerColor.length ? <Grid item xs={12} md={12}>
-                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center' }}>
+                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                                 <Typography>
                                   Flower Color
                                 </Typography>
-                                {plant.flowerColor.map((color, i) => {
-                                  return (
-                                    <Chip
-                                      key={i}
-                                      label={color}
-                                      icon={<Box as='img' src={flower} sx={{ width: '24px' }} />}
-                                      variant="outlined"
-                                      sx={{ width: '120px', mb: 1, mr: 1, bgcolor: [color], borderColor: 'rgba(0,0,0,0.15)' }}
-                                    />
-                                  )
-                                })}
+                                <Box>
+                                  {plant.flowerColor.map((color, i) => {
+                                    return (
+                                      <Chip
+                                        key={i}
+                                        label={color}
+                                        icon={<Box as='img' src={flower} sx={{ width: '24px' }} />}
+                                        variant="outlined"
+                                        sx={{ width: '120px', mb: 1, mr: 1, bgcolor: [color], borderColor: 'rgba(0,0,0,0.15)' }}
+                                      />
+                                    )
+                                  })}
+                                </Box>
                               </Box>
                             </Grid> : null}
                           </Grid>
