@@ -44,7 +44,7 @@ Are you curious to see the end result? [Check out the site.](https://a-day-at-th
 * JSON Web Token / bcrypt
 * Trello
 * Excalidraw
-* A [http://www.mauvecloud.net/randomchooser.html](Random Chooser) for divvying up tasks
+* A http://www.mauvecloud.net/randomchooser.html[Random Chooser](http://www.mauvecloud.net/randomchooser.html) for divvying up tasks
 
 
 ---
