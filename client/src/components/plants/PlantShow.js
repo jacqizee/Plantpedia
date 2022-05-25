@@ -4,6 +4,8 @@ import axios from 'axios'
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import Spinner from '../utilities/Spinner'
 
+import moment from 'moment'
+
 //mui
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
@@ -32,7 +34,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import wateringCan from '../../images/icons/watering-can.png'
 import sun from '../../images/icons/sun.png'
 import soil from '../../images/icons/soil.png'
-import flower from '../../images/icons/flower.png'
+import LocalFloristOutlinedIcon from '@mui/icons-material/LocalFloristOutlined'
+import LocalFloristIcon from '@mui/icons-material/LocalFlorist'
 import globe from '../../images/icons/globe.png'
 import calendar from '../../images/icons/calendar.png'
 import emotions from '../../images/icons/emotions.png'
@@ -442,7 +445,7 @@ const PlantShow = () => {
                             {/* Flower Color */}
                             {plant.flowerColor.length ? <Grid item xs={12} md={12}>
                               <Box sx={{
-                                backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center',
+                                backgroundColor: '#7fa283', borderRadius: 2, textAlign: 'center',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                               }}>
                                 <Typography>
@@ -454,9 +457,9 @@ const PlantShow = () => {
                                       <Chip
                                         key={i}
                                         label={color}
-                                        icon={<Box as='img' src={flower} sx={{ width: '24px' }} />}
-                                        variant="outlined"
-                                        sx={{ width: '120px', mb: 1, mr: 1, bgcolor: [color], borderColor: 'rgba(0,0,0,0.15)' }}
+                                        icon={<LocalFloristIcon sx={{ width: '24px' }} />}
+                                        variant="filled"
+                                        sx={{ width: '120px', mb: 1, mr: 1, color: [color] }}
                                       />
                                     )
                                   })}
@@ -554,7 +557,8 @@ const PlantShow = () => {
                               ml: 1,
                               fontSize: 10,
                               color: '#9c9c9c',
-                            }}>{date.getUTCMonth() + 1}/{date.getUTCDate()}/{date.getUTCFullYear()}
+                            }}>
+                              {moment(date).fromNow()}
                             </Typography>
                           </Box>
 
@@ -591,6 +595,7 @@ const PlantShow = () => {
                           value={formData.text}
                           size='small'
                           variant='standard'
+                          autoComplete='off'
                           fullWidth
                           placeholder='Add a comment...'
                           onChange={handleInput}
