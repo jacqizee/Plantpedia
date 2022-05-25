@@ -539,7 +539,7 @@ const PlantShow = () => {
                           direction='row'
                           my={{ xs: 1, md: 2 }}
                           p={{ xs: 1, md: 2 }}
-                          sx={{ backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+                          sx={{ display: 'flex', flexDirection: 'column' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             {/* User Avatar */}
                             <Box component='img'
@@ -593,7 +593,7 @@ const PlantShow = () => {
                       <Box width='95%'
                         as='form'
                         onSubmit={handleSubmit}
-                        sx={{ backgroundColor: 'rgba(0,0,0,0.05)', p: { xs: 1, md: 3 } }}>
+                        sx={{ p: { xs: 1, md: 3 } }}>
                         <TextField
                           name='text'
                           value={formData.text}
