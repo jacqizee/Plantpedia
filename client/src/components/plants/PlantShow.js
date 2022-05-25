@@ -299,7 +299,7 @@ const PlantShow = () => {
                         >
                           <Typography>Description</Typography>
                         </AccordionSummary>
-                        <AccordionDetails>
+                        <AccordionDetails sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start' }}>
                           <Typography variant='body1' sx={{ textAlign: 'left' }}>{plant.description}</Typography>
                         </AccordionDetails>
                       </Accordion>
