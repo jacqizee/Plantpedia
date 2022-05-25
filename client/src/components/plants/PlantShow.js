@@ -26,6 +26,7 @@ import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Pagination from '@mui/material/Pagination'
+import Paper from '@mui/material/Paper'
 
 //icon images
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -558,14 +559,14 @@ const PlantShow = () => {
                             </Typography>
                           </Box>
 
-                          <Box sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
+                          <Paper sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
                             {/* Comment Text */}
                             <Typography
                               p={{ xs: .5, md: 1 }}
                               sx={{ mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
                               {text}
                             </Typography>
-                          </Box>
+                          </Paper>
                         </Stack>
                       )
                     })
