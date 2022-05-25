@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import mongooseUniqueValidator from 'mongoose-unique-validator'
 
-// Comment Schema
+// editorApplication Schema
 export const editorApplicationSchema = new mongoose.Schema({
   firstName: { type: String, required: true, maxlength: 50 },
   lastName: { type: String, required: true, maxlength: 50 },

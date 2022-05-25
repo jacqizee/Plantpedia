@@ -136,6 +136,7 @@ const Home = () => {
                             borderRadius: 10,
                             p: 1,
                             color: [color],
+                            fontFamily: 'Raleway',
                             '&:hover': {
                               cursor: 'pointer',
                               backgroundColor: '#e0e0e0',
