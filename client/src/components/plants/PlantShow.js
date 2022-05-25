@@ -220,14 +220,6 @@ const PlantShow = () => {
     }
   }
 
-  const handleCreatedClicked = () => {
-    payload ? navigate(`/profile/${plant.ownerUsername[0].username}`) : navigate('/login')
-  }
-
-  const handleLastEditClicked = () => {
-    payload ? navigate(`/profile/${plant.lastEditUsername[0].username}`) : navigate('/login')
-  }
-
   const handleEditPressed = () => {
     if (userCanEdit || plant.owner === payload.sub) {
       navigate(`/plants/${plant._id}/edit`)
@@ -449,29 +441,15 @@ const PlantShow = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                           {/* Plant Owner */}
                           <Typography variant='caption' sx={{ mt: 1, mb: -.75 }} >Original Creator:
-                            <Box as='span' onClick={handleCreatedClicked} sx={{
-                              fontWeight: 'bold',
-                              ml: '5px',
-                              '&:hover': {
-                                cursor: 'pointer',
-                                textDecoration: 'underline',
-                              },
-                            }} >
+                            <Link to={payload ? `/profile/${plant.ownerUsername[0].username}` : '/login'}>
                               {plant.ownerUsername[0].username.charAt(0).toUpperCase() + plant.ownerUsername[0].username.slice(1)}
-                            </Box>
+                            </Link>
                           </Typography>
                           {/* Last Editor */}
                           <Typography variant='caption'>Last Edit:
-                            <Box as='span' onClick={handleLastEditClicked} sx={{
-                              fontWeight: 'bold',
-                              ml: '5px',
-                              '&:hover': {
-                                cursor: 'pointer',
-                                textDecoration: 'underline',
-                              },
-                            }}>
+                            <Link to={payload ? `/profile/${plant.lastEditUsername[0].username}` : '/login'}>
                               {plant.lastEditUsername[0].username.charAt(0).toUpperCase() + plant.lastEditUsername[0].username.slice(1)}
-                            </Box>
+                            </Link>
                           </Typography>
                         </Box>
                         {/* Edit Chip */}
@@ -528,15 +506,9 @@ const PlantShow = () => {
                               sx={{ width: 35, height: 35, borderRadius: 5, mr: 1 }} />
                             {/* Username */}
                             <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
-                              <Box as='span' onClick={handleCreatedClicked} sx={{
-                                fontWeight: 'bold',                            
-                                '&:hover': {
-                                  cursor: 'pointer',
-                                  textDecoration: 'underline',
-                                },
-                              }}>
+                              <Link to={`/profile/${username}`}>
                                 {username.charAt(0).toUpperCase() + username.slice(1)}
-                              </Box>
+                              </Link>
                             </Typography>
                             {/* Date */}
                             <Typography as='span' sx={{
