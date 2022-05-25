@@ -616,6 +616,7 @@ const PlantShow = () => {
                             <Button
                               type="submit"
                               variant="contained"
+                              color='error'
                               sx={{ mr: 2, float: 'right', display: showComments }}
                               onClick={toggleShowOff}
                             >
