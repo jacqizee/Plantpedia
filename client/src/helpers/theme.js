@@ -1,6 +1,32 @@
 import { amber, deepOrange, grey, teal, green } from '@mui/material/colors'
 
 const getDesignTokens = (mode) => ({
+  palette: {
+    mode,
+    ...(mode === 'light'
+      ? {
+        // palette values for light mode
+        primary: green,
+        secondary: deepOrange,
+        text: {
+          primary: grey[900],
+          secondary: grey[700],
+        },
+      }
+      : {
+        // palette values for dark mode
+        primary: deepOrange,
+        secondary: green,
+        text: {
+          primary: grey[100],
+          secondary: grey[500],
+        },
+        background: {
+          default: teal[800],
+          paper: deepOrange[900],
+        },
+      }),
+  },
   typography: {
     fontFamily: 'Raleway, Arial',
   },
@@ -20,38 +46,6 @@ const getDesignTokens = (mode) => ({
           body2: 'span',
         },
       },
-    },
-  },
-  palette: {
-    mode,
-    primary: {
-      main: green[800],
-      ...(mode === 'dark' && {
-        main: amber[300],
-      }),
-    },
-    secondary: {
-      main: deepOrange[400],
-      ...(mode === 'dark' && {
-        main: amber[300],
-      }),
-    },
-    ...(mode === 'dark' && {
-      background: {
-        default: teal[900],
-        paper: deepOrange[900],
-      },
-    }),
-    text: {
-      ...(mode === 'light'
-        ? {
-          primary: grey[900],
-          secondary: grey[800],
-        }
-        : {
-          primary: '#fff',
-          secondary: grey[500],
-        }),
     },
   },
 })

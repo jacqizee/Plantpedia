@@ -28,6 +28,7 @@ import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Pagination from '@mui/material/Pagination'
+import Paper from '@mui/material/Paper'
 
 //icon images
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -540,7 +541,7 @@ const PlantShow = () => {
                           direction='row'
                           my={{ xs: 1, md: 2 }}
                           p={{ xs: 1, md: 2 }}
-                          sx={{ backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+                          sx={{ display: 'flex', flexDirection: 'column' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             {/* User Avatar */}
                             <Box component='img'
@@ -562,14 +563,14 @@ const PlantShow = () => {
                             </Typography>
                           </Box>
 
-                          <Box sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
+                          <Paper sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
                             {/* Comment Text */}
                             <Typography
                               p={{ xs: .5, md: 1 }}
                               sx={{ mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
                               {text}
                             </Typography>
-                          </Box>
+                          </Paper>
                         </Stack>
                       )
                     })
@@ -589,7 +590,7 @@ const PlantShow = () => {
                       <Box width='95%'
                         as='form'
                         onSubmit={handleSubmit}
-                        sx={{ backgroundColor: 'rgba(0,0,0,0.05)', p: { xs: 1, md: 3 } }}>
+                        sx={{ p: { xs: 1, md: 3 } }}>
                         <TextField
                           name='text'
                           value={formData.text}
