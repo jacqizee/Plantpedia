@@ -166,7 +166,7 @@ const Home = () => {
               :
               // images
               <>
-                {getImageList((filteredPlants.length ? filteredPlants : plants), 1, 2, 3, 4, true)}
+                {getImageList((filters.flowerColorFilter.length || filters.searchTerm ? filteredPlants : plants), 1, 2, 3, 4, true)}
               </>
         }
       </Box>
