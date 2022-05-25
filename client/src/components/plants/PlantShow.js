@@ -227,15 +227,19 @@ const PlantShow = () => {
 
   //send request to favorites
   const toggleFavorite = async (plant) => {
-    try {
-      await axios.put(`/api/plants/${plant._id}/favorite`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      favorite ? setFavorite(false) : setFavorite(true)
-    } catch (error) {
-      console.log(error)
+    if (payload) {
+      try {
+        await axios.put(`/api/plants/${plant._id}/favorite`, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        favorite ? setFavorite(false) : setFavorite(true)
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      navigate('/login')
     }
   }
 
