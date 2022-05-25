@@ -231,7 +231,7 @@ const UserProfile = () => {
               </Container>
               : myPlants.length > 0 ?
                 <>
-                  {getImageList(myPlants, 3, 3, 3, 0)}
+                  {getImageList(myPlants, 1, 2, 3, 4)}
                 </>
                 : username === payload.username ?
                   <>
@@ -262,7 +262,7 @@ const UserProfile = () => {
               </Container>
               : favoritePlants.length > 0 ?
                 <>
-                  {getImageList(favoritePlants, 3, 3, 3, 0)}
+                  {getImageList(favoritePlants, 1, 2, 3, 4)}
                 </>
                 : username === payload.username ?
                   <>
@@ -293,7 +293,7 @@ const UserProfile = () => {
               </Container>
               : editedPlants.length > 0 ?
                 <>
-                  {getImageList(editedPlants, 3, 3, 3, 0)}
+                  {getImageList(editedPlants, 1, 2, 3, 4)}
                 </>
                 : username === payload.username ?
                   <>

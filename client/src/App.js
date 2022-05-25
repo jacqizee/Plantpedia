@@ -23,10 +23,10 @@ import Box from '@mui/material/Box'
 
 const App = () => {
   const [mode, setMode] = useState('light')
-  const theme = createTheme(getDesignTokens(mode))
+  const darkTheme = createTheme(getDesignTokens(mode))
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <Box id='wrapper-box' bgcolor='background.default' color='text.primary'>
         <BrowserRouter>
           <PageNavbar setMode={setMode} mode={mode} />
