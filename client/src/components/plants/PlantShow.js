@@ -568,7 +568,7 @@ const PlantShow = () => {
                               sx={{ width: { xs: 25, md: 35 }, height: { xs: 25, md: 35 }, borderRadius: 5, mr: 1 }} />
                             {/* Username */}
                             <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
-                              <Link to={`/profile/${username}`}>
+                              <Link to={payload ? `/profile/${plant.username}` : '/login'}>
                                 {username.charAt(0).toUpperCase() + username.slice(1)}
                               </Link>
                             </Typography>
