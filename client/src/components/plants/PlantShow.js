@@ -62,8 +62,6 @@ const PlantShow = () => {
     text: '',
   })
 
-  const windowInnerWidth = window.innerWidth
-
   // Error Handling
   const [errors, setErrors] = useState(false) // GET request errors
   const [postErrors, setPostErrors] = useState(false) // POST request errors (for comments)
@@ -246,10 +244,10 @@ const PlantShow = () => {
             {plant ?
               <Container>
                 {/* Main Section */}
-                <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', padding: 2, my: 5, borderRadius: 1 }}>
+                <Container sx={{ backgroundColor: 'rgba(0,0,0,0.1)', padding: 2, my: 5, borderRadius: 1 }}>
                   <Grid container spacing={2} sx={{ my: 1 }}>
                     {/* Title */}
-                    <Grid item xs={12} sx={{ textAlign: 'center', mb: 1 }}>
+                    <Grid item xs={12} sx={{ textAlign: 'center', my: 1, ml: 2, pb: 1, backgroundColor: 'rgba(0,0,0,0.25)' }}>
                       <Typography variant='h4'>
                         {plant.name}
                       </Typography>
@@ -273,6 +271,7 @@ const PlantShow = () => {
                       {/* Description Accordion */}
                       <Accordion defaultExpanded>
                         <AccordionSummary
+                          sx={{ backgroundColor: 'rgba(0,0,0,0.15)' }}
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="description-content"
                           id="description-header"
@@ -287,6 +286,7 @@ const PlantShow = () => {
                       {/* Upkeep Accordion */}
                       <Accordion defaultExpanded>
                         <AccordionSummary
+                          sx={{ backgroundColor: 'rgba(0,0,0,0.15)' }}
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="upkeep-content"
                           id="upkeep-header"
@@ -351,6 +351,7 @@ const PlantShow = () => {
                       {/* Characteristics Accordion */}
                       <Accordion>
                         <AccordionSummary
+                          sx={{ backgroundColor: 'rgba(0,0,0,0.15)' }}
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="characteristics-content"
                           id="characteristics-header"
@@ -503,7 +504,7 @@ const PlantShow = () => {
                 </Container>
 
                 {/* Comment Section */}
-                <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', height: '100%', p: { xs: 2, md: 5 }, pt: 5 }}>
+                <Container sx={{ backgroundColor: 'rgba(0,0,0,0.1)', height: '100%', p: { xs: 2, md: 5 }, pt: 5 }}>
                   {/* Total Comment Count */}
                   <Box display='flex' mb={3} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography variant='overline' sx={{ borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.25)', py: 1, px: 3, ml: 3 }}>{commentCount} comments</Typography>
@@ -538,7 +539,7 @@ const PlantShow = () => {
                           direction='row'
                           my={{ xs: 1, md: 2 }}
                           p={{ xs: 1, md: 2 }}
-                          sx={{ display: 'flex', flexDirection: 'column' }}>
+                          sx={{ backgroundColor: 'rgba(0,0,0,0.25)', display: 'flex', flexDirection: 'column', boxShadow: 2 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             {/* User Avatar */}
                             <Box component='img'
@@ -563,7 +564,7 @@ const PlantShow = () => {
                             {/* Comment Text */}
                             <Typography
                               p={{ xs: .5, md: 1 }}
-                              sx={{ mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
+                              sx={{ width: '100%' }}>
                               {text}
                             </Typography>
                           </Paper>
