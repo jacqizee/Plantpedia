@@ -45,8 +45,8 @@ const PlantShow = () => {
   const payload = getPayload()
   const token = getTokenFromLocalStorage()
 
-  const [ plant, setPlant ] = useState(false)
-  const [ favorite, setFavorite ] = useState(false)
+  const [plant, setPlant] = useState(false)
+  const [favorite, setFavorite] = useState(false)
 
   const [commentCount, setCommentCount] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
@@ -300,8 +300,10 @@ const PlantShow = () => {
                             sx={{ mt: 1 }}>
                             {/* Watering */}
                             <Grid item xs md={4}>
-                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                              <Box sx={{
+                                backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                              }}>
                                 <Typography>Watering</Typography>
                                 <Box>{plant.ownerUsername.username}</Box>
                                 <Chip
@@ -313,8 +315,10 @@ const PlantShow = () => {
                             </Grid>
                             {/* Sun Exposure */}
                             <Grid item xs md={4}>
-                              <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 10, textAlign: 'center',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                              <Box sx={{
+                                backgroundColor: '#d5cd9f', borderRadius: 10, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                              }}>
                                 <Typography>Sun</Typography>
                                 <Chip
                                   label={plant.sunExposure}
@@ -326,8 +330,10 @@ const PlantShow = () => {
                             </Grid>
                             {/* Soil Type */}
                             <Grid item xs md={4}>
-                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                              <Box sx={{
+                                backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                              }}>
                                 <Typography>Soil Type</Typography>
                                 <Chip
                                   label={plant.soilType}
@@ -354,8 +360,10 @@ const PlantShow = () => {
                           <Grid container rowSpacing={1} columnSpacing={1} sx={{ mt: 1 }}>
                             {/* Lifecycle */}
                             <Grid item xs={12} md={6}>
-                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                              <Box sx={{
+                                backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                              }}>
                                 <Typography>
                                   Lifecycle
                                 </Typography>
@@ -369,8 +377,10 @@ const PlantShow = () => {
                             </Grid>
                             {/* Mood */}
                             <Grid item xs={12} md={6}>
-                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                              <Box sx={{
+                                backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                              }}>
                                 <Typography>
                                   Mood
                                 </Typography>
@@ -384,8 +394,10 @@ const PlantShow = () => {
                             </Grid>
                             {/* Mature Size (Height/Width) */}
                             <Grid item xs={12} md={12}>
-                              <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 2, textAlign: 'center',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                              <Box sx={{
+                                backgroundColor: '#d5cd9f', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                              }}>
                                 <Typography>Mature Size</Typography>
                                 <Box>
                                   <Chip
@@ -405,8 +417,10 @@ const PlantShow = () => {
                             </Grid>
                             {/* Native Area */}
                             {plant.nativeArea.length ? <Grid item xs={12} md={12}>
-                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                              <Box sx={{
+                                backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                              }}>
                                 <Typography>
                                   Native to
                                 </Typography>
@@ -427,8 +441,10 @@ const PlantShow = () => {
                             </Grid> : null}
                             {/* Flower Color */}
                             {plant.flowerColor.length ? <Grid item xs={12} md={12}>
-                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center',
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                              <Box sx={{
+                                backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                              }}>
                                 <Typography>
                                   Flower Color
                                 </Typography>
@@ -455,15 +471,19 @@ const PlantShow = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                           {/* Plant Owner */}
                           <Typography variant='caption' sx={{ mt: 1, mb: -.75 }} >Original Creator:
-                            <Link to={payload ? `/profile/${plant.ownerUsername[0].username}` : '/login'}>
-                              {plant.ownerUsername[0].username.charAt(0).toUpperCase() + plant.ownerUsername[0].username.slice(1)}
-                            </Link>
+                            <Typography sx={{ ml: '5px', fontWeight: 'bold', fontSize: '13px' }} as='span'>
+                              <Link to={payload ? `/profile/${plant.ownerUsername[0].username}` : '/login'}>
+                                {plant.ownerUsername[0].username.charAt(0).toUpperCase() + plant.ownerUsername[0].username.slice(1)}
+                              </Link>
+                            </Typography>
                           </Typography>
                           {/* Last Editor */}
                           <Typography variant='caption'>Last Edit:
-                            <Link to={payload ? `/profile/${plant.lastEditUsername[0].username}` : '/login'}>
-                              {plant.lastEditUsername[0].username.charAt(0).toUpperCase() + plant.lastEditUsername[0].username.slice(1)}
-                            </Link>
+                            <Typography as='span' sx={{ ml: '5px', fontWeight: 'bold', fontSize: '13px' }}>
+                              <Link to={payload ? `/profile/${plant.lastEditUsername[0].username}` : '/login'}>
+                                {plant.lastEditUsername[0].username.charAt(0).toUpperCase() + plant.lastEditUsername[0].username.slice(1)}
+                              </Link>
+                            </Typography>
                           </Typography>
                         </Box>
                         {/* Edit Chip */}
@@ -486,7 +506,7 @@ const PlantShow = () => {
                   {/* Total Comment Count */}
                   <Box display='flex' mb={3} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography variant='overline' sx={{ borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.25)', py: 1, px: 3, ml: 3 }}>{commentCount} comments</Typography>
-      
+
                     {/* Comment Sort Select */}
                     <Box sx={{ minWidth: { xs: 90, md: 120 } }} >
                       <FormControl variant='standard' fullWidth size='small'>
@@ -537,10 +557,10 @@ const PlantShow = () => {
                             }}>{date.getUTCMonth() + 1}/{date.getUTCDate()}/{date.getUTCFullYear()}
                             </Typography>
                           </Box>
-      
+
                           <Box sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
                             {/* Comment Text */}
-                            <Typography 
+                            <Typography
                               p={{ xs: .5, md: 1 }}
                               sx={{ mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
                               {text}
