@@ -6,6 +6,7 @@ import axios from 'axios'
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import Spinner from '../utilities/Spinner'
 import NotFound from '../common/NotFound'
+import RequestError from '../common/RequestError'
 
 // moment for timestamps
 import moment from 'moment'
@@ -379,7 +380,7 @@ const PlantShow = () => {
                             {/* Lifecycle */}
                             <Grid item xs={12} md={6}>
                               <Box sx={{
-                                backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center',
+                                backgroundColor: '#C398bb', borderRadius: 2, textAlign: 'center',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                               }}>
                                 <Typography>
@@ -396,7 +397,7 @@ const PlantShow = () => {
                             {/* Mood */}
                             <Grid item xs={12} md={6}>
                               <Box sx={{
-                                backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center',
+                                backgroundColor: '#98C3BB', borderRadius: 2, textAlign: 'center',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                               }}>
                                 <Typography>
@@ -413,7 +414,7 @@ const PlantShow = () => {
                             {/* Mature Size (Height/Width) */}
                             <Grid item xs={12} md={12}>
                               <Box sx={{
-                                backgroundColor: '#d5cd9f', borderRadius: 2, textAlign: 'center',
+                                backgroundColor: '#C3989A', borderRadius: 2, textAlign: 'center',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                               }}>
                                 <Typography>Mature Size</Typography>
@@ -436,7 +437,7 @@ const PlantShow = () => {
                             {/* Native Area */}
                             {plant.nativeArea.length ? <Grid item xs={12} md={12}>
                               <Box sx={{
-                                backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center',
+                                backgroundColor: '#ABC398', borderRadius: 2, textAlign: 'center',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                               }}>
                                 <Typography>
@@ -460,7 +461,7 @@ const PlantShow = () => {
                             {/* Flower Color */}
                             {plant.flowerColor.length ? <Grid item xs={12} md={12}>
                               <Box sx={{
-                                backgroundColor: '#7fa283', borderRadius: 2, textAlign: 'center',
+                                backgroundColor: '#989CC3', borderRadius: 2, textAlign: 'center',
                                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                               }}>
                                 <Typography>
@@ -595,11 +596,11 @@ const PlantShow = () => {
                     </Box>
                   }
 
-                  {/* add commment */}
+                  {/* add commment section */}
                   {userIsAuthenticated() ?
-                    <Stack direction='row' spacing={2} sx={{ mt: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '25%' }}>
+                    <Stack direction='row' spacing={1} sx={{ mt: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '25%' }}>
                       <Avatar
-                        sx={{ width: { xs: 30, md: 50 }, height: { xs: 30, md: 50 } }}
+                        sx={{ width: { xs: 30, md: 50 }, height: { xs: 30, md: 50 }, ml: 1, mr: -1 }}
                         alt={payload.username}
                         src={payload.profilePicture} />
                       <Box width='95%'
@@ -638,11 +639,7 @@ const PlantShow = () => {
                               Cancel
                             </Button>
                             {postErrors &&
-                              <Grid item xs={12}>
-                                <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                                  <Typography sx={{ color: 'red' }}>Error. Failed to post comment.</Typography>
-                                </Container>
-                              </Grid>
+                              <RequestError />
                             }
                           </Box>
                           : null}
@@ -655,7 +652,7 @@ const PlantShow = () => {
                     count={Math.ceil(commentCount / commentsPerPage)}
                     variant="outlined"
                     onChange={handlePageChange}
-                    sx={{ mt: 5, mb: -2 }} />
+                    sx={{ mt: 3, mb: -2 }} />
                 </Container>
               </Container>
               :

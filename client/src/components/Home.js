@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
 import Spinner from './utilities/Spinner.js'
-import sadPlant from '../images/sad-plant.gif'
+import RequestError from './common/RequestError'
 import { getImageList } from '../helpers/imageHandling'
 
 //mui
@@ -159,12 +159,7 @@ const Home = () => {
               <Spinner />
             </Container >
             : errors ?
-              <Container maxWidth='md' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', my: '10%' }} >
-                <Box component='img' src={sadPlant} alt='sad plant gif' sx={{ width: 150 }} />
-                <Typography>
-                  Error! Could not fetch data!
-                </Typography>
-              </Container>
+              <RequestError />
               :
               // images
               <>
