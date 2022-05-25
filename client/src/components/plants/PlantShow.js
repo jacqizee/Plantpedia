@@ -657,6 +657,7 @@ const PlantShow = () => {
               </Container>
               :
               <Box sx={{ height: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spinner /></Box>
+              
             }
           </Container >
 
