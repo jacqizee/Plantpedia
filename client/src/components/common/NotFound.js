@@ -12,7 +12,7 @@ const NotFound = () => {
     <Container sx={{ height: '85vh', width: '100vw', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
       <Box component='img' src={sadPlant} alt='sad plant gif' sx={{ width: 150 }} />
       <Typography variant='h4'>Page Not Found!</Typography>
-      <Typography as={Link} to="/">Back to Home</Typography>
+      <Typography as={Link} to="/" sx={{ textDecoration: 'underline' }}>Back to Home</Typography>
     </Container>
   )
 }

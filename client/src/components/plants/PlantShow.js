@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
+
+// components
 import { getPayload, getTokenFromLocalStorage, userIsAuthenticated } from '../../helpers/auth'
 import Spinner from '../utilities/Spinner'
+import NotFound from '../common/NotFound'
 
+// moment for timestamps
 import moment from 'moment'
 
 //mui
@@ -35,7 +39,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import wateringCan from '../../images/icons/watering-can.png'
 import sun from '../../images/icons/sun.png'
 import soil from '../../images/icons/soil.png'
-import LocalFloristOutlinedIcon from '@mui/icons-material/LocalFloristOutlined'
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist'
 import globe from '../../images/icons/globe.png'
 import calendar from '../../images/icons/calendar.png'
@@ -44,32 +47,37 @@ import ruler from '../../images/icons/ruler.png'
 import width from '../../images/icons/width.png'
 
 const PlantShow = () => {
-  const navigate = useNavigate()
+
+  // Get Params
   const { id } = useParams()
+
+  const navigate = useNavigate()
   const payload = getPayload()
   const token = getTokenFromLocalStorage()
 
+  // States for Main Section
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
 
+  // States for Comment Section
   const [commentCount, setCommentCount] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
   const [showComments, setShowComments] = useState(false)
   const [page, setPage] = useState(1)
   const [pageResults, setPageResults] = useState(false)
   const commentsPerPage = 3
-
-  const [userCanEdit, setUserCanEdit] = useState(false)
-
   const [formData, setFormData] = useState({
     text: '',
   })
+
+  // State for editing status
+  const [userCanEdit, setUserCanEdit] = useState(false)
 
   // Error Handling
   const [errors, setErrors] = useState(false) // GET request errors
   const [postErrors, setPostErrors] = useState(false) // POST request errors (for comments)
 
-  //get plant data & set initial comments
+  // get plant data & set initial comments and pagination
   useEffect(() => {
     const getPlant = async () => {
       try {
@@ -99,6 +107,7 @@ const PlantShow = () => {
   // comment dropdown menu
   const handleDropdown = (e) => {
     setCommentDropdown(e.target.value)
+    // If oldest is selected, display oldest -> newest, and vice versa
     if (e.target.value === 'oldest') {
       setPlant({ ...plant, comments: plant.comments.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)) })
     } else if (e.target.value === 'newest') {
@@ -112,15 +121,19 @@ const PlantShow = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  //submit comment
+  // submit comment
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    //Resetting errors
+    // Resetting errors
     setPostErrors(false)
 
     if (!formData.text.length) return
+
+    // Add owner and username to comment form data
     setFormData({ ...formData, owner: payload.sub, username: payload.username })
+
+    // Submit post request to API
     try {
       await axios.post(`/api/plants/${plant._id}/comments`, formData, {
         headers: {
@@ -159,11 +172,12 @@ const PlantShow = () => {
     }
   }
 
-  //show/hide comment buttons
+  // show comment buttons
   const toggleShowOn = () => {
     setShowComments(true)
   }
 
+  // hide comment buttons
   const toggleShowOff = () => {
     setShowComments(false)
     setFormData({
@@ -179,6 +193,7 @@ const PlantShow = () => {
   const handlePageChange = (e) => {
     const { dataset, innerText } = e.target
     let pageNumber
+    // Check what button was pressed, a number or an icon (ex right/left arrows)
     if (!innerText) {
       dataset.testid === 'NavigateBeforeIcon' ? pageNumber = page - 1 : pageNumber = page + 1
     } else {
@@ -188,6 +203,7 @@ const PlantShow = () => {
     updatePageResults(pageNumber, plant)
   }
 
+  // Update commnent results based on page number
   const updatePageResults = (pageNumber, data) => {
     if (pageNumber === 1) {
       setPageResults(data.comments.slice(0, commentsPerPage))
@@ -222,6 +238,7 @@ const PlantShow = () => {
     }
   }
 
+  // Handle when a user presses edit
   const handleEditPressed = () => {
     if (userCanEdit || plant.owner === payload.sub) {
       navigate(`/plants/${plant._id}/edit`)
@@ -235,11 +252,7 @@ const PlantShow = () => {
     <>
       {errors ?
         <>
-          <Grid item xs={12} sx={{ my: '10%' }}>
-            <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Typography sx={{ color: 'red' }}>Error. Failed fetch plant data.</Typography>
-            </Container>
-          </Grid>
+          <NotFound />
         </>
         :
         <>
@@ -542,7 +555,7 @@ const PlantShow = () => {
                           direction='row'
                           my={{ xs: 1, md: 2 }}
                           p={{ xs: 1, md: 2 }}
-                          sx={{ backgroundColor: 'rgba(0,0,0,0.25)', display: 'flex', flexDirection: 'column', boxShadow: 2 }}>
+                          sx={{ backgroundColor: 'rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', boxShadow: 2 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             {/* User Avatar */}
                             <Box component='img'
@@ -564,10 +577,11 @@ const PlantShow = () => {
                             </Typography>
                           </Box>
 
-                          <Paper sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
+                          <Paper sx={{ display: 'flex', flexDirection: 'column', mt: 1, mx: { sx: 1, md: 2 } }}>
                             {/* Comment Text */}
                             <Typography
-                              p={{ xs: .5, md: 1 }}
+                              variant='body1'
+                              p={{ xs: .5, md: 2 }}
                               sx={{ width: '100%' }}>
                               {text}
                             </Typography>
@@ -602,7 +616,8 @@ const PlantShow = () => {
                           placeholder='Add a comment...'
                           onChange={handleInput}
                           onKeyUp={shouldBlur}
-                          onFocus={toggleShowOn} />
+                          onFocus={toggleShowOn}
+                          sx={{ backgroundColor: 'rgba(255,255,255,0.5)', px: 1, py: 3 }} />
                         {showComments ?
                           <Box mt={{ xs: 2, md: 3 }}>
                             <Button
