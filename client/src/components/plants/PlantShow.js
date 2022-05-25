@@ -608,13 +608,13 @@ const PlantShow = () => {
                             <Button
                               type="submit"
                               variant="contained"
+                              color='primary'
                               sx={{ float: 'right', display: showComments }}
                               disabled={isAddDisabled}
                             >
                               Comment
                             </Button>
                             <Button
-                              type="submit"
                               variant="contained"
                               color='error'
                               sx={{ mr: 2, float: 'right', display: showComments }}
