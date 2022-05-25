@@ -45,19 +45,19 @@ const PlantShow = () => {
   const payload = getPayload()
   const token = getTokenFromLocalStorage()
 
-  const [plant, setPlant] = useState(false)
-  const [favorite, setFavorite] = useState(false)
+  const [ plant, setPlant ] = useState(false)
+  const [ favorite, setFavorite ] = useState(false)
 
   const [ commentCount, setCommentCount ] = useState()
-  const [commentDropdown, setCommentDropdown] = useState('newest')
-  const [showComments, setShowComments] = useState(false)
+  const [ commentDropdown, setCommentDropdown ] = useState('newest')
+  const [ showComments, setShowComments ] = useState(false)
   const [ page, setPage ] = useState(1)
   const [ pageResults, setPageResults ] = useState(false)
   const commentsPerPage = 3
   
   const [ userCanEdit, setUserCanEdit ] = useState(false)
   
-  const [formData, setFormData] = useState({
+  const [ formData, setFormData ] = useState({
     text: '',
   })
 
@@ -350,7 +350,7 @@ const PlantShow = () => {
                         <AccordionDetails>
                           <Grid container rowSpacing={1} columnSpacing={1} sx={{ mt: 1 }}>
                             {/* Lifecycle */}
-                            <Grid item xs={12} md={3}>
+                            <Grid item xs={12} md={6}>
                               <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center' }}>
                                 <Typography>
                                   Lifecycle
@@ -363,8 +363,22 @@ const PlantShow = () => {
                                 />
                               </Box>
                             </Grid>
-                            {/* Mature Size (Height/Width) */}
+                            {/* Mood */}
                             <Grid item xs={12} md={6}>
+                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center' }}>
+                                <Typography>
+                                  Mood
+                                </Typography>
+                                <Chip
+                                  label={plant.mood}
+                                  icon={<Box as='img' src={emotions} sx={{ width: '24px' }} />}
+                                  variant="filled"
+                                  sx={{ mb: 1 }}
+                                />
+                              </Box>
+                            </Grid>
+                            {/* Mature Size (Height/Width) */}
+                            <Grid item xs={12} md={12}>
                               <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 2, textAlign: 'center' }}>
                                 <Typography>Mature Size</Typography>
                                 <Chip
@@ -378,20 +392,6 @@ const PlantShow = () => {
                                   icon={<Box as='img' src={width} sx={{ width: '24px' }} />}
                                   variant="filled"
                                   sx={{ mb: 1, ml: '2px' }}
-                                />
-                              </Box>
-                            </Grid>
-                            {/* Mood */}
-                            <Grid item xs={12} md={3}>
-                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center' }}>
-                                <Typography>
-                                  Mood
-                                </Typography>
-                                <Chip
-                                  label={plant.mood}
-                                  icon={<Box as='img' src={emotions} sx={{ width: '24px' }} />}
-                                  variant="filled"
-                                  sx={{ mb: 1 }}
                                 />
                               </Box>
                             </Grid>
@@ -460,13 +460,13 @@ const PlantShow = () => {
                 </Container>
                 
                 {/* Comment Section */}
-                <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', height: '100%', p: 5, pt: 5, mb: 5 }}>
+                <Container sx={{ backgroundColor: 'rgba(0,0,0,0.05)', height: '100%', p: { xs: 2, md: 5 }, pt: 5 }}>
                   {/* Total Comment Count */}
                   <Box display='flex' mb={3} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography sx={{ borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.25)', py: 1, px: 3, ml: 3 }}>{commentCount} comments</Typography>
+                    <Typography variant='overline' sx={{ borderRadius: 10, backgroundColor: 'rgba(0,0,0,0.25)', py: 1, px: 3 }}>{commentCount} comments</Typography>
       
                     {/* Comment Sort Select */}
-                    <Box sx={{ minWidth: 120, mr: 4 }} >
+                    <Box sx={{ minWidth: { xs: 90, md: 120 } }} >
                       <FormControl variant='standard' fullWidth size='small'>
                         <InputLabel id="sort-comments">Sort by</InputLabel>
                         <Select
@@ -490,12 +490,17 @@ const PlantShow = () => {
                       const { username, _id, text, createdAt } = comment
                       const date = new Date(createdAt)
                       return (
-                        <Stack key={_id} direction='row' my={2} sx={{ backgroundColor: 'white', p: 2, display: 'flex', flexDirection: 'column' }}>
-                          <Container sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Stack
+                          key={_id}
+                          direction='row'
+                          my={{ xs: 1, md: 2 }}
+                          p={{ xs: 1, md: 2 }}
+                          sx={{ backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             {/* User Avatar */}
                             <Box component='img'
                               src={plant.comments[index].image[0].image}
-                              sx={{ width: 35, height: 35, borderRadius: 5, mr: 1 }} />
+                              sx={{ width: { xs: 25, md: 35 }, height: { xs: 25, md: 35 }, borderRadius: 5, mr: 1 }} />
                             {/* Username */}
                             <Typography sx={{ fontSize: 14, fontWeight: 'bold' }}>
                               <a href={`/profile/${username}`}>{username.charAt(0).toUpperCase() + username.slice(1)}</a>
@@ -507,14 +512,16 @@ const PlantShow = () => {
                               color: '#9c9c9c',
                             }}>{date.getUTCMonth() + 1}/{date.getUTCDate()}/{date.getUTCFullYear()}
                             </Typography>
-                          </Container>
+                          </Box>
       
-                          <Container sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
                             {/* Comment Text */}
-                            <Typography sx={{ p: 2, mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
+                            <Typography 
+                              p={{ xs: .5, md: 1 }}
+                              sx={{ mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
                               {text}
                             </Typography>
-                          </Container>
+                          </Box>
                         </Stack>
                       )
                     })
@@ -527,8 +534,14 @@ const PlantShow = () => {
                   {/* add commment */}
                   {userIsAuthenticated() ?
                     <Stack direction='row' spacing={2} sx={{ mt: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '25%' }}>
-                      <Avatar sx={{ width: 50, height: 50 }} alt={payload.username} src={payload.profilePicture} />
-                      <Box width='95%' as='form' onSubmit={handleSubmit} sx={{ backgroundColor: 'rgba(0,0,0,0.05)', p: 3 }}>
+                      <Avatar
+                        sx={{ width: { xs: 30, md: 50 }, height: { xs: 30, md: 50 } }}
+                        alt={payload.username}
+                        src={payload.profilePicture} />
+                      <Box width='95%'
+                        as='form'
+                        onSubmit={handleSubmit}
+                        sx={{ backgroundColor: 'rgba(0,0,0,0.05)', p: { xs: 1, md: 3 } }}>
                         <TextField
                           name='text'
                           value={formData.text}
@@ -536,24 +549,23 @@ const PlantShow = () => {
                           variant='standard'
                           fullWidth
                           placeholder='Add a comment...'
-                          autoComplete='off'
                           onChange={handleInput}
                           onKeyUp={shouldBlur}
                           onFocus={toggleShowOn} />
                         {showComments ?
-                          <>
+                          <Box mt={{ xs: 2, md: 3 }}>
                             <Button
                               type="submit"
                               variant="contained"
-                              sx={{ mt: 3, float: 'right', display: showComments }}
+                              sx={{ float: 'right', display: showComments }}
                               disabled={isAddDisabled}
                             >
-                              Add comment
+                              Comment
                             </Button>
                             <Button
                               type="submit"
                               variant="contained"
-                              sx={{ mr: 2, mt: 3, float: 'right', display: showComments }}
+                              sx={{ mr: 2, float: 'right', display: showComments }}
                               onClick={toggleShowOff}
                             >
                               Cancel
@@ -565,8 +577,7 @@ const PlantShow = () => {
                                 </Container>
                               </Grid>
                             }
-      
-                          </>
+                          </Box>
                           : null}
       
                       </Box>
