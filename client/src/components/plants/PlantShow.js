@@ -47,7 +47,6 @@ const PlantShow = () => {
 
   const [plant, setPlant] = useState(false)
   const [favorite, setFavorite] = useState(false)
-  const [ loading, setLoading ] = useState(true)
 
   const [ commentCount, setCommentCount ] = useState()
   const [commentDropdown, setCommentDropdown] = useState('newest')
@@ -89,7 +88,6 @@ const PlantShow = () => {
         console.log(error)
         setErrors(true)
       }
-      setLoading(false)
     }
     getPlant()
   }, [id])

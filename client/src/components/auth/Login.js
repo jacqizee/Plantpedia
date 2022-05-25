@@ -35,7 +35,7 @@ const Login = () => {
     window.localStorage.setItem('plantpedia', token)
   }
 
-  //Submit Login request
+  //Submit request
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -56,97 +56,78 @@ const Login = () => {
   }
 
   // ? Handle change
-  // formData updates as email and password fields are updated
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
     setErrors(false)
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          {/* Lock Icon */}
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-
-          {/* Log In Header */}
-          <Typography component="h1" variant="h5">
-            Log In
-          </Typography>
-
-          {/* Input Form */}
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            
-            {/* Email */}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={formData.email} 
-              onChange={handleChange}
-            />
-
-            {/* Password */}
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={formData.password} 
-              onChange={handleChange}
-            />
-
-            {/* Error Message */}
-            {errors && 
-              <Grid item xs={12}>
-                <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Typography sx={{ color: 'red' }}>Unauthorised.</Typography>
-                </Container>
-              </Grid>  
-            }
-
-            {/* Sign In Button */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-
-            {/* Prompt for if you need to register instead of logging in */}
-            <Grid container>
-              <Grid item>
-                <Link href="/register" variant="body2">
-                  {'No account yet? Sign Up'}
-                </Link>
-              </Grid>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Log In
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={formData.email} 
+            onChange={handleChange}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={formData.password} 
+            onChange={handleChange}
+          />
+          {errors && 
+            <Grid item xs={12}>
+              <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography sx={{ color: 'red' }}>Unauthorised.</Typography>
+              </Container>
+            </Grid>  
+          }
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Sign In
+          </Button>
+          <Grid container>
+            <Grid item>
+              <Link href="/register" variant="body2">
+                {'No account yet? Sign Up'}
+              </Link>
             </Grid>
-            
-          </Box>
+          </Grid>
         </Box>
-      </Container>
-    </ThemeProvider>
+      </Box>
+    </Container>
   )
 }
 

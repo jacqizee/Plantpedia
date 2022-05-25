@@ -20,13 +20,19 @@ import Login from './components/auth/Login'
 //MUI
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import { amber, deepOrange, grey, teal } from '@mui/material/colors'
+import { amber, deepOrange, grey, teal, green } from '@mui/material/colors'
 
 const getDesignTokens = (mode) => ({
   palette: {
     mode,
     primary: {
-      ...grey,
+      main: green[800],
+      ...(mode === 'dark' && {
+        main: amber[300],
+      }),
+    },
+    secondary: {
+      main: deepOrange[400],
       ...(mode === 'dark' && {
         main: amber[300],
       }),
@@ -90,3 +96,9 @@ const App = () => {
 }
 
 export default App
+// primary: {
+//   main: '#1b5e20',
+// },
+// secondary: {
+//   main: '#689f38',
+// },

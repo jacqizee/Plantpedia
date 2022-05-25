@@ -63,151 +63,149 @@ const Register = () => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
 
-          {/* Lock Avatar */}
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+        {/* Lock Avatar */}
+        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <LockOutlinedIcon />
+        </Avatar>
 
-          {/* Register Header */}
-          <Typography component="h1" variant="h5">
+        {/* Register Header */}
+        <Typography component="h1" variant="h5">
+          Register
+        </Typography>
+
+        {/* User Inputs Form */}
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Grid container spacing={2}>
+            
+            {/* Username */}
+            <Grid item xs={12}>
+              <TextField
+                autoComplete="username"
+                name="username"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                autoFocus
+                value={formData.username} 
+                onChange={handleChange}
+              />
+            </Grid>
+
+            {/* Error message under username if it's a username error */}
+            {errors.username && 
+              <Grid item xs={12}>
+                <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Typography variant='p' sx={{ color: 'red' }}>{errors.username}</Typography>
+                </Container>
+              </Grid>  
+            }
+
+            {/* Email */}
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                value={formData.email} 
+                onChange={handleChange}
+              />
+            </Grid>
+
+            {/* Error message under email if it's an email error */}
+            {errors.email && 
+              <Grid item xs={12}>
+                <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Typography variant='p' sx={{ color: 'red' }}>{errors.email}</Typography>
+                </Container>
+              </Grid>  
+            }
+
+            {/* Password */}
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+                value={formData.password} 
+                onChange={handleChange}
+              />
+            </Grid>
+
+            {/* Error message under password if it's a password error */}
+            {errors.password && 
+              <Grid item xs={12}>
+                <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Typography variant='p' sx={{ color: 'red' }}>{errors.password}</Typography>
+                </Container>
+              </Grid>  
+            }
+
+            {/* Password Confirmation */}
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                name="passwordConfirmation"
+                label="Password Confirmation"
+                type="password"
+                id="passwordConfirmation"
+                autoComplete="new-password"
+                value={formData.passwordConfirmation} 
+                onChange={handleChange}
+              />
+            </Grid>
+
+            {/* Error message under password confirmation if it's a password confirmation error */}
+            {errors.passwordConfirmation && 
+              <Grid item xs={12}>
+                <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Typography variant='p' sx={{ color: 'red' }}>{errors.passwordConfirmation}</Typography>
+                </Container>
+              </Grid>  
+            }
+
+          </Grid>
+
+          {/* Register Button */}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
             Register
-          </Typography>
+          </Button>
 
-          {/* User Inputs Form */}
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              
-              {/* Username */}
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="username"
-                  name="username"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  autoFocus
-                  value={formData.username} 
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              {/* Error message under username if it's a username error */}
-              {errors.username && 
-                <Grid item xs={12}>
-                  <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Typography variant='p' sx={{ color: 'red' }}>{errors.username}</Typography>
-                  </Container>
-                </Grid>  
-              }
-
-              {/* Email */}
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={formData.email} 
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              {/* Error message under email if it's an email error */}
-              {errors.email && 
-                <Grid item xs={12}>
-                  <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Typography variant='p' sx={{ color: 'red' }}>{errors.email}</Typography>
-                  </Container>
-                </Grid>  
-              }
-
-              {/* Password */}
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                  value={formData.password} 
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              {/* Error message under password if it's a password error */}
-              {errors.password && 
-                <Grid item xs={12}>
-                  <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Typography variant='p' sx={{ color: 'red' }}>{errors.password}</Typography>
-                  </Container>
-                </Grid>  
-              }
-
-              {/* Password Confirmation */}
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="passwordConfirmation"
-                  label="Password Confirmation"
-                  type="password"
-                  id="passwordConfirmation"
-                  autoComplete="new-password"
-                  value={formData.passwordConfirmation} 
-                  onChange={handleChange}
-                />
-              </Grid>
-
-              {/* Error message under password confirmation if it's a password confirmation error */}
-              {errors.passwordConfirmation && 
-                <Grid item xs={12}>
-                  <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Typography variant='p' sx={{ color: 'red' }}>{errors.passwordConfirmation}</Typography>
-                  </Container>
-                </Grid>  
-              }
-
+          {/* Prompt */}
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Link href="/login" variant="body2">
+                Already have an account? Log in
+              </Link>
             </Grid>
-
-            {/* Register Button */}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Register
-            </Button>
-
-            {/* Prompt */}
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/login" variant="body2">
-                  Already have an account? Log in
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
+          </Grid>
         </Box>
-      </Container>
-    </ThemeProvider>
+      </Box>
+    </Container>
   )
 }
 
