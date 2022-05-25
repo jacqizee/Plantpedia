@@ -655,11 +655,12 @@ const PlantShow = () => {
                     count={Math.ceil(commentCount / commentsPerPage)}
                     variant="outlined"
                     onChange={handlePageChange}
-                    sx={{ mt: 5, mb: -2 }} />
+                    sx={{ mt: 5, mb: 0 }} />
                 </Container>
               </Container>
               :
               <Box sx={{ height: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spinner /></Box>
+              
             }
           </Container >
 
