@@ -128,7 +128,7 @@ const UserProfile = () => {
         //Update user
         setUser(
           { 
-            ...user, 
+            username: retrievedUser.username, 
             numberOfPosts: retrievedUser.createdPlants.length,
             bio: retrievedUser.bio,
             image: retrievedUser.image,
