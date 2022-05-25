@@ -259,7 +259,7 @@ const PlantShow = () => {
       
                     {/* Image and Favorite Button */}
                     <Grid item md={6} sx={{ textAlign: 'right' }}>
-                      <Box component='img' src={plant.images} alt={plant.name} sx={{ height: windowInnerWidth * 0.7, maxHeight: 500, objectFit: 'cover' }} />
+                      <Box component='img' src={plant.images} alt={plant.name} sx={{ height: '70vw', maxHeight: 500, objectFit: 'cover' }} />
                       <IconButton
                         sx={{ bottom: 55, right: 5, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }}
                         onClick={() => toggleFavorite(plant)} >

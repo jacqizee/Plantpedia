@@ -40,6 +40,10 @@ const PlantAdd = () => {
   const uploadURL = process.env.REACT_APP_CLOUDINARY_URL
   const preset = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
 
+  // for image display centering
+  const windowInnerWidth = window.innerWidth
+  const marginImageLeft = windowInnerWidth > 700 ? 4 : 0
+
   // UseNavigate
   const navigate = useNavigate()
 
@@ -169,7 +173,7 @@ const PlantAdd = () => {
             </Grid>
 
             {/* Images */}
-            <Grid item xs={12} sx={{ my: 2, ml: 4, textAlign: 'center' }} >
+            <Grid item xs={12} sx={{ my: 2, ml: marginImageLeft, textAlign: 'center' }} >
 
               {/* If there is an image to display, then display it */}
               {displayImage ? 
