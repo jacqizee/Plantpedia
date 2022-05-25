@@ -1,3 +1,5 @@
+
+// Seeded comments
 export default [
   {
     text: 'Our relationship with nature is so mysterious that even visual encounter can relieve down whole stress and make us ecstatic. Loved it.',

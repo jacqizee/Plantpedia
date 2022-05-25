@@ -11,6 +11,7 @@ export const commentSchema = new mongoose.Schema({
   id: false
 })
 
+// Adding commenter profile picture as virtual field
 commentSchema.virtual('image', {
   ref: 'User',
   localField: 'owner',

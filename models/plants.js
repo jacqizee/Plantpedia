@@ -2,6 +2,8 @@ import mongoose from 'mongoose'
 import mongooseUniqueValidator from 'mongoose-unique-validator'
 import { commentSchema } from './comments.js'
 
+
+// Creating the plantSchema
 const plantSchema = new mongoose.Schema({
   name: { type: String, required: true, maxLength: 35 },
   scientificName: { type: String, required: true, unique: true, maxLength: 50 },
@@ -26,12 +28,14 @@ const plantSchema = new mongoose.Schema({
   timestamps: true
 })
 
+// Adding in the owner's username as a virtual field
 plantSchema.virtual('ownerUsername', {
   ref: 'User',
   localField: 'owner',
   foreignField: '_id',
 })
 
+// Adding in the last editor's username as a virtual field
 plantSchema.virtual('lastEditUsername', {
   ref: 'User',
   localField: 'lastEdit',
