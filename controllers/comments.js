@@ -4,7 +4,7 @@ import User from '../models/users.js'
 
 // METHOD: POST
 // Endpoint: /plants/:id/comments
-// Description: Add a comment to a plant
+// Description: Add a comment to a plant, runs after secure route
 export const addComment = async (req, res) => {
   const { id } = req.params
   try {
@@ -18,6 +18,7 @@ export const addComment = async (req, res) => {
     const checkUser = await User.findById(req.verifiedUser._id)
     if (checkUser.username !== req.verifiedUser.username) throw new Error('Username does not match!')
 
+    // Add the comment to the database
     await Comment.create(commentWithOwner)
 
     // Add commentWithOwner into plantToUpdate.comments
@@ -36,10 +37,13 @@ export const addComment = async (req, res) => {
 
 // METHOD: DELETE
 // Endpoint: /delete/:id/comments/:commentId
-// Description: Deleting a single comment
+// Description: Deleting a single comment, runs after secure route
 export const deleteComment = async (req, res) => {
   const { id, commentId } = req.params
+  
   try {
+    
+    // Retrieve the specified plant from the database, if it doesn't exist throw an error
     const plant = await Plant.findById(id)
     if (!plant) throw new Error('Plant not found')
 

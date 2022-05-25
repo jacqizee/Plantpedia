@@ -1,9 +1,9 @@
 import Plant from '../models/plants.js'
 import User from '../models/users.js'
 
-//METHOD: GET
-//Endpoint: /plants
-//get all plants
+// METHOD: GET
+// Endpoint: /plants
+// Return all plants
 export const getAllPlants = async (req, res) => {
   try {
     const plants = await Plant.find()
@@ -14,12 +14,14 @@ export const getAllPlants = async (req, res) => {
   }
 }
 
-//METHOD GET
+// METHOD GET
 // plants/:id
-// get single plant
+// Return a single plant
 export const getSinglePlant = async (req, res) => {
   const { id } = req.params
   try {
+
+    // Retrieve a plant and populate virtual fields
     const plant = await Plant.findById(id)
       .populate('ownerUsername', 'username')
       .populate('lastEditUsername', 'username')
@@ -30,9 +32,13 @@ export const getSinglePlant = async (req, res) => {
           select: 'image'
         }
       })
+
+    // If the plant isn't found, return a message
     if (!plant) {
       return res.status(404).json({ message: "Plant not found" })
     }
+
+    // Otherwise return the plant
     return res.status(200).json(plant)
   } catch (err) {
     console.log(err)
@@ -42,13 +48,15 @@ export const getSinglePlant = async (req, res) => {
 
 // METHOD: POST
 // Endpoint: /plants
-// Description: POST request that adds a new plant to the db
+// Description: POST request that adds a new plant to the db, runs after the secure route
 export const addPlant = async (req, res) => {
   const { body: newPlant } = req
   try {
-    console.log('req.body ->', newPlant)
+
+    // After the secure route has run, then add a plant to the database with the owner as the verified user
     const addedPlant = await Plant.create({ ...newPlant, owner: req.verifiedUser._id, lastEdit: req.verifiedUser._id })
 
+    // Return the plant
     return res.status(200).json(addedPlant)
   } catch (err) {
     console.log("Can't add this plant!")
@@ -59,16 +67,19 @@ export const addPlant = async (req, res) => {
 
 //METHOD PUT
 // plants/:id
-// update single plant
+// update single plant, runs after the secure route
 export const updatePlant = async (req, res) => {
   const { id } = req.params
+
+  // Destructure the plant to edit and the verified user (from secure route) from the req
   const { body: editPlant, verifiedUser } = req
+
   try {
+
+    // Retrieve the plant that will be updated from the database
     const updatedPlant = await Plant.findById(id)
 
-    // if (!updatedPlant.owner.equals(verifiedUser._id)) throw new Error('Unauthorised')
-
-    // Update myEdits and lastEdit
+    // Update myEdits and lastEdit on the editPlant and the verified user 
     editPlant.lastEdit = verifiedUser._id
     if (!editPlant.editors.includes(verifiedUser._id) && !updatedPlant.owner.equals(verifiedUser._id)) {
       editPlant.editors.push(verifiedUser._id)
@@ -77,9 +88,6 @@ export const updatePlant = async (req, res) => {
       console.log('The if statement runs 🏃🏻‍♂️')
       verifiedUser.myEdits.push(id)
     }
-    
-    console.log('updated plant is: ', updatedPlant)
-    console.log('verified user is: ', verifiedUser)
 
     // Update the document
     Object.assign(updatedPlant, editPlant)
@@ -88,6 +96,7 @@ export const updatePlant = async (req, res) => {
     await updatedPlant.save()
     await verifiedUser.save()
 
+    // Send back messages if the plant or the user is not found
     if (!updatedPlant){
       return res.status(404).json({
         message: 'Plant not found',
@@ -108,11 +117,11 @@ export const updatePlant = async (req, res) => {
 
 // METHOD: DELETE
 // Endpoint: /plants/:id
-// Description: Delete specified plants
+// Description: Delete specified plants, runs after secure route
 export const deletePlant = async (req, res) => {
   const { id } = req.params
   try {
-    // We can't send a body back due to the status code, so no need to save the response to a variable
+    // Find the plant by the ID
     const plantToDelete = await Plant.findById(id)
 
     // Removing references to the plant among people who favorited it
@@ -137,9 +146,12 @@ export const deletePlant = async (req, res) => {
       }
     }
 
+    // Remove the plant
     await plantToDelete.remove()
-    // 204 status doesn't accept a body in the response, so sendStatus ends the request as well as allowing us to still define the status
+
+    // Send back status code
     return res.sendStatus(204)
+
   } catch (err) {
     return res.status(404).json(err)
   }
