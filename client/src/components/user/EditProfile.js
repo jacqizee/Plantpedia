@@ -58,7 +58,7 @@ const EditProfile = () => {
   const marginImageLeft = windowInnerWidth > allowCroppingMinWidth ? 0 : 0
 
   // User bio to update
-  const [ formData, setFormData ] = useState({
+  const [formData, setFormData] = useState({
     username: username,
     image: payload.profilePicture,
     bio: '',
@@ -82,7 +82,7 @@ const EditProfile = () => {
 
         // Making sure the bio autopopulates with the user's most recently saved bio
         setFormData(
-          { 
+          {
             ...formData,
             bio: data.bio,
           }
@@ -98,7 +98,7 @@ const EditProfile = () => {
   }, [])
 
   const handleImageUpload = async e => {
-    
+
     // Setting the x and y start values of the crop slightly more than zero so user knows its a crop window
     setCrop({
       ...crop,
@@ -115,12 +115,12 @@ const EditProfile = () => {
     // The cropper will behave differently depending on whether the srcImg fills the 350x350 square
     const img = new Image()
     img.src = urlString
-    img.onload = function() {
+    img.onload = function () {
       const w = img.width
       const h = img.height
       const heightMoreThan350px = img.height > 350 ? true : false
       const widthMoreThan350px = img.width > 350 ? true : false
-      setIsUndersized(!heightMoreThan350px || !widthMoreThan350px )
+      setIsUndersized(!heightMoreThan350px || !widthMoreThan350px)
     }
   }
 
@@ -167,7 +167,7 @@ const EditProfile = () => {
       )
 
       return canvas.toDataURL('image/jpg', 1)
-      
+
     } catch (e) {
       console.log('error cropping the image: ', e)
       return ''
@@ -192,7 +192,7 @@ const EditProfile = () => {
         //Get the data URL of the part inside the crop window if it is not undersized
         imageURL = await getCroppedImg()
       }
-      
+
       // If there is a data URL, create a new form and upload the new image to Cloudinary
       // Then add the result to formData and newForm
       // Doing this here and adding newForm so that only the submitted image is uploaded to Cloudinary
@@ -206,7 +206,7 @@ const EditProfile = () => {
         newForm = { ...newForm, image: res.data.url }
       }
     }
-    
+
     // Updating the data base with the new profile
     try {
       const response = await axios.put(`/api/profile/${payload.sub}`, newForm, {
@@ -248,10 +248,12 @@ const EditProfile = () => {
       <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream' }} >
         <Box
           component='form'
-          sx={{ width: '100%',
+          sx={{
+            width: '100%',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center' }}
+            alignItems: 'center',
+          }}
           onSubmit={handleSubmit}
         >
           <Typography variant='h3' sx={{ pb: 2 }}>Edit Profile</Typography>
@@ -260,15 +262,15 @@ const EditProfile = () => {
             sx={{ width: .90 }}
             rowSpacing={1}
             columnSpacing={1}>
-            
+
             {/* This must be first input So that the file upload only fires when you press the button */}
             <>
               <Input type="text" autoFocus="autoFocus" />
             </>
-              
+
             {/* Images */}
             <Grid item xs={12} sx={{ textAlign: 'center', ml: 0 }}>
-              {!srcImg ? 
+              {!srcImg ?
                 <>
                   <Box component='img' src={formData.image} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                   <label htmlFor="icon-button-file">
@@ -279,7 +281,7 @@ const EditProfile = () => {
                   </label>
                 </>
                 :
-                !isUndersized && windowInnerWidth > allowCroppingMinWidth ? 
+                !isUndersized && windowInnerWidth > allowCroppingMinWidth ?
                   <>
                     <Box >
                       <ReactCrop
@@ -292,7 +294,7 @@ const EditProfile = () => {
                       >
                         <img src={srcImg} />
                       </ReactCrop>
-                    
+
                     </Box>
                     <label htmlFor="icon-button-file">
                       <Input accept="image/*" id="icon-button-file" type="file" onChange={handleImageUpload} />
@@ -317,7 +319,7 @@ const EditProfile = () => {
             {/* Bio */}
             <Grid item xs={12} sx={{ my: 1 }}>
               <TextField
-                id='bio' 
+                id='bio'
                 placeholder='Bio * (max 150 characters)'
                 variant='outlined'
                 name='bio'
@@ -329,14 +331,16 @@ const EditProfile = () => {
             </Grid>
 
             {/* Submit Button */}
-            <Grid item xs={12}>
-              <Container sx={{ display: 'flex', justifyContent: 'space-between', my: 1 }}>
-                <Button variant="contained" type="submit" size='large' sx={{ width: .48, mx: 0 }}>Submit</Button>
-                <Button variant="contained" onClick={handleCancel} size='small' sx={{ width: .48, mx: 0, backgroundColor: 'red' }}>Cancel</Button>
-              </Container>
+            <Grid container textAlign='center'>
+              <Grid item xs={6}>
+                <Button variant="contained" type="submit"  sx={{ width: .75 }}>Submit</Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button variant="contained" color='error' onClick={handleCancel} sx={{ width: .75, backgroundColor: 'red' }}>Cancel</Button>
+              </Grid>
             </Grid>
-                
-            {putErrors && 
+
+            {putErrors &&
               <Grid item xs={12}>
                 <Container sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Typography sx={{ color: 'red' }}>Error. Failed to upload updated profile.</Typography>
@@ -346,7 +350,7 @@ const EditProfile = () => {
           </Grid>
         </Box>
       </Paper>
-    </Container>
+    </Container >
   )
 }
 
