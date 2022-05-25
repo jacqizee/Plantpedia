@@ -103,31 +103,40 @@ Once the site had all the functionality we wanted, styling became the focus. We 
 ---
 ### Screenshots
 ---
-![Homepage](/home-screen.png)
-![Animals](/animals-index.png)
-![My Journey](/my-journey.png)
-![Show Animal](/animal-show.png)
+![Homepage](/client/src/images/home-screen.png)
+![User Profile](/client/src/images/user-profile.png)
+![Show Page](/client/src/images/show-page.png)
+![Mobile and Dark Mode](/client/src/images/mobile-dark.png)
 
 ---
 ### Challenges
 ---
-The biggest challenge was that our API wouldn't let us fetch data by ID — we were only allowed to "get" a collection of random animals. To solve this we had to save data to arrays using useState and useEffect defined in the App.js.
+This was each of our first team projects using Github branches, so the first challenge we faced was making sure we all knew how to make our commits and merges without erasing other people's work. Luckily we did not have any Github issues.
+
+We each faced and conquered solo challenges as well.
+
+Rob's biggest challenge was the intelligent searchbar that filters by searching the name and combines it with flower-color tags.
+
+Jackie's biggest challenges were creating the Add Plants and Edit Plants forms and getting the comments section to work well on the PLants Show page.
+
+Philip's biggest challenge was image handling. He used React Image Crop for users to be able to crop their profile pictures into squares on desktop in the Edit Profile page. On mobile, the crop functionality is not enabled. On the Plant Add and Plant Edit page, the added images are automatically centered and cropped into squares, making it so only square plant images populate the site.
 
 ---
 ### Wins
 ---
-Creating a site using React is a huge confidence boost for us! We also love the zoo and animals, so it was a win in terms of being able to look at animal photos for 48 hours.
-
----
-### Learning
----
-The most important thing we learned was how to keep track of state variables across multiple pages.
-
-It was also important learn how to use implicit onClick methods such that they don't run every time they are called an so that information can be passed into them.
+The biggest win was everything. We accomplished a lot and are proud of ourselves!
 
 ---
 ### Ideas for Future Improvements
 ---
-The images were all different sizes, so we made a standardized size for the image element in the Cards, but sometimes it cuts off important image elements, so figuring this out would really help.
+Making it so that the user can update his/her username. Currently we left this option out because it doesn't change the username for all the posts and comments that the user made, so users would encounter 404 pages when clicking on old usernames.
 
-We also didn't do any error handling. Given more time, this is the first thing we would add in.
+Error handling and error messages are there but could be more descriptive
+
+Favoriting plants from the homepage is something that could be added.
+
+Another thing would be to incorporate more types of tags into the intelligent searchbar.
+
+Another thing we didn't quite get to were comment replies.
+
+... You tell us! We've been looking at this too long and are zonked — you're the one with fresh eyes!
