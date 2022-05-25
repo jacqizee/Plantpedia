@@ -563,11 +563,11 @@ const PlantShow = () => {
                             </Typography>
                           </Box>
 
-                          <Paper sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
+                          <Paper sx={{ display: 'flex', flexDirection: 'column', mt: 1, backgroundColor: 'rgba(0,0,0,0.05)' }}>
                             {/* Comment Text */}
                             <Typography
                               p={{ xs: .5, md: 1 }}
-                              sx={{ mt: 1, backgroundColor: 'rgba(0,0,0,0.05)', width: '100%' }}>
+                              sx={{ mt: 1, width: '100%' }}>
                               {text}
                             </Typography>
                           </Paper>

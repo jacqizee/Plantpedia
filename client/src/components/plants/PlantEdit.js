@@ -48,23 +48,26 @@ const PlantEdit = () => {
   const marginImageLeft = windowInnerWidth > 700 ? 4 : 0
 
   // Tells if the form is loaded
-  const [ formLoaded, setFormLoaded ] = useState(false)
+  const [formLoaded, setFormLoaded] = useState(false)
 
   // The form data
-  const [ formData, setFormData ] = useState(form)
-  
+  const [formData, setFormData] = useState(form)
+
   // Error Handling
-  const [ errors, setErrors ] = useState(false) // GET request errors
-  const [ putErrors, setPutErrors ] = useState(false) // PUT or Delete request errors
+  const [errors, setErrors] = useState(false) // GET request errors
+  const [putErrors, setPutErrors] = useState(false) // PUT or Delete request errors
 
   // For image handling
-  const [ displayImage, setDisplayImage ] = useState('')
+  const [displayImage, setDisplayImage] = useState('')
 
   // Setting units for height/width
-  const [ matureSize, setMatureSize ] = useState({ height: formData.height, width: formData.width })
-  const [ unit, setUnit ] = useState('in')
-  const [ max, setMax ] = useState(150)
-  const [ step, setStep ] = useState(10)
+  const [matureSize, setMatureSize] = useState({ height: formData.height, width: formData.width })
+  const [unit, setUnit] = useState('in')
+  const [max, setMax] = useState(150)
+  const [step, setStep] = useState(10)
+
+  //disable delete button
+  const [disableBtn, setDisableBtn] = useState(true)
 
   // Get existing form data from API and populate in form
   useEffect(() => {
@@ -126,6 +129,10 @@ const PlantEdit = () => {
     }
   }
 
+  useEffect(() => {
+    userIsOwner(formData) ? setDisableBtn(false) : setDisableBtn(true)
+  }, [formData])
+
   return (
     <>
       {/* If there are errors getting the data, give an error message */}
@@ -145,10 +152,12 @@ const PlantEdit = () => {
             <Paper elevation={6} sx={{ m: 5, py: 3, backgroundColor: 'cream', maxWidth: 'sm' }} >
               <Box
                 component='form'
-                sx={{ width: '100%',
+                sx={{
+                  width: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  alignItems: 'center' }}
+                  alignItems: 'center',
+                }}
                 onSubmit={handleSubmit}
               >
 
@@ -164,7 +173,7 @@ const PlantEdit = () => {
                   <>
                     <Input type="text" autoFocus="autoFocus" />
                   </>
-                  
+
                   {/* Plant Name */}
                   <Grid item xs={12} md={6}>
                     <TextField
@@ -181,7 +190,7 @@ const PlantEdit = () => {
                   {/* Scientific Name */}
                   <Grid item xs={12} md={6}>
                     <TextField
-                      id='scientificName' 
+                      id='scientificName'
                       label='Scientific Name'
                       variant='outlined'
                       name='scientificName'
@@ -194,7 +203,7 @@ const PlantEdit = () => {
                   {/* Description */}
                   <Grid item xs={12}>
                     <TextField
-                      id='description' 
+                      id='description'
                       label='Description'
                       variant='outlined'
                       name='description'
@@ -212,12 +221,12 @@ const PlantEdit = () => {
                   <Grid item xs={12} sx={{ my: 2, ml: marginImageLeft, textAlign: 'center' }} >
 
                     {/* If there is a new image to display, then display it */}
-                    {displayImage ? 
+                    {displayImage ?
                       <Box component='img' src={displayImage} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                       :
                       // Else if there's an image on formData, display that one
                       <>
-                        {formData.images ? 
+                        {formData.images ?
                           <Box component='img' src={formData.images} alt='Image to upload' sx={{ height: '300px', width: '300px', objectFit: 'cover' }} />
                           :
                           <></>
@@ -228,9 +237,9 @@ const PlantEdit = () => {
                     {/* The upload image button */}
                     <label htmlFor="contained-button-file">
                       <Input accept="image/*" id="contained-button-file" multiple type="file" onChange={(e) => handleImageUpload(e, setDisplayImage, setFormData, formData)} />
-                      
+
                       {/* If there's an image on formData, display upload button as an icon, else make it a button with "Upload Image" as the prompt */}
-                      {formData.images ? 
+                      {formData.images ?
                         <IconButton aria-label="upload picture" component="span" sx={{ bottom: 25, right: 50, border: 2, borderColor: 'white', boxShadow: 3, backgroundColor: 'rgba(170,170,170,0.5)' }} >
                           <PhotoCamera />
                         </IconButton>
@@ -451,16 +460,22 @@ const PlantEdit = () => {
                   </Grid>
 
                   {/* Submit Button */}
-                  <Grid item xs={12}>
-                    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
-                      <Button variant="contained" type="submit" size='large' sx={{ width: .70, mx: 2 }}>Submit</Button>
-                      { !formLoaded ? '' : userIsOwner(formData) ? <Button variant="contained" onClick={(e) => handleDelete(e, navigate, setPutErrors, plantId)} size='small' sx={{ width: .70, mx: 2, backgroundColor: 'red' }}>Delete</Button> : ''}
-                    </Container>
+                  <Grid container sx={{ textAlign: 'center' }}>
+                    <Grid item xs={6}>
+                      <Button variant="contained" type="submit" sx={{ width: .70, mx: 2 }}>
+                        Submit
+                      </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                      {!formLoaded ? '' :  <Button color='error' variant="contained" disabled={disableBtn} sx={{ width: .70, mx: 2 }} onClick={(e) => handleDelete(e, navigate, setPutErrors, plantId)}>
+                        Delete
+                      </Button>}
+                    </Grid>
                   </Grid>
-                      
+
 
                   {/* Error message under submit if updating the plant fails */}
-                  {putErrors && 
+                  {putErrors &&
                     <Grid item xs={12}>
                       <Container sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Typography sx={{ color: 'red' }}>Error. Failed to upload updated plant.</Typography>
