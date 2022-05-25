@@ -278,7 +278,7 @@ const PlantShow = () => {
                     {/* Accordion Column */}
                     <Grid item md={6} sx={{ textAlign: 'center', flexGrow: 1 }}>
                       {/* Description Accordion */}
-                      <Accordion disableGutters>
+                      <Accordion defaultExpanded>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="description-content"
@@ -287,25 +287,27 @@ const PlantShow = () => {
                           <Typography>Description</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Typography sx={{ textAlign: 'left' }}>{plant.description}</Typography>
+                          <Typography variant='body1' sx={{ textAlign: 'left' }}>{plant.description}</Typography>
                         </AccordionDetails>
                       </Accordion>
 
                       {/* Upkeep Accordion */}
-                      <Accordion disableGutters>
+                      <Accordion defaultExpanded>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="upkeep-content"
                           id="upkeep-header"
-                          sx={{ backgroundColor: '#8cbf94' }}
                           square='false'
                         >
                           <Typography>Care</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Grid container columnSpacing={1} sx={{ mt: 1 }}>
+                          <Grid container
+                            rowSpacing={1}
+                            columnSpacing={1}
+                            sx={{ mt: 1 }}>
                             {/* Watering */}
-                            <Grid item xs={4}>
+                            <Grid item xs md={4}>
                               <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center' }}>
                                 <Typography>Watering</Typography>
                                 <Box>{plant.ownerUsername.username}</Box>
@@ -317,9 +319,9 @@ const PlantShow = () => {
                               </Box>
                             </Grid>
                             {/* Sun Exposure */}
-                            <Grid item xs={4}>
+                            <Grid item xs md={4}>
                               <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 10, textAlign: 'center' }}>
-                                <Typography>Sun</Typography> <br />
+                                <Typography>Sun</Typography>
                                 <Chip
                                   label={plant.sunExposure}
                                   icon={<Box as='img' src={sun} sx={{ width: '24px' }} />}
@@ -329,7 +331,7 @@ const PlantShow = () => {
                               </Box>
                             </Grid>
                             {/* Soil Type */}
-                            <Grid item xs={4}>
+                            <Grid item xs md={4}>
                               <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center' }}>
                                 <Typography>Soil Type</Typography>
                                 <Chip
@@ -345,7 +347,7 @@ const PlantShow = () => {
                       </Accordion>
 
                       {/* Characteristics Accordion */}
-                      <Accordion disableGutters>
+                      <Accordion>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="characteristics-content"
@@ -356,8 +358,8 @@ const PlantShow = () => {
                         <AccordionDetails>
                           <Grid container rowSpacing={1} columnSpacing={1} sx={{ mt: 1 }}>
                             {/* Lifecycle */}
-                            <Grid item xs={3}>
-                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center' }}>
+                            <Grid item xs={12} md={3}>
+                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center' }}>
                                 <Typography>
                                   Lifecycle
                                 </Typography>
@@ -370,8 +372,8 @@ const PlantShow = () => {
                               </Box>
                             </Grid>
                             {/* Mature Size (Height/Width) */}
-                            <Grid item xs={6}>
-                              <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 10, textAlign: 'center' }}>
+                            <Grid item xs={12} md={6}>
+                              <Box sx={{ backgroundColor: '#d5cd9f', borderRadius: 2, textAlign: 'center' }}>
                                 <Typography>Mature Size</Typography>
                                 <Chip
                                   label={`Length: ${plant.height}"`}
@@ -388,8 +390,8 @@ const PlantShow = () => {
                               </Box>
                             </Grid>
                             {/* Mood */}
-                            <Grid item xs={3}>
-                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 10, textAlign: 'center' }}>
+                            <Grid item xs={12} md={3}>
+                              <Box sx={{ backgroundColor: '#98bac3', borderRadius: 2, textAlign: 'center' }}>
                                 <Typography>
                                   Mood
                                 </Typography>
@@ -402,8 +404,8 @@ const PlantShow = () => {
                               </Box>
                             </Grid>
                             {/* Native Area */}
-                            {plant.nativeArea.length ? <Grid item xs={12}>
-                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center' }}>
+                            {plant.nativeArea.length ? <Grid item xs={12} md={12}>
+                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center' }}>
                                 <Typography>
                                   Native to
                                 </Typography>
@@ -421,8 +423,8 @@ const PlantShow = () => {
                               </Box>
                             </Grid> : null}
                             {/* Flower Color */}
-                            {plant.flowerColor.length ? <Grid item xs={12}>
-                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 10, textAlign: 'center' }}>
+                            {plant.flowerColor.length ? <Grid item xs={12} md={12}>
+                              <Box sx={{ backgroundColor: '#c3ab98', borderRadius: 2, textAlign: 'center' }}>
                                 <Typography>
                                   Flower Color
                                 </Typography>
