@@ -261,7 +261,7 @@ const PlantShow = () => {
         </>
         :
         <>
-          <Container maxWidth='lg' >
+          <Container maxWidth='lg' sx={{ pb: 6 }} >
             {plant ?
               <Container>
                 {/* Main Section */}
@@ -656,7 +656,7 @@ const PlantShow = () => {
                     count={Math.ceil(commentCount / commentsPerPage)}
                     variant="outlined"
                     onChange={handlePageChange}
-                    sx={{ mt: 3, mb: -2 }} />
+                    sx={{ mt: 3, mb: 2 }} />
                 </Container>
               </Container>
               :
