@@ -109,7 +109,7 @@ const Home = () => {
   return (
     <>
       {/* search bar */}
-      <Box onClick={handleClose}>
+      <Box onClick={handleClose} sx={{ pb: 1 }}>
         <Container maxWidth='lg' >
           <Box onClick={handleOpen}>
             <TextField fullWidth name='searchTerm' autoComplete='off' placeholder='Search by name...'
