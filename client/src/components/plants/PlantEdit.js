@@ -455,7 +455,7 @@ const PlantEdit = () => {
                   {/* Is Indoor? */}
                   <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <FormControlLabel control={
-                      <Checkbox value={formData.isIndoor} onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)} />
+                      <Checkbox checked={formData.isIndoor} onChange={(e) => handleChange(e, setPutErrors, setFormData, formData)} />
                     } label="Can Be Indoor Plant?" />
                   </Grid>
 
