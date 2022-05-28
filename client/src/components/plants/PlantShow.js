@@ -622,7 +622,7 @@ const PlantShow = () => {
                           onChange={handleInput}
                           onKeyUp={shouldBlur}
                           onFocus={toggleShowOn}
-                          sx={{ backgroundColor: 'rgba(255,255,255,0.5)', px: 1, py: 3 }} />
+                          sx={{ backgroundColor: 'rgba(255,255,255,0.5)', px: 1, py: 3, borderRadius: 1 }} />
                         {showComments ?
                           <Box mt={{ xs: 2, md: 3 }}>
                             <Button
