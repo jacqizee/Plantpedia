@@ -87,7 +87,7 @@ const PlantShow = () => {
         setCommentCount(data.comments.length)
         setPageResults(data.comments.slice(0, commentsPerPage))
 
-        if (payload) {
+        if (userIsAuthenticated()) {
           const { data: userData } = await axios.get(`/api/profile/${payload.sub}`, {
             headers: {
               Authorization: `Bearer ${getTokenFromLocalStorage()}`,
@@ -227,7 +227,7 @@ const PlantShow = () => {
 
   //send request to favorites
   const toggleFavorite = async (plant) => {
-    if (payload) {
+    if (userIsAuthenticated()) {
       try {
         await axios.put(`/api/plants/${plant._id}/favorite`, null, {
           headers: {
