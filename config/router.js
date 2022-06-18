@@ -7,7 +7,6 @@ import { addComment, deleteComment } from '../controllers/comments.js'
 import { getProfile, updateProfile, getProfileByUsername } from '../controllers/users.js'
 import { addEditorApplication } from '../controllers/editorApplications.js'
 
-
 const router = express.Router()
 
 // Routes
