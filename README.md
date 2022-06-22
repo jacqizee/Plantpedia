@@ -74,7 +74,9 @@ Rob Green - [Github](https://github.com/greezyBob/)
 
 ### Wireframing
 
-![Plantpedia Wireframe]()
+![Plantpedia Wireframe](client/src/images/readme/wireframe.png)
+
+![Plantpedia model plan](client/src/images/readme/model-plan.png)
 
 ## Coding
 
