@@ -10,11 +10,14 @@ You can find the deployed version of the project [here](https://plant-pedia.hero
 ## Navigation
 
 * [Brief](#the-brief)
+* [Collaborators](#collaborators)
 * [Technologies](#technologies)
 * [Planning](#planning)
   * [Features](#features)
   * [Wireframing](#wireframing)
 * [Coding](#coding)
+  * [Back-End](#back-end)
+  * [Front-End](#front-end)
 * [Reflection](#reflection)
   * [Challenges](#challenges)
   * [Key Learnings](#key-learnings)
@@ -123,8 +126,8 @@ We decided to divide up different front-end pages across the three of us. We cod
 
 Division of Work:
 * Jackie - Add/Edit Plant Pages (form inputs and submittion, metric/imperial measurement slider, styling), Plant Show Page (comment filtering, pagination, and styling), dark mode configuration
-* Rob - Home Page (search bar, flower color filter, styling), Plant Show Page (favoriting, base styling), dark mode setup
-* Philip - Login/Register pages, Edit User Profile (profile picture upload, image handling), Add/Edit Plant Pages (upload image feature)
+* Philip - Login/Register pages, User Profile, Edit User Profile (profile picture upload, image handling), Add/Edit Plant Pages (upload image feature)
+* Rob - Homepage (search bar, flower color filter, styling), Plant Show Page (favoriting, base styling), dark mode setup
 
 #### Add/Edit Plant Pages
 When putting together the Add/Edit Plant forms, one issue I ran into was handling nested values and deeper nested values with useState. When we initially designed our database, we nested properties within properties within properties, thinking it made sense to group things like Characteristics or Upkeep together. However, the unnecessary grouping complicated updating and accessing values, especially for these forms. This was a lesson that when designing a database, it's important to keep things practical rather than needlessly complicating things.
