@@ -1,142 +1,225 @@
 # Project 3: Plantpedia
 
----
-### Overview
----
-This project is Philip, Jacqueline, and Rob's third fully developed exercise at General Assembly's Software Immersive course.
+## Overview
+This was the third project for the Software Engineering Immersive course with GA, which consisted of a full-stack group project built using the MERN stack.
 
-The assignment was to create a full stack website comprised of a backend that uses express to store user-generated data on a mongodb database and a frontend that uses React and React-based frameworks. The project was to be completed by a three-person team within one week.
+You can find the deployed version of the project [here](https://plant-pedia.herokuapp.com/).
 
-We chose to create "Plantpedia" because we all like plants and because it would allow us not only to use all the skills we have learned but to also grow on this skill base.  
+## Navigation
 
+* [Brief](#the-brief)
+* [Technologies](#technologies)
+* [Planning](#planning)
+  * [Features](#features)
+  * [Wireframing](#wireframing)
+* [Coding](#coding)
+  * [Search Feature](#search-feature)
+  * [Favorites Feature](#favorites-feature)
+* [Reflection](#reflection)
+  * [Challenges](#challenges)
+  * [Key Learnings](#key-learnings)
+* [Future Features](#future-features)
+* [Credits](#credits)
 
-Are you curious to see the end result? [Check out the site.](https://a-day-at-the-zoo.netlify.app/) 
+## The Brief
 
----
-### Brief
----
-* A full stack website that stores user-generated data in a mongodb database.
-* A React frontend that is connected to the backend.
-* User registration, login, and authentication.
-* Write a readme.
-* Commit early and often to Github.
-* Complete it in one week.
+**Timeframe:**
+* 1 week
 
----
-### Technologies Used
----
-* HTML
-* CSS
-* GoogleFonts
-* JavaScript
-* Git and GitHub
-* React
-  - React hooks: useState, useEffect, BrowserRouter, Route, Routes, useNavigate, Link
-* Material UI
-  - Components: Avatar, Button, CssBaseline, TextField, Link, Grid, Box, LockOutlinedIcon, Typography, Container, createTheme, AppBar, Toolbar, IconButton, Menu, Tooltip, MenuItem, AdIcon, DarkModeIcon, LightModeIcon, FormControl, FormControlLabel, Select, InputLabel, Slider, Checkbox, OutlinedInput, Chip, Paper, ToggleButton, ToggleButtonGroup, PhotoCamera, styled, Accordion, AccordionSummary, AccordionDetails, Pagination, TextareaAutosize, Stack, Tabs, Tab
+**General Project Brief:**
+* A full stack website that stores user-generated data in a MongoDB database
+* A React frontend that is connected to the backend
+* User registration, login, and authentication
+
+## Collaborators
+
+Jacqueline Zhou - [Github](https://github.com/jacqizee/)
+
+Philip Sopher - [Github](https://github.com/psopher/)
+
+Rob Green - [Github](https://github.com/greezyBob/)
+
+## Technologies 
+
+* MERN Stack (MongoDB, Express.js, React, Node.js)
+* React Router
+* JavaScript (ES6+)
+* Mongoose
+* JSON Web Token / bcrypt
+* Material UI (MUI)
+* HTML5, CSS3, and SASS
+* Axios
+* VSCode
+* Eslint
+* Git & GitHub
+* Insomnia
+* Trello for Project Management
 * Third Party Dependencies:
   - react-image-crop
   - moment.js
-* Axios
-* Express
-* Mongoose / Mongoose Unique Validator
-* MongoDB
-* JSON Web Token / bcrypt
-* Trello
-* Excalidraw
-* A [Random Chooser](http://www.mauvecloud.net/randomchooser.html) for divvying up tasks
 
+## Planning
 
+### Features
+* Homepage - index of all plants with a search bar that allows users to filter by plant characteristics (ex. flower color)
+* Navbar - allow users to navigate across the different pages on the site
+* User Login/Register - login/register to website
+* User Profile - view added, favorited, and edited plants
+* Edit User Profile - edit user profile, update profile picture
+* Plant Show Page - detailed view of plant, where you can favorite a plant
+* Add/Edit Plant Page - users can add or edit plants
+* Editor Application - users can apply for editor rights for editing plants
+* Mobile-Friendly/Responsive Web Design
+* Dark Mode
+
+### Wireframing
+
+![Plantpedia Wireframe]()
+
+## Coding
+
+We utilized Trello to divide up different parts of the application, while also creating a list of any bugs or features we noticed that should be addressed.
+
+### Back-End
+We initially worked on coding out the back-end of our project in a group of three. As we continued to develop the application, we added and updated the back-end as needed.
+
+Areas I implemented on the back-end individually included:
+
+#### Populating Nested Virtual Fields for Plant Show Page
+Populated a virtual field within a virtual field was initially was a bit difficult as we did not understand how or if this was possible, but by reading through the Mongoose documentation I was able to find and populate the fields we desired.
+```
+    // Retrieve a plant and populate virtual fields, then populating virtual fields within virtual fields
+    const plant = await Plant.findById(id)
+      .populate('ownerUsername', 'username')
+      .populate('lastEditUsername', 'username')
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'image',
+          select: 'image'
+        }
+      })
+```
+
+#### Email Validation:
+Validating emails before they entered the database by checking for the presence of both an '@' and a '.'. Tying this in with an email input field on the front-end and we have greater certainty that a user is entering a valid email.
+```
+  // Making sure the email address provided when registering is a valid email address with pre-validation conditions
+  userSchema
+  .pre('validate', function (next) { 
+    if (this.isModified('email') && (this.email.indexOf('@') === -1 || this.email.indexOf('.') === -1)) { 
+      this.invalidate('email', 'does not contain an email')
+    }
+    next()
+  })
+```
 ---
-### Frontend Interface
----
-The interface includes 11 pages:
-* Home.js is the root page, where users are greeted with a list of all plants and a dynamic search bar that allows users to search for plants by name and also by flower color.
-* Login.js is where the user logs in. There are certain pages, such as user profiles, that the user can't view without being logged in and thusly redirects the user to the login page if clicked
-* Register.js is where a new user can register
-* NotFound.js is our 404 page
-* PageNavbar.js is our navbar. It has the logo and name of our site on the left. On the right, when a user is logged in, there is a dark-mode toggle, a '+' button that directs users to the PlantAdd page, and a menu bar that allows users to click on their own profile or to log out. When a user is logged out, on the righthand side is different, containing only "Login" and "Register" options that link to the respective pages
-* PlantAdd.js is a form where a user can add a plant along with a description of the plant, an image, and all of the important information about the plant
-* PlantEdit.js is the same form as PlantAdd, but data for the selected plant populates in the form upon pageload
-* PlantShow.js is the show page for the plant. It is accessed when the user clicks on the specific plant image. The page includes the image of the plant, an accordion for displaying information about the plant, and a comment section.
-* EditorApplication.js is where the user applies for editing permissions. It is accessed when a user that does not have editing permissions presses the "edit" button on the PlantShow page. When a user submits an application, the data is directed to an "EditorApplications" section of the database. The admins can read the application there and then toggle "canEdit" to "true" on the user's profile on the backend.
-* EditUserProfile.js is where the user sets and edits their bio profile picture. React-image-crop is used to crop the image into a square image on desktop, but when the screen is less than 700px, the image crop functionality is disabled.
-* UserProfile.js is the user's profile. Inspired by Instagram's user profile, it has the user profile image and information at the top, and at the bottom is a tab bar where users can toggle between their posted plants, their favorite plants, and their edited plants
 
----
-### Backend Models and Controllers
----
-The backend includes 4 models:
-* User: 
-  - Database fields: username, email, password, image, favorites, myEdits, bio, canEdit, and hasApplied  
-  - Virtual fields: createdPlants and createdComments
-* Plant: 
-  - Database fields: name, scientificName, description, images, watering, sunExposure, soilType, flowerColor, mood, lifespan, isIndoor, height, width, nativeArea, owner, lastEdit, comments, favorites, editors, and timestamps
-  - Virtual fields: ownerUsername and lastEditUsername
-* Comments:
-  - Database fields: text, owner, username, timestamps
-  - Virtual fields: image
-* EditorApplication:
-  - Database fields: firstName, lastName, text, owner, username, timestamps
-  - Virtual fields: none
+### Front-End
 
-Each model has its own controller. To view profiles of other users, and to update or post any information, the user must first get past a secure route that checks to see if the user's id matches the one on the jwt web token associated with the user id.
+We decided to divide up different front-end pages across the three of us. We coded alongside one another on Zoom so that in any instance one of us ran into a bug or needed help, the rest of us were readily available to chip in and provide suggestions or talk through potential ways to tackle a problem.
 
-The server uses express to listen for and route calls and mongoose to connect to the mongodb backend
+Division of Work:
+* Jackie - Add/Edit Plant Pages (form inputs and submittion, metric/imperial measurement slider, styling), Plant Show Page (comment filtering, pagination, and styling), dark mode configuration
+* Rob - Home Page (search bar, flower color filter, styling), Plant Show Page (favoriting, base styling), dark mode setup
+* Philip - Login/Register pages, Edit User Profile (profile picture upload, image handling), Add/Edit Plant Pages (upload image feature)
 
----
-### Approach
----
+#### Add/Edit Plant Pages
+When putting together the Add/Edit Plant forms, one issue I ran into was handling nested values and deeper nested values with useState. When we initially designed our database, we nested properties within properties within properties, thinking it made sense to group things like Characteristics or Upkeep together. However, the unnecessary grouping complicated updating and accessing values, especially for these forms. This was a lesson that when designing a database, it's important to keep things practical rather than needlessly complicating things.
 
+#### Slider with Unit Conversions
+To spice up an otherwise boring form, I added in a slider to handle the Height and Width measurement of a plant, which could handle the user switching between centimeters and inches. To do this, I wrote one function to handle movement on the slider, and one to handle unit changes:
 
-#### Planning
-The first thing we did was brainstorm ideas for a site. Once we had one that we all liked, we created Excalidraw mockups for the site and decided to go with Material UI as our frontend React Framework. We then created Trello checklists for the initial frontend and backend coding that would be useful to do together before splitting up tasks.
+```
+export const handleSizeChange = (e, setMatureSize, matureSize, setFormData, formData, unit) => {
+  const { name, value } = e.target
+  setMatureSize({ ...matureSize, [name]: value })
+  if (unit === 'cm') {
+    setFormData({ ...formData, [name]: Math.ceil(value / 2.54) })
+  } else {
+    setFormData({ ...formData, [name]: value })
+  }
+  
+  export const handleUnitChange = (e, matureSize, setMatureSize, setMax, setStep, setUnit) => {
+  const { height, width } = matureSize
+  setUnit(e.target.value)
+  if (e.target.value === 'in') {
+    setMatureSize({ height: Math.ceil(height / 2.54), width: Math.ceil(width / 2.54) })
+    setMax(150)
+    setStep(10)
+  } else if (e.target.value === 'cm') {
+    setMatureSize({ height: Math.ceil(height * 2.54), width: Math.ceil(width * 2.54) })
+    setMax(380)
+    setStep(20)
+  }
+}
+```
 
-#### Coding
-It was decided that we would code the entire backend together, so that's the coding we did. When this was done, we moved onto the frontend, setting up the folder structures, the Index.js, the App.js, and the PageNavBar together before dividing and conquering on creating MVP browser pages.
+#### Comment Sorting
 
-When the MVP was made, we added bells and whistles to it, such as an intelligent searchbar, comments, an editor application, and intelligent image handling and cropping.
+To sort comments, I opted to update the comment value of the Plant state, which would re-render the component each time a new sort selection was made. Initially a group member tried to hande the sort with a separate state, but we found that complicated things and was a bit buggy in execution.
 
-Once the site had all the functionality we wanted, styling became the focus. We added a dark mode, a custom color palette, and custom fonts, along with general stylistic enhancements so that it rendered well on mobile as well as on desktop
+```
+  const handleDropdown = (e) => {
+    setCommentDropdown(e.target.value)
+    // If oldest is selected, display oldest -> newest, and vice versa
+    if (e.target.value === 'oldest') {
+      setPlant({ ...plant, comments: plant.comments.sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)) })
+    } else if (e.target.value === 'newest') {
+      setPlant({ ...plant, comments: plant.comments.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)) })
+    }
+    updatePageResults(page, plant)
+  }
+```
 
+#### Comment Pagination
+This was my first time attempting to paginate items. I used MUI pagination components to achieve this, and wrote functions to handle when a user navigates to a different page. Since we have only a low volume of comments to deal with, I opted to load the full comment array then simply modify which comments are displayed. In the future, a potential change that could be made is only loading smaller chunks of comment data to reduce the load on our database.
 
----
-### Screenshots
----
-![Homepage](/client/src/images/home-screen.png)
-![User Profile](/client/src/images/user-profile.png)
-![Show Page](/client/src/images/show-page.png)
-![Mobile and Dark Mode](/client/src/images/mobile-dark.png)
+```
+  // handle page change
+  const handlePageChange = (e) => {
+    const { dataset, innerText } = e.target
+    let pageNumber
+    // Check what button was pressed, a number or an icon (ex right/left arrows)
+    if (!innerText) {
+      dataset.testid === 'NavigateBeforeIcon' ? pageNumber = page - 1 : pageNumber = page + 1
+    } else {
+      pageNumber = parseInt(innerText)
+    }
+    setPage(pageNumber)
+    updatePageResults(pageNumber, plant)
+  }
+```
 
----
+## Reflection
+
 ### Challenges
----
-This was each of our first team projects using Github branches, so the first challenge we faced was making sure we all knew how to make our commits and merges without erasing other people's work. Luckily we did not have any Github issues.
 
-We each faced and conquered solo challenges as well.
+I found the project very fun and insightful. It allowed to put parts of what we had learned throughout the course to use, but also presenting us with real world problems and tackling creating a project under a short deadline. My key takeaways were:
+* When designing a database, it's important to be mindful of how we plan to use the data, and design accordingly
+  * Keep things simple and shallow (no need to nest within a nest within a nest if there's no justification) 
+* Clean, commented code is valuable not just to keep yourself organized, but to allow others to more easily read, digest, and build upon your code
+* Plan, plan, plan. More time spent planning helps eliminate frustration and guess-work down the line.
 
-Rob's biggest challenge was the intelligent searchbar that filters by searching the name and combines it with flower-color tags.
+### Key Learnings
 
-Jackie's biggest challenges were creating the Add Plants and Edit Plants forms and getting the comments section to work well on the PLants Show page.
+One major takeaway from this group project was learning how to communicate and work with other people's code. Different people approach problems differently, so working together in a group allowed me to train my skill for reading and understanding the someone elses code and thought process, to then build upon the foundation they've established. This reinforced the need for leaving behind concise but informative comments, allowing others to more rapidly understand the purpose of different components/functions, reducing the time spent needed to decipher exactly what's going on and where.
 
-Philip's biggest challenge was image handling. He used React Image Crop for users to be able to crop their profile pictures into squares on desktop in the Edit Profile page. On mobile, the crop functionality is not enabled. On the Plant Add and Plant Edit page, the added images are automatically centered and cropped into squares, making it so only square plant images populate the site.
+Working in a group also allowed us to learn how to best use Git and remote repos as a team, working out of separate branches to ensure we were more confident with what was being pushed to the development and main branches. This helped avoid any potentially problematic merge conflicts, and allowed us to better work as a remote team.
 
----
-### Wins
----
-The biggest win was everything. We accomplished a lot and are proud of ourselves!
+## Future Features
 
----
-### Ideas for Future Improvements
----
-Making it so that the user can update his/her username. Currently we left this option out because it doesn't change the username for all the posts and comments that the user made, so users would encounter 404 pages when clicking on old usernames.
+* More descriptive error handling on forms
+* Favoriting plants directly from the homepage rather than just on the Plant Show page
+* More robust filter options for our search bar
+* Reply to comments
+* Splash page
+* Footer
 
-Error handling and error messages are there but could be more descriptive
+## Credits:
 
-Favoriting plants from the homepage is something that could be added.
+* Images
+  * Plant images for seed data - [The Spruce](https://www.thespruce.com/)
 
-Another thing would be to incorporate more types of tags into the intelligent searchbar.
-
-Another thing we didn't quite get to were comment replies.
-
-... You tell us! We've been looking at this too long and are zonked — you're the one with fresh eyes!
+* Fonts
+  * [Google Fonts](https://google.com/fonts)
