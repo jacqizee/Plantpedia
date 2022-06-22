@@ -5,16 +5,19 @@ This was the third project for the Software Engineering Immersive course with GA
 
 You can find the deployed version of the project [here](https://plant-pedia.herokuapp.com/).
 
+![plantpedia-preview](client/src/images/readme/plantpedia-preview.gif)
+
 ## Navigation
 
 * [Brief](#the-brief)
+* [Collaborators](#collaborators)
 * [Technologies](#technologies)
 * [Planning](#planning)
   * [Features](#features)
   * [Wireframing](#wireframing)
 * [Coding](#coding)
-  * [Search Feature](#search-feature)
-  * [Favorites Feature](#favorites-feature)
+  * [Back-End](#back-end)
+  * [Front-End](#front-end)
 * [Reflection](#reflection)
   * [Challenges](#challenges)
   * [Key Learnings](#key-learnings)
@@ -74,7 +77,9 @@ Rob Green - [Github](https://github.com/greezyBob/)
 
 ### Wireframing
 
-![Plantpedia Wireframe]()
+![Plantpedia Wireframe](client/src/images/readme/wireframe.png)
+
+![Plantpedia model plan](client/src/images/readme/model-plan.png)
 
 ## Coding
 
@@ -120,9 +125,9 @@ Validating emails before they entered the database by checking for the presence 
 We decided to divide up different front-end pages across the three of us. We coded alongside one another on Zoom so that in any instance one of us ran into a bug or needed help, the rest of us were readily available to chip in and provide suggestions or talk through potential ways to tackle a problem.
 
 Division of Work:
-* Jackie - Add/Edit Plant Pages (form inputs and submittion, metric/imperial measurement slider, styling), Plant Show Page (comment filtering, pagination, and styling), dark mode configuration
-* Rob - Home Page (search bar, flower color filter, styling), Plant Show Page (favoriting, base styling), dark mode setup
-* Philip - Login/Register pages, Edit User Profile (profile picture upload, image handling), Add/Edit Plant Pages (upload image feature)
+* Jackie - Add/Edit Plant Pages (form inputs and submittion, metric/imperial measurement slider, styling), Plant Show Page (comment filtering, pagination, and styling), dark mode configuration, deployment
+* Philip - Login/Register pages, User Profile, Edit User Profile (profile picture upload, image handling), Add/Edit Plant Pages (upload image feature)
+* Rob - Homepage (search bar, flower color filter, styling), Plant Show Page (favoriting, base styling), dark mode setup
 
 #### Add/Edit Plant Pages
 When putting together the Add/Edit Plant forms, one issue I ran into was handling nested values and deeper nested values with useState. When we initially designed our database, we nested properties within properties within properties, thinking it made sense to group things like Characteristics or Upkeep together. However, the unnecessary grouping complicated updating and accessing values, especially for these forms. This was a lesson that when designing a database, it's important to keep things practical rather than needlessly complicating things.
