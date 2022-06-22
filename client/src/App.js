@@ -9,6 +9,7 @@ import PlantShow from './components/plants/PlantShow'
 import PlantAdd from './components/plants/PlantAdd'
 import PlantEdit from './components/plants/PlantEdit'
 import NotFound from './components/common/NotFound'
+import Footer from './components/common/Footer'
 import UserProfile from './components/user/UserProfile'
 import EditProfile from './components/user/EditProfile'
 import EditorApplication from './components/user/EditorApplication'
@@ -52,6 +53,7 @@ const App = () => {
             {/* The following path matches any path specified, so it needs to come last */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Footer />
         </BrowserRouter>
       </Box>
     </ThemeProvider>
