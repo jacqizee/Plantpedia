@@ -5,10 +5,6 @@ This was the third project for the Software Engineering Immersive course with GA
 
 You can find the deployed version of the project [here](https://plant-pedia.herokuapp.com/).
 
-![Homepage](/client/src/images/home-screen.png)
-![User Profile](/client/src/images/user-profile.png)
-![Show Page](/client/src/images/show-page.png)
-
 ## Navigation
 
 * [Brief](#the-brief)
@@ -208,6 +204,8 @@ I found the project very fun and insightful. It allowed to put parts of what we 
 ### Key Learnings
 
 One major takeaway from this group project was learning how to communicate and work with other people's code. Different people approach problems differently, so working together in a group allowed me to train my skill for reading and understanding the someone elses code and thought process, to then build upon the foundation they've established. This reinforced the need for leaving behind concise but informative comments, allowing others to more rapidly understand the purpose of different components/functions, reducing the time spent needed to decipher exactly what's going on and where.
+
+Working in a group also allowed us to learn how to best use Git and remote repos as a team, working out of separate branches to ensure we were more confident with what was being pushed to the development and main branches. This helped avoid any potentially problematic merge conflicts, and allowed us to better work as a remote team.
 
 ## Future Features
 
