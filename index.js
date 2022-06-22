@@ -2,12 +2,12 @@ import express from 'express'
 import mongoose from 'mongoose'
 import router from './config/router.js'
 
-// Deployment
-import path, { dirname } from 'path'
-import { fileURLToPath } from 'url'
+// // Deployment
+// import path, { dirname } from 'path'
+// import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+// const __filename = fileURLToPath(import.meta.url)
+// const __dirname = dirname(__filename)
 
 import 'dotenv/config'
 
@@ -29,12 +29,12 @@ const startSever = async () => {
   // Router
   app.use('/api', router)
 
-  // ** New lines **
-  app.use(express.static(path.join(__dirname, 'client', 'build')))
+  // // ** New lines **
+  // app.use(express.static(path.join(__dirname, 'client', 'build')))
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
-  })
+  // app.get('*', (req, res) => {
+  //   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+  // })
 
   await mongoose.connect(process.env.MONGO_DB) //Connecting to mongoose
   console.log('Connected to MongoDB!')
