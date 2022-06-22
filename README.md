@@ -5,6 +5,8 @@ This was the third project for the Software Engineering Immersive course with GA
 
 You can find the deployed version of the project [here](https://plant-pedia.herokuapp.com/).
 
+![plantpedia-preview](client/src/images/readme/plantpedia-preview.gif)
+
 ## Navigation
 
 * [Brief](#the-brief)
@@ -13,8 +15,6 @@ You can find the deployed version of the project [here](https://plant-pedia.hero
   * [Features](#features)
   * [Wireframing](#wireframing)
 * [Coding](#coding)
-  * [Search Feature](#search-feature)
-  * [Favorites Feature](#favorites-feature)
 * [Reflection](#reflection)
   * [Challenges](#challenges)
   * [Key Learnings](#key-learnings)
