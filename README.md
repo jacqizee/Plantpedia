@@ -81,6 +81,10 @@ Rob Green - [Github](https://github.com/greezyBob/)
 
 ![Plantpedia model plan](client/src/images/readme/model-plan.png)
 
+### Team Planning
+
+My team members and I used Trello to organize tasks that needed to be completed, and would assign tasks to one another based on how much progress we had made on the tasks of the previous day.;
+
 ## Coding
 
 We utilized Trello to divide up different parts of the application, while also creating a list of any bugs or features we noticed that should be addressed.
@@ -211,6 +215,15 @@ I found the project very fun and insightful. It allowed to put parts of what we 
 One major takeaway from this group project was learning how to communicate and work with other people's code. Different people approach problems differently, so working together in a group allowed me to train my skill for reading and understanding the someone else's code and thought process, to then build upon the foundation they've established. This reinforced the need for leaving behind concise but informative comments, allowing others to more rapidly understand the purpose of different components/functions, reducing the time spent needed to decipher exactly what's going on and where.
 
 Working in a group also allowed us to learn how to best use Git and remote repos as a team, working out of separate branches to ensure we were more confident with what was being pushed to the development and main branches. This helped avoid any potentially problematic merge conflicts, and allowed us to better work as a remote team.
+
+### Wins
+
+I learned quite a bit throughout this project, some of the top wins being:
+* Designing a back-end database and learning the importance of proper planning
+* Managing remote repos with git, including how to address merge conflicts
+* Working in a team on a project, reading and discussing what would be an optimal way to tackle problems or bugs
+* Trying my hand at pagination of data
+* Creating a form on the front-end and handling form data via states
 
 ## Future Features
 
