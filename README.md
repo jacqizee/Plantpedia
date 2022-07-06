@@ -83,7 +83,7 @@ Rob Green - [Github](https://github.com/greezyBob/)
 
 ### Team Planning
 
-My team members and I used Trello to organize tasks that needed to be completed, and would assign tasks to one another based on how much progress we had made on the tasks of the previous day.;
+My team members and I used Trello to organize tasks that needed to be completed, and would assign tasks to one another based on how much progress we had made on the tasks of the previous day. We also had a daily stand up to discuss our challenges and our wins from the previous day, allowing us to share our opinions and think through any problems as a team. While we coded separately for quite a lot of the front-end, we worked alongside one another via Zoom so that in the case any of us ran into any issues or had any questions, the rest of us were right there and available to chip in and help out.
 
 ## Coding
 
