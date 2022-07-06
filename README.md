@@ -221,7 +221,7 @@ Working in a group also allowed us to learn how to best use Git and remote repos
 I learned quite a bit throughout this project, some of the top wins being:
 * Designing a back-end database and learning the importance of proper planning
 * Managing remote repos with git, including how to address merge conflicts
-* Working in a team on a project, reading and discussing what would be an optimal way to tackle problems or bugs
+* Working in a team on a project, reading and working with someone else's code at times, as well as discussing ways to tackle bugs/problems
 * Trying my hand at pagination of data
 * Creating a form on the front-end and handling form data via states
 
