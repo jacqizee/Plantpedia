@@ -95,7 +95,7 @@ We initially worked on coding out the back-end of our project in a group of thre
 Areas I implemented on the back-end individually included:
 
 #### Populating Nested Virtual Fields for Plant Show Page
-Populated a virtual field within a virtual field was initially was a bit difficult as we did not understand how or if this was possible, but by reading through the Mongoose documentation I was able to find and populate the fields we desired.
+Populating a virtual field within a virtual field was initially a bit difficult as we did not understand how or if this was possible, but by reading through the Mongoose documentation I was able to find and populate the fields we desired.
 ```
     // Retrieve a plant and populate virtual fields, then populating virtual fields within virtual fields
     const plant = await Plant.findById(id)
@@ -204,7 +204,7 @@ This was my first time attempting to paginate items. I used MUI pagination compo
 
 ### Challenges
 
-I found the project very fun and insightful. It allowed to put parts of what we had learned throughout the course to use, but also presenting us with real world problems and tackling creating a project under a short deadline. My key takeaways were:
+I found the project very fun and insightful. It allowed us to put parts of what we had learned throughout the course to use, but also presented us with real world problems and tackling creating a project under a short deadline. My key takeaways were:
 * When designing a database, it's important to be mindful of how we plan to use the data, and design accordingly
   * Keep things simple and shallow (no need to nest within a nest within a nest if there's no justification) 
 * Clean, commented code is valuable not just to keep yourself organized, but to allow others to more easily read, digest, and build upon your code
@@ -212,7 +212,7 @@ I found the project very fun and insightful. It allowed to put parts of what we 
 
 ### Key Learnings
 
-One major takeaway from this group project was learning how to communicate and work with other people's code. Different people approach problems differently, so working together in a group allowed me to train my skill for reading and understanding the someone else's code and thought process, to then build upon the foundation they've established. This reinforced the need for leaving behind concise but informative comments, allowing others to more rapidly understand the purpose of different components/functions, reducing the time spent needed to decipher exactly what's going on and where.
+One major takeaway from this group project was learning how to communicate and work with other people's code. Different people approach problems differently, so working together in a group allowed me to train my skill for reading and understanding someone else's code and thought process, to then build upon the foundation they've established. This reinforced the need for leaving behind concise but informative comments, allowing others to more rapidly understand the purpose of different components/functions, reducing the time spent needed to decipher exactly what's going on and where.
 
 Working in a group also allowed us to learn how to best use Git and remote repos as a team, working out of separate branches to ensure we were more confident with what was being pushed to the development and main branches. This helped avoid any potentially problematic merge conflicts, and allowed us to better work as a remote team.
 
