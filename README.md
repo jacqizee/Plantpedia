@@ -81,6 +81,10 @@ Rob Green - [Github](https://github.com/greezyBob/)
 
 ![Plantpedia model plan](client/src/images/readme/model-plan.png)
 
+### Team Planning
+
+My team members and I used Trello to organize tasks that needed to be completed, and would assign tasks to one another based on how much progress we had made on the tasks of the previous day. We also had a daily stand up to discuss our challenges and our wins from the previous day, allowing us to share our opinions and think through any problems as a team. While we coded separately for quite a lot of the front-end, we worked alongside one another via Zoom so that in the case any of us ran into any issues or had any questions, the rest of us were right there and available to chip in and help out.
+
 ## Coding
 
 We utilized Trello to divide up different parts of the application, while also creating a list of any bugs or features we noticed that should be addressed.
@@ -91,7 +95,7 @@ We initially worked on coding out the back-end of our project in a group of thre
 Areas I implemented on the back-end individually included:
 
 #### Populating Nested Virtual Fields for Plant Show Page
-Populated a virtual field within a virtual field was initially was a bit difficult as we did not understand how or if this was possible, but by reading through the Mongoose documentation I was able to find and populate the fields we desired.
+Populating a virtual field within a virtual field was initially a bit difficult as we did not understand how or if this was possible, but by reading through the Mongoose documentation I was able to find and populate the fields we desired.
 ```
     // Retrieve a plant and populate virtual fields, then populating virtual fields within virtual fields
     const plant = await Plant.findById(id)
@@ -125,7 +129,7 @@ Validating emails before they entered the database by checking for the presence 
 We decided to divide up different front-end pages across the three of us. We coded alongside one another on Zoom so that in any instance one of us ran into a bug or needed help, the rest of us were readily available to chip in and provide suggestions or talk through potential ways to tackle a problem.
 
 Division of Work:
-* Jackie - Add/Edit Plant Pages (form inputs and submittion, metric/imperial measurement slider, styling), Plant Show Page (comment filtering, pagination, and styling), dark mode configuration, deployment
+* Jackie - Add/Edit Plant Pages (form inputs and submission, metric/imperial measurement slider, styling), Plant Show Page (comment filtering, pagination, and styling), dark mode configuration, deployment
 * Philip - Login/Register pages, User Profile, Edit User Profile (profile picture upload, image handling), Add/Edit Plant Pages (upload image feature)
 * Rob - Homepage (search bar, flower color filter, styling), Plant Show Page (favoriting, base styling), dark mode setup
 
@@ -162,7 +166,7 @@ export const handleSizeChange = (e, setMatureSize, matureSize, setFormData, form
 
 #### Comment Sorting
 
-To sort comments, I opted to update the comment value of the Plant state, which would re-render the component each time a new sort selection was made. Initially a group member tried to hande the sort with a separate state, but we found that complicated things and was a bit buggy in execution.
+To sort comments, I opted to update the comment value of the Plant state, which would re-render the component each time a new sort selection was made. Initially a group member tried to handle the sort with a separate state, but we found that complicated things and was a bit buggy in execution.
 
 ```
   const handleDropdown = (e) => {
@@ -178,7 +182,7 @@ To sort comments, I opted to update the comment value of the Plant state, which 
 ```
 
 #### Comment Pagination
-This was my first time attempting to paginate items. I used MUI pagination components to achieve this, and wrote functions to handle when a user navigates to a different page. Since we have only a low volume of comments to deal with, I opted to load the full comment array then simply modify which comments are displayed. In the future, a potential change that could be made is only loading smaller chunks of comment data to reduce the load on our database.
+This was my first time attempting to paginate items. I used MUI pagination components to achieve this, and wrote functions to handle when a user navigates to a different page. Since we have only a low volume of comments to deal with, I opted to load the full comment array, then simply modify which comments are displayed. In the future, a potential change that could be made is only loading smaller chunks of comment data to reduce the load on our database.
 
 ```
   // handle page change
@@ -200,7 +204,7 @@ This was my first time attempting to paginate items. I used MUI pagination compo
 
 ### Challenges
 
-I found the project very fun and insightful. It allowed to put parts of what we had learned throughout the course to use, but also presenting us with real world problems and tackling creating a project under a short deadline. My key takeaways were:
+I found the project very fun and insightful. It allowed us to put parts of what we had learned throughout the course to use, but also presented us with real world problems and tackling creating a project under a short deadline. My key takeaways were:
 * When designing a database, it's important to be mindful of how we plan to use the data, and design accordingly
   * Keep things simple and shallow (no need to nest within a nest within a nest if there's no justification) 
 * Clean, commented code is valuable not just to keep yourself organized, but to allow others to more easily read, digest, and build upon your code
@@ -208,9 +212,18 @@ I found the project very fun and insightful. It allowed to put parts of what we 
 
 ### Key Learnings
 
-One major takeaway from this group project was learning how to communicate and work with other people's code. Different people approach problems differently, so working together in a group allowed me to train my skill for reading and understanding the someone elses code and thought process, to then build upon the foundation they've established. This reinforced the need for leaving behind concise but informative comments, allowing others to more rapidly understand the purpose of different components/functions, reducing the time spent needed to decipher exactly what's going on and where.
+One major takeaway from this group project was learning how to communicate and work with other people's code. Different people approach problems differently, so working together in a group allowed me to train my skill for reading and understanding someone else's code and thought process, to then build upon the foundation they've established. This reinforced the need for leaving behind concise but informative comments, allowing others to more rapidly understand the purpose of different components/functions, reducing the time spent needed to decipher exactly what's going on and where.
 
 Working in a group also allowed us to learn how to best use Git and remote repos as a team, working out of separate branches to ensure we were more confident with what was being pushed to the development and main branches. This helped avoid any potentially problematic merge conflicts, and allowed us to better work as a remote team.
+
+### Wins
+
+I learned quite a bit throughout this project, some of the top wins being:
+* Designing a back-end database and learning the importance of proper planning
+* Managing remote repos with git, including how to address merge conflicts
+* Working in a team on a project, reading and working with someone else's code at times, as well as discussing ways to tackle bugs/problems
+* Trying my hand at pagination of data
+* Creating a form on the front-end and handling form data via states
 
 ## Future Features
 
