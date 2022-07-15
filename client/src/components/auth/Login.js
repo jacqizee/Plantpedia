@@ -70,6 +70,7 @@ const Login = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          minHeight: 'calc(100vh - 100px)',
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>

@@ -29,6 +29,7 @@ function TabPanel(props) {
       hidden={numberValue !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      className='tabpanel'
       {...other}
     >
       {numberValue === index && (
