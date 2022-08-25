@@ -409,7 +409,7 @@ const PlantEdit = () => {
                   {/* Unit Toggler */}
                   <Grid item xs={12} md={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Container>
-                      <ToggleButtonGroup value={unit} exclusive onChange={(e) => handleUnitChange(e, matureSize, setMatureSize, setMax, setStep, setUnit)} aria-label="measurement unit">
+                      <ToggleButtonGroup value={unit} exclusive onChange={(e) => handleUnitChange(e, matureSize, setMatureSize, setMax, setStep, unit, setUnit)} aria-label="measurement unit">
                         <ToggleButton value="in" aria-label="inches" size="small">
                           in
                         </ToggleButton>

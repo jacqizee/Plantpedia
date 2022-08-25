@@ -24,8 +24,11 @@ export const handleDelete = async (e, navigate, setPutErrors, plantId) => {
 }
 
 // Handles change in units for height/width sliders
-export const handleUnitChange = (e, matureSize, setMatureSize, setMax, setStep, setUnit) => {
+export const handleUnitChange = (e, matureSize, setMatureSize, setMax, setStep, unit, setUnit) => {
   const { height, width } = matureSize
+  if (e.target.value === unit) {
+    return
+  }
   setUnit(e.target.value)
   if (e.target.value === 'in') {
     setMatureSize({ height: Math.ceil(height / 2.54), width: Math.ceil(width / 2.54) })
